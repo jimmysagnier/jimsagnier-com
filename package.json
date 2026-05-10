@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "keystatic": "open 'http://localhost:4321/keystatic' & astro dev",
+    "deploy": "astro build && wrangler pages deploy dist --project-name=jimsagnier-com --branch=main"
   },
   "dependencies": {
     "@astrojs/markdoc": "^1.0.4",
