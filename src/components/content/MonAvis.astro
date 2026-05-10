@@ -1,0 +1,57 @@
+---
+interface Props { sentiment?: 'positif' | 'negatif' | 'mitige' }
+const { sentiment = 'positif' } = Astro.props;
+const icons = { positif: '👍', negatif: '👎', mitige: '🤔' } as const;
+const labels = {
+  positif: 'Mon avis · positif',
+  negatif: 'Mon avis · négatif',
+  mitige: 'Mon avis · mitigé',
+} as const;
+---
+<aside class={`block-eeat avis avis-${sentiment}`} role="note">
+  <div class="block-head">
+    <span class="ico" aria-hidden="true">{icons[sentiment]}</span>
+    <strong>{labels[sentiment]}</strong>
+  </div>
+  <div class="block-body"><slot /></div>
+</aside>
+
+<style>
+  /* Override du padding hérité de block-eeat pour respirer mieux */
+  .avis {
+    padding: 32px 36px;
+    margin: 40px 0;
+  }
+  .avis .block-head {
+    margin-bottom: 14px;
+    font-size: 12px;
+    letter-spacing: .08em;
+  }
+  .avis .block-body :global(p) { margin: 0 0 14px; line-height: 1.7; }
+  .avis .block-body :global(p:last-child) { margin-bottom: 0; }
+
+  /* positif → green (DA) */
+  .avis-positif {
+    border-left-color: var(--green);
+    background: color-mix(in srgb, var(--green) 5%, transparent);
+  }
+  .avis-positif .block-head { color: var(--green); }
+
+  /* mitige → warm (DA) */
+  .avis-mitige {
+    border-left-color: var(--warm);
+    background: color-mix(in srgb, var(--warm) 5%, transparent);
+  }
+  .avis-mitige .block-head { color: var(--warm); }
+
+  /* negatif → pink (DA, alerte sans agression) */
+  .avis-negatif {
+    border-left-color: var(--pink);
+    background: color-mix(in srgb, var(--pink) 5%, transparent);
+  }
+  .avis-negatif .block-head { color: var(--pink); }
+
+  @media (max-width: 760px) {
+    .avis { padding: 24px 22px; margin: 32px 0; }
+  }
+</style>

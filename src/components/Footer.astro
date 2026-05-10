@@ -1,0 +1,46 @@
+---
+import { getSiteSettings } from '../lib/site';
+const s = getSiteSettings();
+const year = new Date().getFullYear();
+---
+<footer class="site">
+  <div class="inner">
+    <div class="col brand-col">
+      <h3>Jim Sagnier</h3>
+      <p>{s.tagline}</p>
+    </div>
+    <div class="col">
+      <h4>Atelier</h4>
+      <a href="/journal">Journal</a>
+      <a href="/projets">Projets</a>
+      <a href="/a-propos">À propos</a>
+      <a href="https://jsagnier.substack.com" target="_blank" rel="noopener">Newsletter</a>
+    </div>
+    <div class="col">
+      <h4>Territoires</h4>
+      <a href="/journal#construire">Construire</a>
+      <a href="/journal#comprendre">Comprendre</a>
+      <a href="/journal#reflechir">Réfléchir</a>
+    </div>
+    <div class="col">
+      <h4>Canaux</h4>
+      {s.sameAs.length === 0 ? (
+        <span class="muted">À configurer dans Keystatic</span>
+      ) : (
+        s.sameAs.map((link) => (
+          <a href={link.url} target="_blank" rel="noopener me">
+            {link.platform}
+          </a>
+        ))
+      )}
+    </div>
+  </div>
+  <div class="legal">
+    <span>© {year} Jim Sagnier · Lyon, France</span>
+    <span>Built with Astro · Hosted on Cloudflare</span>
+  </div>
+</footer>
+
+<style>
+  .muted { color: var(--fg-mute); font-size: 13px; }
+</style>

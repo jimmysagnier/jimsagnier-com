@@ -1,0 +1,347 @@
+---
+export interface SubProject { title: string; description?: string }
+
+export interface UniverseProject {
+  slug: string;
+  color: 'cyan' | 'warm' | 'purple' | 'green' | 'pink';
+  status: string;
+  type: string;
+  year?: string;
+  role?: string;
+  title: string;
+  summary: string;
+  subProjects?: SubProject[];
+  stack?: string[];
+  progress?: number;
+  progressLabel?: string;
+  progressTarget?: string;
+  /** simule l'URL affichée dans la barre de la fenêtre */
+  windowUrl?: string;
+  /** texte affiché en label dans la window simulée */
+  windowLabel?: string;
+}
+
+interface Props {
+  project: UniverseProject;
+  position?: 'left' | 'right';
+}
+
+const { project, position = 'left' } = Astro.props;
+const stackPills = project.stack ?? [];
+const subs = project.subProjects ?? [];
+const hasProgress = project.progress != null;
+---
+<article class={`universe ${project.color}${position === 'right' ? ' right' : ''}`}>
+  <div class="layout">
+    <div class="visual" aria-hidden="true">
+      <div class="grain"></div>
+      <div class="window">
+        <div class="titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="url">{project.windowUrl ?? `${project.slug} · preview`}</span>
+        </div>
+        <div class="canvas">
+          <div class="label">{project.windowLabel ?? `// ${project.type}`}</div>
+          <h3>{project.title}</h3>
+          <div class="lines"><div></div><div></div><div></div></div>
+          <div class="pills">
+            {stackPills.slice(0, 4).map((s) => <span>{s}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body">
+      <div>
+        <div class="top-meta">
+          <span class="badge status">{project.status}</span>
+          <span class="badge type">{project.type}</span>
+          {project.year && <span class="badge year">{project.year}</span>}
+        </div>
+        <h2>{project.title}</h2>
+        {project.role && <div class="role-line">{project.role}</div>}
+        <p class="story" set:html={project.summary} />
+
+        {subs.length > 0 && (
+          <div class="sub-projects">
+            <div class="sub-label">// sous-projets</div>
+            <div class="sub-pills">
+              {subs.map((sp) => <span>{sp.title}</span>)}
+            </div>
+          </div>
+        )}
+
+        {stackPills.length > 0 && (
+          <div class="stack">
+            {stackPills.map((s) => <span>{s}</span>)}
+          </div>
+        )}
+      </div>
+      <div class="footer-row">
+        {hasProgress ? (
+          <div class="progress">
+            <div class="bar"><div style={`width: ${project.progress}%`}></div></div>
+            <div class="label">
+              <span>{project.progressLabel ?? `${project.progress}% complété`}</span>
+              {project.progressTarget && <b>{project.progressTarget}</b>}
+            </div>
+          </div>
+        ) : <div></div>}
+        <a href={`/projets/${project.slug}`} class="cta">Découvrir</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .universe {
+    --c: var(--accent);
+    --c-tint: rgba(6,182,212,0.04);
+    --c-strong: rgba(6,182,212,0.15);
+    position: relative;
+    border-radius: 28px;
+    background: var(--c-tint);
+    border: 1px solid var(--c-strong);
+    overflow: hidden;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+  }
+  .universe::before {
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+    background: var(--c);
+    z-index: 2;
+  }
+  .universe:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px -25px rgba(0,0,0,.12);
+  }
+  .universe.cyan   { --c: #06B6D4; --c-tint: rgba(6,182,212,0.04);  --c-strong: rgba(6,182,212,0.16); }
+  .universe.warm   { --c: #FB923C; --c-tint: rgba(251,146,60,0.05); --c-strong: rgba(251,146,60,0.18); }
+  .universe.purple { --c: #A78BFA; --c-tint: rgba(167,139,250,0.05);--c-strong: rgba(167,139,250,0.18); }
+  .universe.green  { --c: #10B981; --c-tint: rgba(16,185,129,0.04); --c-strong: rgba(16,185,129,0.16); }
+  .universe.pink   { --c: #EC4899; --c-tint: rgba(236,72,153,0.04); --c-strong: rgba(236,72,153,0.16); }
+
+  .universe .layout {
+    display: grid; grid-template-columns: 1.05fr 1fr;
+    align-items: stretch;
+  }
+  .universe.right .layout { direction: rtl; }
+  .universe.right .layout > * { direction: ltr; }
+
+  .universe .visual {
+    position: relative;
+    min-height: 460px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 25% 30%, var(--c-strong), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(0,0,0,0.06), transparent 60%),
+      linear-gradient(135deg, color-mix(in srgb, var(--c) 14%, white), white);
+  }
+  .universe .grain {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: .06; mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .universe .window {
+    position: absolute; inset: 32px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.5);
+    overflow: hidden;
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .universe:hover .window { transform: translateY(-3px) rotate(-.3deg); }
+  .universe .window .titlebar {
+    background: rgba(244,244,245,.7);
+    backdrop-filter: blur(6px);
+    height: 32px; padding: 0 14px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .universe .window .dots { display: flex; gap: 6px; }
+  .universe .window .dots span {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: rgba(0,0,0,.1);
+  }
+  .universe .window .dots span:nth-child(1) { background: #ef4444; }
+  .universe .window .dots span:nth-child(2) { background: #eab308; }
+  .universe .window .dots span:nth-child(3) { background: #22c55e; }
+  .universe .window .url {
+    margin-left: 10px; flex: 1;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--fg-dim);
+    background: rgba(255,255,255,.6);
+    padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.04);
+    max-width: 280px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .universe .window .canvas {
+    padding: 24px; height: calc(100% - 32px);
+    overflow: hidden;
+  }
+  .universe .window .canvas .label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--fg-mute); letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .universe .window .canvas h3 {
+    font-size: 22px; font-weight: 600; letter-spacing: -.02em;
+    line-height: 1.2;
+  }
+  .universe .window .canvas .lines {
+    display: flex; flex-direction: column; gap: 6px; margin-top: 14px;
+  }
+  .universe .window .canvas .lines div {
+    height: 8px; border-radius: 4px;
+    background: linear-gradient(90deg, var(--c-strong), transparent);
+  }
+  .universe .window .canvas .lines div:nth-child(1) { width: 100%; }
+  .universe .window .canvas .lines div:nth-child(2) { width: 92%; }
+  .universe .window .canvas .lines div:nth-child(3) { width: 78%; }
+  .universe .window .canvas .pills {
+    display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap;
+  }
+  .universe .window .canvas .pills span {
+    font-family: var(--mono); font-size: 10px;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--c-tint); color: var(--c);
+    border: 1px solid var(--c-strong);
+  }
+
+  .universe .body {
+    padding: 56px 48px;
+    display: flex; flex-direction: column;
+    justify-content: space-between; gap: 24px;
+  }
+  .universe .body .top-meta {
+    display: flex; gap: 8px; align-items: center;
+    margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .universe .body .badge {
+    font-family: var(--mono); font-size: 10px;
+    padding: 5px 11px; border-radius: 6px;
+    letter-spacing: .08em; text-transform: uppercase;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .universe .body .badge.status {
+    background: var(--c); color: #fff; border: 1px solid var(--c);
+  }
+  .universe .body .badge.status::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    animation: pulse 1.8s infinite;
+  }
+  .universe .body .badge.type {
+    background: rgba(0,0,0,.04); color: var(--fg);
+    border: 1px solid rgba(0,0,0,.08);
+  }
+  .universe .body .badge.year {
+    background: transparent; color: var(--fg-mute);
+    border: 1px solid rgba(0,0,0,.08);
+    font-weight: 400;
+  }
+  .universe .body h2 {
+    font-size: clamp(28px, 3.2vw, 38px);
+    letter-spacing: -.025em; font-weight: 600;
+    line-height: 1.1;
+  }
+  .universe .body .role-line {
+    margin-top: 8px;
+    font-family: var(--mono); font-size: 13px;
+    color: var(--c); letter-spacing: .04em;
+  }
+  .universe .body .story {
+    font-size: 16px; line-height: 1.65; color: var(--fg);
+    margin-top: 16px;
+  }
+  .universe .body .story :global(em) { font-style: italic; color: var(--fg-dim); }
+  .universe .body .story :global(strong) { font-weight: 500; }
+
+  .universe .body .sub-projects {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px dashed color-mix(in srgb, var(--c) 30%, transparent);
+    border-radius: 10px;
+  }
+  .universe .body .sub-projects .sub-label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--c); letter-spacing: .1em;
+    margin-bottom: 8px;
+  }
+  .universe .body .sub-projects .sub-pills {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .universe .body .sub-projects .sub-pills span {
+    font-family: var(--mono); font-size: 11px;
+    padding: 4px 10px; border-radius: 999px;
+    background: color-mix(in srgb, var(--c) 8%, transparent);
+    color: var(--c);
+    border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
+  }
+
+  .universe .body .stack {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .universe .body .stack span {
+    font-family: var(--mono); font-size: 11px;
+    padding: 4px 9px; border-radius: 5px;
+    background: rgba(0,0,0,.04);
+    color: var(--fg-dim);
+    border: 1px solid rgba(0,0,0,.06);
+  }
+
+  .universe .body .footer-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0,0,0,.08);
+    gap: 16px;
+  }
+  .universe .body .progress {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 6px;
+    max-width: 240px;
+  }
+  .universe .body .progress .bar {
+    height: 4px; background: rgba(0,0,0,.06);
+    border-radius: 99px; overflow: hidden;
+    position: relative;
+  }
+  .universe .body .progress .bar > div {
+    height: 100%; background: var(--c); border-radius: 99px;
+  }
+  .universe .body .progress .label {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--fg-mute);
+    display: flex; justify-content: space-between;
+  }
+  .universe .body .progress .label b { color: var(--fg); font-weight: 500; }
+  .universe .body .cta {
+    padding: 12px 20px; border-radius: 999px;
+    background: var(--c); color: #fff;
+    font-size: 13px; font-weight: 500;
+    transition: transform .2s, box-shadow .2s;
+    display: inline-flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+  }
+  .universe:hover .body .cta {
+    transform: translateX(2px);
+    box-shadow: 0 8px 20px -8px var(--c);
+  }
+  .universe .body .cta::after {
+    content: '→'; transition: transform .25s;
+  }
+  .universe:hover .body .cta::after { transform: translateX(4px); }
+
+  @media (max-width: 980px) {
+    .universe .layout { grid-template-columns: 1fr; }
+    .universe.right .layout { direction: ltr; }
+    .universe .visual { min-height: 320px; }
+    .universe .body { padding: 40px 32px; }
+    .universe .body .footer-row { flex-direction: column; align-items: stretch; gap: 16px; }
+    .universe .body .progress { max-width: 100%; }
+  }
+</style>

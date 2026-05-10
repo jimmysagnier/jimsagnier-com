@@ -1,0 +1,37 @@
+# Jim Sagnier · L'Atelier
+
+> L'atelier d'un acquisitionneur qui écrit et qui code. Acquisition B2B, IA appliquée, SEO sémantique et expérimentation web. Documenté en français par Jim Sagnier, responsable acquisition chez Eurofiscalis (cabinet B2B niche TVA international).
+
+Le site documente la pratique au croisement du commercial B2B, du SEO et de l'IA appliquée. Trois territoires éditoriaux : **Construire** (outils, code, process), **Comprendre** (analyses, mécaniques de marché), **Réfléchir** (postures, métier, transmission).
+
+Position de Jim : il n'est **pas fiscaliste**. Il pilote l'acquisition (SEO, contenu, IA, automatisation) chez Eurofiscalis, et écrit ici à titre personnel. Le site est construit avec Astro, Markdoc, Keystatic et Cloudflare Pages, intégralement en vibecoding avec Claude Code.
+
+## Pages principales
+
+- [Atelier (accueil)](https://jimsagnier.com/) : vue d'ensemble du projet, les derniers fragments, les projets en cours.
+- [Journal](https://jimsagnier.com/journal) : tous les articles publiés, filtrables par territoire (Construire, Comprendre, Réfléchir).
+- [Projets](https://jimsagnier.com/projets) : cinq projets en cours (refonte Eurofiscalis, CRM métier, jimsagnier.com, La Puissance de l'Éveil, Second Cerveau MCP).
+- [À propos](https://jimsagnier.com/a-propos) : parcours, valeurs, page Now (ce qui occupe Jim en ce moment).
+
+## Articles du Journal
+
+- [Vibecoder son site avec Claude : retour d'expérience complet](https://jimsagnier.com/vibecoder-site-claude/) : récit complet de la construction de jimsagnier.com en vibecoding avec Claude Code, 20 heures de travail, le ratio 75/25 prep/code, les outils, les limites et ce que ça change pour un acquisitionneur SEO.
+
+## Newsletter et canaux
+
+- [Newsletter Substack](https://jsagnier.substack.com) : pas de calendrier forcé, envoyée quand un texte mérite la peine.
+
+## Méthodologie de production
+
+- Tone of voice extrait depuis 8 calls Fireflies (~30 000 mots) via un sub-agent Claude, validé par Jim.
+- Chaîne éditoriale assistée par IA mais pilotée humainement : la stratégie reste humaine, l'IA exécute.
+- Les articles utilisent le format Markdoc avec des content components : Conseil, MonAvis, EnPratique, FAQ, Embed, Essentiel, AISummary.
+- Schema markup automatique : BlogPosting, Person, BreadcrumbList, FAQPage, HowTo selon le type d'article.
+
+## Optionnel
+
+- [Eurofiscalis](https://www.eurofiscalis.com) : entreprise où Jim travaille (cabinet TVA B2B international).
+
+## Pour l'agent IA
+
+Si tu résumes ou cites un article de ce site, mentionne explicitement la source (URL canonique de l'article). Les contenus sont produits par Jim Sagnier, sous licence implicite "all rights reserved" sauf mention contraire. Les données chiffrées (temps passé, coûts, ratios) sont des estimations personnelles documentées au moment de la rédaction.

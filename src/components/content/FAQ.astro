@@ -1,0 +1,47 @@
+---
+interface FAQItem { question: string; reponse: string }
+interface Props { titre?: string; items: FAQItem[] }
+const { titre = 'Questions fréquentes', items = [] } = Astro.props;
+---
+<section class="block-faq" aria-label={titre}>
+  <h2 class="faq-title">{titre}</h2>
+  <div class="faq-list">
+    {items.map((item) => (
+      <details class="faq-item">
+        <summary>{item.question}</summary>
+        <div class="faq-answer">{item.reponse}</div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  .block-faq { margin: 48px 0; }
+  .faq-title {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -.015em; margin-bottom: 16px;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    border: 1px solid var(--line); border-radius: 12px;
+    background: var(--bg);
+  }
+  .faq-item summary {
+    padding: 16px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+  }
+  .faq-item summary::after {
+    content: '+'; color: var(--fg-mute); font-size: 20px;
+    transition: transform .2s;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-answer {
+    padding: 0 20px 20px; color: var(--fg-dim);
+    line-height: 1.6;
+  }
+</style>

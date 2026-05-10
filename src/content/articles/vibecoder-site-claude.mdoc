@@ -1,0 +1,250 @@
+---
+title: "Vibecoder son site avec Claude : retour d'expérience complet"
+territory: construire
+publishedAt: 2026-05-07
+summary: "Trois ratios qui changent tout, cinq outils qui marchent, et les limites honnêtes du vibecoding pour un acquisitionneur SEO qui code à côté."
+readingTime: 12
+tags:
+  - vibecoding
+  - Claude Code
+  - Astro
+  - Keystatic
+  - Markdoc
+  - SEO
+essentiel:
+  readingTime: "3 min · ou 12 min en entier"
+  sousTitre: "Les points essentiels."
+  items:
+    - "**jimsagnier.com construit en vibecoding avec Claude Code**, 20 heures de travail réparties sur dix jours."
+    - "**Stack** : Astro 6, Markdoc, Keystatic, Cloudflare Pages."
+    - "**Ratio 75/25** : 15 heures de préparation (design, tone of voice, brief) pour 5 heures de code."
+    - "**Coût marginal** : 1 €/mois pour le domaine, parce que l'abo Claude Code à 100 €/mois est déjà amorti sur d'autres projets pro et perso."
+    - "**Schema markup, FAQ et encarts EEAT** générés automatiquement par les content components Markdoc."
+    - "*Le copywriting reste l'étape la plus longue, même avec l'IA.*"
+    - "Pas une baguette magique : la **stratégie d'acquisition reste 100% humaine**."
+coverImage:
+  src: /images/jim-coding.webp
+  alt: Jim Sagnier devant son écran avec Claude Code ouvert sur le projet
+  caption: "L'atelier en train de tourner."
+seo:
+  title: "Vibecoder son site avec Claude : retour d'expérience complet"
+  description: "Récit complet de la construction de jimsagnier.com en vibecoding avec Claude Code. Process, choix techniques, leçons, et ce que ça change pour mon SEO."
+  schemaType: BlogPosting
+  noindex: false
+draft: true
+featured: true
+---
+
+[Le site que tu lis](/projets/jimsagnier-com) a été construit en vibecoding avec Claude Code. Pas un prototype, pas une maquette qu'on jette dans deux mois, la version qui tourne en production. J'y ai passé environ **20 heures de travail effectif**, dont 5 sur la mise en code et 15 en préparation. C'est ce ratio 75/25 qui résume mieux le vibecoding que tous les guides débutant ne te disent pas. Voilà le récit, les outils que j'utilise vraiment, les choix techniques, et surtout les leçons qui valent autant pour un dev junior que pour un acquisitionneur ou un marketeur qui code à côté.
+
+## Le résultat avant le process
+
+### Le site en chiffres
+
+Quatre pages publiées (accueil, journal, projets, à propos), un premier article en ligne (celui que tu lis), un panel d'admin Keystatic câblé, JSON-LD `WebSite` et `Person` injectés sitewide, breadcrumbs automatiques, Open Graph propre. Côté code : Astro 6, CSS artisanal sans framework, TypeScript strict. Hébergé sur Cloudflare Pages, déployé en deux clics depuis GitHub.
+
+Score Lighthouse à mesurer en finalisation, mais l'architecture est calibrée pour viser 95 et plus partout : preload des fonts, images dimensionnées, zéro JS inutile, pas de tracker.
+
+### Ce qui m'a surpris en bien
+
+La densité de ce qu'on peut produire en cinq heures quand le terrain est préparé. Pas du code à jeter, du code qui passe le linter, qui tient en TypeScript strict, et qui est cohérent d'un fichier à l'autre. L'agent ne perd pas le fil entre deux composants.
+
+Surtout : la première fois que la home s'est affichée avec mes mockups portés en Astro, j'ai eu un moment qui ne s'oublie pas.
+
+{% MonAvis sentiment="positif" %}
+Même quand tu as déjà généré des outils ou des SaaS internes au boulot, l'affichage de la première version d'un projet purement personnel, c'est incroyable. Il y a eu de l'itération pour ajuster, bien sûr. Mais le moment où ton idée prend forme à l'écran, sans intermédiaire, c'est ce qui fait revenir au prochain side project.
+{% /MonAvis %}
+
+### Ce qui m'a surpris en mal
+
+Le copywriting. On y reviendra plus bas, c'est l'étape qui ne raccourcit pas vraiment avec l'IA.
+
+Et un classique vibecoding : le cache Vite désynchronisé qui m'a fait croire pendant cinq minutes que tout le CSS de la home était cassé, alors qu'un `rm -rf .astro node_modules/.vite` réglait le problème. Petite anecdote à garder en mémoire pour ceux qui débutent.
+
+## Vibecoding, mot de l'année 2025 : pourquoi ça concerne tout le monde
+
+### La définition courte
+
+Le terme [vibecoding](https://en.wikipedia.org/wiki/Vibe_coding) a été inventé par Andrej Karpathy en février 2025. L'idée tient en une phrase : tu décris ce que tu veux à un agent IA en langage naturel, l'agent écrit le code, tu testes, tu ajustes. Tu ne lis pas chaque ligne. Tu pilotes par les vibes.
+
+Collins Dictionary l'a élu mot de l'année 2025. C'est dire à quel point la pratique a percé hors des cercles dev.
+
+### La différence avec un tutoriel IA classique
+
+Quand tu copies un prompt depuis un tutoriel ChatGPT, tu obtiens un bout de code. Tu le colles, tu lances, tu débugges si ça plante. Tu fais le travail d'intégration toi-même.
+
+En vibecoding avec Claude Code, l'agent tourne dans ton terminal. Il a accès aux fichiers, il peut lancer des commandes, il peut lire les erreurs et corriger lui-même. Tu ne lui demandes pas un bout de code, tu lui demandes un résultat. La différence est dans la boucle : Claude itère sans que tu copies-colles.
+
+C'est ça qui change la productivité, pas la génération brute. La capacité à enchaîner cinq étapes sans intervention manuelle.
+
+### Pourquoi Claude Code et pas un autre outil
+
+J'ai testé Cursor, j'ai testé Copilot, j'ai utilisé ChatGPT pendant des mois. Claude Code gagne sur trois points concrets pour mon usage :
+
+1. **L'agent autonome** est plus fiable que la complétion en ligne. Il ouvre les fichiers, modifie ce qu'il faut, lance les tests, corrige.
+2. **Les sub-agents et skills** permettent de cadrer son comportement par contexte : un sub-agent pour le design, un skill pour le SEO, un skill pour la rédaction.
+3. **Le MCP** (Model Context Protocol) ouvre l'accès à des données externes : mon vault Obsidian, Search Console, Sanity, GitHub. C'est pas un détail.
+
+Si tu n'as pas besoin de ça, d'autres outils suffisent largement. Pour ce que je fais au quotidien, Claude Code est l'outil que j'ai choisi.
+
+## Le vrai travail s'est joué avant le premier prompt
+
+15 heures sur 20. Trois quarts du temps, à zéro ligne de code. C'est le secret que peu de tutoriels racontent.
+
+### Le brief design
+
+Avant Astro, j'ai validé l'identité visuelle avec un agent design dédié. Je suis parti de plusieurs directions générées via Google Stitch, j'ai itéré sur les structures dans des fichiers HTML statiques, et j'ai validé une direction artistique nommée "Galerie Curatée v2" : light-first, éditorial, cyan signal pour les accents.
+
+Cinq mockups complets ont été produits avant qu'une seule ligne d'Astro n'existe : accueil, article, journal, projets, à propos. Ces mockups ont servi de cahier des charges visuel quand j'ai demandé à Claude de les porter en composants Astro.
+
+C'est aussi à cette étape que j'ai détouré les logos, optimisé les photos en WebP sous 70 Ko chacune, généré le set complet de favicons, défini la palette CSS variables.
+
+### Le tone of voice extrait depuis 8 calls Fireflies
+
+J'ai lancé un sub-agent Claude Opus sur 30 000 mots transcrits depuis huit calls Fireflies. L'objectif : extraire ma voix, mes mots fétiches, mes patterns de phrase, sans l'inventer ni la lisser.
+
+Le résultat : un tone of voice multi-blocs avec une voix de fond et cinq modulations selon le bloc d'article (BLUF, EEAT, anecdote, conclusion, voix générale). Quand l'IA rédige, elle ne sort plus du jus IA générique. Elle sort des phrases qui sonnent comme moi.
+
+Sans ce travail amont, le copy aurait été acceptable mais générique. C'est probablement l'heure investie qui a le plus de ROI sur le projet entier.
+
+### Le CLAUDE.md, mémoire externe du projet
+
+Le fichier `CLAUDE.md` à la racine du repo, c'est la mémoire externe que Claude charge à chaque session. Il y trouve : qui je suis, ce que je veux dire, ce que je ne veux pas, l'angle du site, la stack technique, la palette, les règles d'opération.
+
+Sans ce fichier, chaque conversation repart de zéro. Avec, Claude reprend exactement où il s'était arrêté. Le coût d'écriture de ce fichier (deux heures peut-être) se paie sur chaque session de la suite.
+
+{% Conseil titre="Investis avant de prompter" %}
+Avant ta première session de code, prends une journée pour écrire trois choses : ton brief design (au minimum un wireframe ou un mockup), un fichier CLAUDE.md qui décrit le projet, et ta voix éditoriale (ne serait-ce qu'une page sur ce que tu veux dire et comment). Ces trois artefacts feront gagner deux fois le temps qu'ils ont coûté à produire.
+{% /Conseil %}
+
+## Les 5 heures de code (après les 15 heures de prep)
+
+### Le ratio 75/25
+
+Trois quarts du temps en prep, un quart en code. C'est le ratio qui m'a surpris quand j'ai cumulé. Et c'est la grille qu'il faut avoir en tête avant de démarrer un projet vibecoding sérieux : si tu zappes la prep, tu paies dix fois en sessions de code décousues.
+
+### Heure 0, l'état du projet avant le premier prompt
+
+Le scaffold Astro de base était posé depuis l'achat du domaine, mais vide. À l'heure 0, j'avais : repo GitHub initialisé, Astro 6 scaffoldé en TypeScript strict, mockups HTML validés, palette CSS définie, photos optimisées, favicons générés, tone of voice écrit, CLAUDE.md à jour. Zéro composant, zéro page, zéro layout.
+
+### Heures 1 à 2, Astro, layouts, content collections, JSON-LD
+
+Premier prompt : porter le shell technique. [Astro](https://docs.astro.build) 6 avec content collections en mode glob loader, BaseLayout avec head meta complet (canonical, Open Graph, Twitter, favicons, manifest PWA), JSON-LD `WebSite` et `Person` injectés sitewide, helpers TypeScript pour les schemas markup (BlogPosting, BreadcrumbList, FAQPage, HowTo, CreativeWork).
+
+À la fin de la deuxième heure : la home renvoie un HTML 200 propre, sans contenu, mais avec toute l'infrastructure SEO en place.
+
+### Heures 2 à 3, Keystatic et content components Markdoc
+
+Installation de Keystatic avec `--legacy-peer-deps` (Astro 6 n'a pas encore de support officiel mais ça tourne). Schema défini en TypeScript : collections `articles` et `projets`, singleton `settings`, tous les champs SEO (seoTitle, metaDescription, ogImage, schemaType, noindex), images avec alt text obligatoire.
+
+Les content components ajoutés au markdoc.config : Conseil, MonAvis, EnPratique, FAQ, Embed, RawHTML. Six composants Astro stylés alignés sur la palette, avec rendu HTML qui peut nourrir le schema markup automatiquement.
+
+### Heures 3 à 4, port des 4 pages depuis les mockups
+
+Accueil, journal, projets, à propos. Chaque mockup HTML statique transformé en page Astro qui consomme les content collections, avec état vide géré (zéro article égale bloc CTA newsletter). Les sous-projets, les valeurs, le bloc Now, les anchor nav. Tout ce qui était dans le mockup est passé en Astro avec scoping des styles.
+
+### Heure 5, la home rend avec mes mockups
+
+Le moment décrit plus haut. Première fois que tout est en place, première vraie navigation entre les pages. Dix minutes à scroller dans tous les sens en souriant.
+
+## Les outils que j'utilise vraiment
+
+### Claude Code en mode agent
+
+L'agent autonome est le cœur du dispositif. Je décris ce que je veux, il s'occupe d'éditer les fichiers, lancer les commandes, lire les erreurs, corriger.
+
+Les **sub-agents** dispatchent des tâches isolées (un agent design pour générer une variante, un agent SEO pour analyser une SERP) sans polluer le contexte principal. Les **skills** sont des comportements documentés que j'invoque par commande slash : `/eurofiscalis-seo`, `/eurofiscalis-blog`, et bientôt un `/jimsagnier-write-article` pour ce blog.
+
+### Astro et Markdoc pour le contenu
+
+Astro 6 pour la structure et le rendu. Content collections en TypeScript strict pour la validation Zod du frontmatter. Markdoc pour l'écriture des articles, avec custom tags qui rendent des composants Astro stylés.
+
+### Keystatic comme CMS git-based
+
+Keystatic édite directement les fichiers Markdoc du repo. Pas de base de données, pas de compte, pas de service tiers. Le panel d'admin tourne en local sur `/keystatic` quand le dev server est ouvert. Quand on déploiera, on pourra le mettre en mode GitHub pour éditer depuis n'importe où.
+
+### MCP pour brancher mon Second Cerveau Obsidian
+
+Mon vault Obsidian (environ 600 notes accumulées sur dix ans) est piloté par Claude via un MCP. Je peux poser des questions à mes notes, ingérer des sources, lancer des audits sémantiques. Pour l'écriture d'un article, c'est un boost énorme : Claude a accès à mes décisions passées et à ma documentation interne.
+
+### Cloudflare Pages pour le déploiement
+
+Hébergement gratuit, build automatique sur push GitHub, edge network mondial, certificat SSL automatique. Zéro friction, zéro coût supplémentaire. Et depuis que Cloudflare a racheté Astro fin 2025, l'intégration est encore plus serrée.
+
+## Ce que ça change pour mon métier d'acquisitionneur
+
+C'est probablement la partie où le vibecoding fait la plus grande différence pour quelqu'un comme moi, qui n'est pas dev pur mais qui s'occupe d'acquisition au quotidien.
+
+### Vitesse d'itération sur les pages SEO
+
+Quand je veux tester une nouvelle structure de page (un nouveau type de cocon, un nouveau format d'article, un widget interactif), je passe d'idée à prototype en moins d'une heure. Avant, c'était une demande au dev, deux semaines d'attente, et un compromis. Maintenant, je teste, je mesure, j'itère.
+
+### Schema markup automatique via les content components
+
+Chaque encart Conseil, MonAvis ou FAQ ne sort pas seulement du HTML stylé. Il nourrit aussi le JSON-LD du schéma markup. Un article avec un bloc FAQ génère automatiquement le schema FAQPage. Un article tutoriel avec des étapes peut basculer en HowTo. Sans toucher au code à chaque article.
+
+### Pipeline contenu avec skills
+
+Le pipeline complet pour Eurofiscalis tourne déjà : un skill SEO qui produit le brief, un skill blog qui rédige, un skill publish qui pousse sur Sanity. Pour jimsagnier.com, c'est le même schéma, en plus simple : recherche SEO via skill, rédaction, dépôt direct dans Keystatic. Le coût marginal d'un nouvel article tombe à quelques minutes de pilotage humain.
+
+### Le solo developer qui rebuild tout, vraiment
+
+C'est le résultat le plus tangible : je peux refaire intégralement un site, son contenu, son SEO, sa stack technique, en deux semaines, sans déléguer. Pas en théorie. En pratique. C'est ce qu'on est en train de faire pour Eurofiscalis avec Max au dev, et c'est ce qui a permis ce site en 20 heures.
+
+## Les limites honnêtes
+
+### Le design ne sort pas tout seul
+
+Claude Code peut implémenter un design, il ne peut pas l'inventer. La direction artistique reste un travail humain, ou un travail spécialisé via Stitch ou un agent design dédié. Si tu attends que l'agent te sorte un site beau sans brief, tu auras un site générique.
+
+### La stratégie d'acquisition reste humaine
+
+L'IA peut produire des pages SEO. Elle ne peut pas définir la stratégie qui les justifie. Choisir l'angle, le territoire, le persona, le tunnel : ça reste 100% humain. Le code et le contenu sont l'exécution. La stratégie est ce qu'il y a en amont.
+
+### Le copywriting, l'étape qui reste la plus longue
+
+{% MonAvis sentiment="mitige" %}
+La partie texte reste l'étape la plus longue, même avec l'IA. Pour avoir un texte qui te ressemble, avec tes mots et ce que tu veux vraiment transmettre, ça demande beaucoup d'itération. C'est long. Mais il faut aussi se dire que rien n'est figé : tu lances, tu publies, et même si ce n'est pas parfait, ce n'est pas grave. Rien n'est gravé dans le marbre. Tu reviendras dessus.
+{% /MonAvis %}
+
+C'est probablement la limite la plus honnête à donner. La rapidité de Claude sur le code n'a aucun équivalent sur le texte qui doit sonner juste.
+
+### La revue critique du code généré
+
+Dernière limite : tu dois savoir lire le code que Claude produit. Pas forcément l'écrire, mais le lire et juger s'il est solide. Sans cette capacité, tu as un site qui marche aujourd'hui mais qui te lâchera dans six mois sans que tu comprennes pourquoi.
+
+## Combien ça coûte vraiment
+
+### Le coût brut
+
+12 dollars par an pour le domaine chez Cloudflare Registrar, et l'abo Claude Code à 100 euros par mois.
+
+### Si tu veux juste un site, des alternatives gratuites existent
+
+Il faut être honnête : si ton seul objectif est d'avoir un site personnel, des solutions gratuites ou peu chères font le job. Google Stitch génère des designs en quelques prompts, Google AI Studio te laisse expérimenter avec Gemini. Tu peux assembler ça avec un éditeur visuel et y arriver sans abonnement à trois chiffres.
+
+### Pourquoi je prends Claude Code malgré tout
+
+Je ne paye pas Claude Code pour faire ce site. Je paye Claude Code parce que je l'utilise au quotidien sur Eurofiscalis (refonte, pipeline éditorial, CRM métier, automatisation), sur mes projets perso, sur les coups de main que je donne à des projets indépendants. Le site est juste un projet de plus dans la liste.
+
+### Le coût marginal quand l'abo est déjà amorti
+
+Du coup, le coût marginal de jimsagnier.com tombe à 1 euro par mois. Juste le domaine. Le reste est déjà payé pour autre chose. C'est ce calcul qu'il faut faire avant de juger si l'abo en vaut la peine : tu amortis sur combien de projets ?
+
+## FAQ
+
+{% FAQ titre="Questions fréquentes" items=[
+  { question: "Faut-il savoir coder pour vibecoder son site ?", reponse: "Pas pour écrire le code, oui pour lire et juger ce que produit l'agent. Sans cette capacité de lecture critique, tu construis sur du sable. Si tu n'as jamais écrit une ligne de HTML ou JS, commence par un crash course de quelques heures avant de te lancer." },
+  { question: "Est-ce que ça remplace WordPress ou Webflow ?", reponse: "Pour un blog ou un site de contenu, oui : la stack Astro plus Keystatic plus Cloudflare est plus rapide, plus performante côté SEO, et plus durable techniquement. Pour un site qui demande beaucoup de plugins tiers ou l'écosystème WordPress, non, reste sur ce que tu connais." },
+  { question: "Le code généré est-il sécurisé ?", reponse: "Pas par défaut. Claude Code peut produire du code propre mais aussi introduire des failles si on lui donne mal le contexte. Tu dois auditer ce qui touche à l'authentification, aux formulaires publics, aux uploads de fichiers. Sur ce site, il n'y a quasiment rien de sensible donc le risque est minimal." },
+  { question: "Combien de temps faut-il vraiment pour un premier site live ?", reponse: "Si tu pars de zéro sans rien préparer, compte 30 à 50 heures pour un résultat correct. Si tu prépares un brief design solide, un tone of voice et un CLAUDE.md, tu peux descendre à 20 heures. Sans préparation, le code prend du temps à converger." },
+  { question: "Vibecoder ou apprendre à coder ?", reponse: "Les deux. Le vibecoding ne remplace pas la compréhension du code, il la complète. Tu pilotes mieux Claude quand tu sais ce que tu lui demandes. Si tu débutes, considère que le vibecoding accélère ton apprentissage plus qu'il ne le remplace." }
+] /%}
+
+## Pour finir
+
+Vingt heures, dont cinq de code. Un site complet en production, un CMS qui tourne, un panel d'admin pour les futurs articles, un schema markup propre, une stack technique que je peux maintenir seul. Voilà ce que le vibecoding a changé pour moi.
+
+Pas de magie : la prep reste 75% du travail, la stratégie reste humaine, le copywriting reste long. Mais dans la fenêtre où l'agent code à ta place, la productivité est sans équivalent. Et quand tu utilises déjà Claude Code pour ton métier, le coût marginal d'un side project tombe à zéro.
+
+C'est le premier article du Journal. D'autres viendront sur l'architecture technique, le pipeline éditorial, le CRM que je construis pour Eurofiscalis. Si ça t'intéresse, [le journal](/journal) est l'endroit où je le documenterai. Pour mon parcours et le contexte général, [c'est par là](/a-propos).

@@ -1,0 +1,29 @@
+---
+interface Props { titre?: string }
+const { titre = 'Mon conseil' } = Astro.props;
+---
+<aside class="block-eeat conseil" role="note">
+  <div class="block-head"><span class="ico" aria-hidden="true">◆</span><strong>{titre}</strong></div>
+  <div class="block-body"><slot /></div>
+</aside>
+
+<style>
+  .block-eeat {
+    margin: 32px 0;
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+  .block-eeat .block-head {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .block-eeat .block-head strong { font-weight: 500; }
+  .block-eeat .block-body :global(p) { margin: 0 0 12px; }
+  .block-eeat .block-body :global(p:last-child) { margin-bottom: 0; }
+</style>

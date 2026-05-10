@@ -1,0 +1,232 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getSiteSettings } from '../../lib/site';
+import { getProjects } from '../../lib/projects';
+import { creativeWorkNode } from '../../lib/schema';
+import type { UniverseProject } from '../../components/UniverseCard.astro';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props { project: UniverseProject }
+const { project } = Astro.props;
+const settings = getSiteSettings();
+const url = `${settings.baseUrl}/projets/${project.slug}`;
+
+// Adapter au format CollectionEntry attendu par creativeWorkNode
+const fakeEntry = {
+  data: {
+    title: project.title,
+    summary: project.summary,
+    status: project.status,
+    stack: project.stack ?? [],
+  },
+} as any;
+const schemaNodes = [creativeWorkNode({ projet: fakeEntry, url })];
+
+const breadcrumbs = [
+  { name: 'Atelier', url: settings.baseUrl },
+  { name: 'Projets', url: `${settings.baseUrl}/projets` },
+  { name: project.title, url },
+];
+---
+<BaseLayout
+  title={project.title}
+  description={`${project.title}, ${project.role ?? project.type}. Statut : ${project.status}.`}
+  active="projets"
+  breadcrumbs={breadcrumbs}
+  schemaNodes={schemaNodes}
+>
+  <header class={`detail-hero color-${project.color}`}>
+    <div class="inner">
+      <nav aria-label="Fil d'Ariane" class="breadcrumb">
+        <a href="/" class="home">Atelier</a>
+        <span class="sep">/</span>
+        <a href="/projets">Projets</a>
+        <span class="sep">/</span>
+        <span class="current">{project.title}</span>
+      </nav>
+      <div class="meta-row">
+        <span class="badge status">{project.status}</span>
+        <span class="badge type">{project.type}</span>
+        {project.year && <span class="badge year">{project.year}</span>}
+      </div>
+      <h1>{project.title}</h1>
+      {project.role && <p class="role-line">{project.role}</p>}
+      <p class="story" set:html={project.summary} />
+    </div>
+  </header>
+
+  <section class="detail-body">
+    <div class="grid">
+      <div class="col-main">
+        {project.subProjects && project.subProjects.length > 0 && (
+          <section class="block">
+            <h2>Sous-projets</h2>
+            <ul class="sub-list">
+              {project.subProjects.map((sp) => (
+                <li>
+                  <strong>{sp.title}</strong>
+                  {sp.description && <p>{sp.description}</p>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {project.stack && project.stack.length > 0 && (
+          <section class="block">
+            <h2>Stack technique</h2>
+            <div class="pills">
+              {project.stack.map((s) => <span>{s}</span>)}
+            </div>
+          </section>
+        )}
+      </div>
+
+      <aside class="col-aside">
+        {project.progress != null && (
+          <div class="aside-block">
+            <span class="aside-label">// progression</span>
+            <div class="bar"><div style={`width: ${project.progress}%`}></div></div>
+            <div class="bar-meta">
+              <span>{project.progressLabel ?? `${project.progress}%`}</span>
+              {project.progressTarget && <b>{project.progressTarget}</b>}
+            </div>
+          </div>
+        )}
+        <div class="aside-block">
+          <a href="/projets" class="back">← Retour aux projets</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .detail-hero {
+    --c: var(--accent);
+    --c-tint: rgba(6,182,212,0.04);
+    --c-strong: rgba(6,182,212,0.16);
+    border-bottom: 1px solid var(--line);
+    padding: 64px 48px;
+    background:
+      radial-gradient(circle at 20% 0%, var(--c-strong), transparent 40%),
+      var(--c-tint);
+  }
+  .detail-hero.color-warm   { --c: #FB923C; --c-tint: rgba(251,146,60,0.05); --c-strong: rgba(251,146,60,0.18); }
+  .detail-hero.color-purple { --c: #A78BFA; --c-tint: rgba(167,139,250,0.05); --c-strong: rgba(167,139,250,0.18); }
+  .detail-hero.color-green  { --c: #10B981; --c-tint: rgba(16,185,129,0.04); --c-strong: rgba(16,185,129,0.16); }
+  .detail-hero.color-pink   { --c: #EC4899; --c-tint: rgba(236,72,153,0.04); --c-strong: rgba(236,72,153,0.16); }
+
+  .detail-hero .inner {
+    max-width: var(--max-narrow); margin: 0 auto;
+  }
+  .detail-hero .breadcrumb {
+    padding: 0 0 18px 0; max-width: none;
+  }
+  .detail-hero .meta-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 18px;
+  }
+  .detail-hero .badge {
+    font-family: var(--mono); font-size: 11px;
+    padding: 4px 10px; border-radius: 6px;
+    letter-spacing: .06em; text-transform: uppercase; font-weight: 500;
+  }
+  .detail-hero .badge.status { background: var(--c); color: #fff; }
+  .detail-hero .badge.type { background: rgba(0,0,0,.04); color: var(--fg); border: 1px solid rgba(0,0,0,.08); }
+  .detail-hero .badge.year { background: transparent; color: var(--fg-mute); border: 1px solid var(--line); font-weight: 400; }
+  .detail-hero h1 {
+    font-size: clamp(36px, 4.4vw, 56px);
+    line-height: 1.05; letter-spacing: -.03em;
+    font-weight: 600;
+  }
+  .detail-hero .role-line {
+    font-family: var(--mono); font-size: 13px;
+    color: var(--c); letter-spacing: .04em; margin-top: 12px;
+  }
+  .detail-hero .story {
+    font-size: 17px; line-height: 1.65; color: var(--fg-dim);
+    margin-top: 18px; max-width: 60ch;
+  }
+  .detail-hero .story :global(strong) { color: var(--fg); font-weight: 500; }
+  .detail-hero .story :global(em) { color: var(--fg-dim); font-style: italic; }
+
+  .detail-body {
+    max-width: var(--max); margin: 0 auto;
+    padding: 48px 48px 96px;
+  }
+  .detail-body .grid {
+    display: grid; grid-template-columns: 1.6fr 1fr;
+    gap: 64px; align-items: start;
+  }
+  .col-main .block { margin-bottom: 48px; }
+  .col-main h2 {
+    font-size: 22px; letter-spacing: -.015em;
+    font-weight: 600; margin-bottom: 16px;
+  }
+  .sub-list {
+    list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;
+  }
+  .sub-list li {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 18px;
+    background: var(--bg);
+  }
+  .sub-list strong { font-weight: 500; }
+  .sub-list p {
+    color: var(--fg-dim); font-size: 14px; margin-top: 4px;
+  }
+  .pills {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .pills span {
+    font-family: var(--mono); font-size: 12px;
+    padding: 5px 12px; border-radius: 6px;
+    background: var(--bg-2); color: var(--fg-dim);
+    border: 1px solid var(--line);
+  }
+  .col-aside {
+    display: flex; flex-direction: column; gap: 24px;
+    position: sticky; top: 92px;
+  }
+  .aside-block {
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px; background: var(--bg);
+  }
+  .aside-label {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--fg-mute); letter-spacing: .1em;
+    display: block; margin-bottom: 12px;
+  }
+  .bar {
+    height: 4px; background: var(--bg-2);
+    border-radius: 99px; overflow: hidden;
+  }
+  .bar > div {
+    height: 100%; background: var(--accent); border-radius: 99px;
+  }
+  .bar-meta {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--fg-mute); margin-top: 8px;
+  }
+  .bar-meta b { color: var(--fg); font-weight: 500; }
+  .back {
+    color: var(--fg-dim); font-size: 14px;
+    transition: color .2s;
+  }
+  .back:hover { color: var(--fg); }
+
+  @media (max-width: 980px) {
+    .detail-hero { padding: 48px 24px; }
+    .detail-body { padding: 32px 24px 64px; }
+    .detail-body .grid { grid-template-columns: 1fr; gap: 32px; }
+    .col-aside { position: static; }
+  }
+</style>

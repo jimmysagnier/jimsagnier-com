@@ -1,0 +1,394 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getSiteSettings } from '../../lib/site';
+
+const settings = getSiteSettings();
+const isDev = import.meta.env.DEV;
+
+const allArticles = await getCollection('articles', ({ data }) =>
+  isDev ? true : !data.draft
+);
+allArticles.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const counts = {
+  total: allArticles.length,
+  construire: allArticles.filter((a) => a.data.territory === 'construire').length,
+  comprendre: allArticles.filter((a) => a.data.territory === 'comprendre').length,
+  reflechir: allArticles.filter((a) => a.data.territory === 'reflechir').length,
+};
+
+const featured = allArticles.find((a) => a.data.featured) ?? null;
+const others = featured
+  ? allArticles.filter((a) => a.id !== featured.id)
+  : allArticles;
+
+const breadcrumbs = [
+  { name: 'Atelier', url: settings.baseUrl },
+  { name: 'Journal', url: `${settings.baseUrl}/journal` },
+];
+
+const territoryLabels = {
+  construire: 'Construire',
+  comprendre: 'Comprendre',
+  reflechir: 'Réfléchir',
+} as const;
+
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+<BaseLayout
+  title="Journal"
+  description="Le journal de Jim Sagnier : articles longs sur le commercial B2B, l'IA appliquée, le SEO et l'expérimentation web."
+  active="journal"
+  breadcrumbs={breadcrumbs}
+>
+  <header class="page-head">
+    <div class="text">
+      <nav aria-label="Fil d'Ariane" class="breadcrumb">
+        <a href="/" class="home">Atelier</a>
+        <span class="sep">/</span>
+        <span class="current">Journal</span>
+      </nav>
+      <span class="kicker">// Journal</span>
+      <h1>Je réfléchis mieux<br/>en <span class="accent">écrivant.</span></h1>
+      <p class="sub">Commercial B2B, IA appliquée, SEO, expérimentation web. J'écris quand j'ai vraiment quelque chose à dire, pas avant. Trois territoires : <b>construire</b>, <b>comprendre</b>, <b>réfléchir</b>.</p>
+      <div class="stats">
+        <span><b>3</b> territoires</span>
+        <span>·</span>
+        <span>écrit en <b>français</b></span>
+      </div>
+    </div>
+    <div class="visual" aria-hidden="true">
+      <span class="badge">L'atelier en mots</span>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div class="inner">
+      <div class="pills" role="tablist">
+        <button class="active" data-filter="all">Tous <span class="count">{counts.total}</span></button>
+        <button data-filter="construire">Construire <span class="count">{counts.construire}</span></button>
+        <button data-filter="comprendre">Comprendre <span class="count">{counts.comprendre}</span></button>
+        <button data-filter="reflechir">Réfléchir <span class="count">{counts.reflechir}</span></button>
+      </div>
+    </div>
+  </div>
+
+  {allArticles.length === 0 ? (
+    <section class="empty-state">
+      <div class="empty-inner">
+        <span class="empty-mono">// 0 articles pour l'instant</span>
+        <p class="empty-msg">Le premier article est en cours.<br/>La newsletter, c'est le moyen le plus sûr de ne pas le rater.</p>
+        <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="btn primary">S'abonner sur Substack →</a>
+      </div>
+    </section>
+  ) : (
+    <>
+      {featured && (
+        <section class="featured">
+          <a href={`/${featured.id}`} class="featured-card">
+            <div class="img">
+              <span class="badge">★ À la une</span>
+            </div>
+            <div class="body">
+              <span class={`terr-tag ${featured.data.territory}`}>{territoryLabels[featured.data.territory]}</span>
+              <h2>{featured.data.title}</h2>
+              <p>{featured.data.summary}</p>
+              <div class="meta">
+                <span><b>{dateFormatter.format(featured.data.publishedAt).toUpperCase()}</b></span>
+              </div>
+              <span class="read">Lire l'article →</span>
+            </div>
+          </a>
+        </section>
+      )}
+
+      <section class="grid-section">
+        <div class="grid">
+          {others.map((article) => (
+            <a class={`article-card ${article.data.territory}`} data-territory={article.data.territory} href={`/${article.id}`}>
+              <div class="cover"></div>
+              <div class="body">
+                <span class={`terr-tag ${article.data.territory}`}>{territoryLabels[article.data.territory]}</span>
+                <h3>{article.data.title}</h3>
+                <p>{article.data.summary}</p>
+                <div class="meta">
+                  <span>{dateFormatter.format(article.data.publishedAt).toUpperCase()}</span>
+                  <span class="read">Lire <span>→</span></span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </>
+  )}
+
+  <section class="cta" id="newsletter">
+    <div class="cta-card">
+      <h2>Reçois les fragments<br/>directement dans ta boîte.</h2>
+      <div class="right">
+        <p>Une newsletter du Journal, sans calendrier forcé. Quand un texte mérite la peine, je l'envoie. Pas avant.</p>
+        <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="substack-cta">S'abonner sur Substack →</a>
+        <div class="meta-line">Substack · désabonnement en 1 clic · 0 spam</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLButtonElement>('.filters .pills button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filters .pills button').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll<HTMLAnchorElement>('.article-card').forEach((card) => {
+          const t = card.dataset.territory;
+          card.style.display = !filter || filter === 'all' || t === filter ? '' : 'none';
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .page-head {
+    max-width: var(--max); margin: 0 auto;
+    padding: 64px 48px 56px;
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 56px; align-items: center;
+  }
+  .page-head .visual {
+    aspect-ratio: 4/5;
+    border-radius: 20px; overflow: hidden;
+    background-color: var(--bg-3);
+    background-size: cover; background-position: center;
+    background-image: image-set(
+      url("/images/jim-explaining.webp") type("image/webp"),
+      url("/images/jim-explaining.jpg") type("image/jpeg")
+    );
+    box-shadow: 0 30px 60px -25px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
+    position: relative;
+    transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .page-head .visual:hover { transform: translateY(-4px) rotate(-.4deg); }
+  .page-head .visual .badge {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(0,0,0,.4); backdrop-filter: blur(10px);
+    color: white; font-family: var(--mono); font-size: 11px;
+    padding: 5px 11px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    letter-spacing: .04em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .page-head .visual .badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 1.8s infinite;
+  }
+  .page-head .breadcrumb { padding: 0 0 16px 0; margin: 0; }
+  .page-head .kicker { display: inline-block; }
+  .page-head h1 {
+    font-size: clamp(44px, 5.4vw, 64px);
+    line-height: 1.02; letter-spacing: -.035em;
+    font-weight: 600; margin-top: 12px;
+  }
+  .page-head h1 .accent {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic; font-weight: 500;
+  }
+  .page-head .sub {
+    font-size: 17px; line-height: 1.55; color: var(--fg-dim);
+    max-width: 56ch; margin-top: 18px;
+  }
+  .page-head .stats {
+    margin-top: 22px;
+    display: flex; gap: 18px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute); letter-spacing: .04em;
+  }
+  .page-head .stats b { color: var(--fg); font-weight: 500; font-size: 14px; }
+
+  .filters {
+    position: sticky; top: 67px; z-index: 40;
+    background: rgba(250,250,250,.85);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 48px;
+    margin-bottom: 48px;
+  }
+  .filters .inner {
+    max-width: var(--max); margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .filters .pills {
+    display: flex; gap: 6px;
+    background: var(--bg-2); padding: 4px;
+    border-radius: 999px; border: 1px solid var(--line);
+  }
+  .filters .pills button {
+    padding: 8px 16px; border-radius: 999px;
+    background: transparent; border: 0;
+    color: var(--fg-dim); font-size: 13px; font-family: inherit;
+    cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .filters .pills button:hover { color: var(--fg); }
+  .filters .pills button.active {
+    background: var(--bg); color: var(--fg);
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .filters .pills button .count {
+    font-family: var(--mono); font-size: 11px;
+    padding: 2px 6px; border-radius: 4px;
+    background: var(--bg-3); color: var(--fg-mute);
+  }
+  .filters .pills button.active .count {
+    background: var(--accent); color: #0F172A;
+  }
+
+  .empty-state {
+    max-width: var(--max); margin: 0 auto;
+    padding: 80px 48px 96px;
+    display: flex; justify-content: center;
+  }
+  .empty-inner {
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    max-width: 480px;
+    padding: 64px 48px;
+    border: 1px dashed var(--line);
+    border-radius: 24px;
+    background: var(--bg-2);
+  }
+  .empty-mono {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute); letter-spacing: .1em;
+  }
+  .empty-msg {
+    font-size: 17px; line-height: 1.6; color: var(--fg-dim);
+  }
+
+  section.featured {
+    max-width: var(--max); margin: 0 auto 64px;
+    padding: 0 48px;
+  }
+  .featured-card {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    border: 1px solid var(--line); border-radius: 24px;
+    overflow: hidden; background: var(--bg);
+    transition: transform .35s, box-shadow .35s, border-color .35s;
+  }
+  .featured-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px -25px rgba(0,0,0,.14);
+    border-color: var(--fg-mute);
+  }
+  .featured-card .img {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #18181B, var(--accent));
+    position: relative;
+  }
+  .featured-card .img::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 25% 30%, rgba(255,255,255,.18), transparent 50%);
+  }
+  .featured-card .img .badge {
+    position: absolute; top: 18px; left: 18px;
+    background: rgba(255,255,255,.16);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px; border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; color: white;
+    border: 1px solid rgba(255,255,255,.2);
+    letter-spacing: .04em;
+  }
+  .featured-card .body {
+    padding: 56px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .featured-card .body h2 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    letter-spacing: -.025em; font-weight: 600; line-height: 1.15;
+    margin-top: 14px;
+  }
+  .featured-card .body p {
+    color: var(--fg-dim); font-size: 16px; line-height: 1.6;
+    margin-top: 16px;
+  }
+  .featured-card .body .meta {
+    display: flex; gap: 16px; margin-top: 28px;
+    font-size: 13px; color: var(--fg-mute);
+    font-family: var(--mono); letter-spacing: .04em;
+  }
+  .featured-card .body .read {
+    margin-top: 20px;
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--accent); font-weight: 500; font-size: 14px;
+    transition: gap .2s;
+  }
+  .featured-card:hover .body .read { gap: 12px; }
+
+  section.grid-section {
+    max-width: var(--max); margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  section.cta { padding: 96px 48px; }
+  .cta-card {
+    max-width: var(--max); margin: 0 auto;
+    background: var(--fg); color: var(--bg);
+    border-radius: 28px; padding: 72px 64px;
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 64px;
+    align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: ''; position: absolute; right: -120px; top: -120px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,182,212,.5), transparent 70%);
+    filter: blur(50px);
+  }
+  .cta-card h2 {
+    font-size: 44px; letter-spacing: -.03em; line-height: 1.05;
+    font-weight: 600; position: relative;
+  }
+  .cta-card .right { position: relative; }
+  .cta-card p { color: rgba(250,250,250,.72); font-size: 16px; line-height: 1.6; }
+  .cta-card .substack-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #0F172A;
+    padding: 12px 24px; border-radius: 999px;
+    font-weight: 500; font-size: 14px;
+    text-decoration: none; margin-top: 20px;
+    transition: transform .2s;
+  }
+  .cta-card .substack-cta:hover { transform: translateY(-1px); }
+  .cta-card .meta-line {
+    margin-top: 14px; font-family: var(--mono); font-size: 12px;
+    color: rgba(250,250,250,.5);
+  }
+
+  @media (max-width: 900px) {
+    .page-head { grid-template-columns: 1fr; gap: 32px; padding: 48px 24px; }
+    .page-head .visual { max-width: 240px; }
+    .filters { padding: 12px 24px; }
+    .featured-card { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    section.featured, section.grid-section { padding-left: 24px; padding-right: 24px; }
+    section.cta { padding: 48px 24px; }
+    .cta-card { grid-template-columns: 1fr; padding: 48px 32px; }
+  }
+</style>

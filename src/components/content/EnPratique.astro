@@ -1,0 +1,13 @@
+---
+interface Props { titre?: string }
+const { titre = 'En pratique' } = Astro.props;
+---
+<aside class="block-eeat enpratique" role="note">
+  <div class="block-head"><span class="ico" aria-hidden="true">▸</span><strong>{titre}</strong></div>
+  <div class="block-body"><slot /></div>
+</aside>
+
+<style>
+  .enpratique { border-left-color: var(--green); background: color-mix(in srgb, var(--green) 4%, transparent); }
+  .enpratique .block-head { color: var(--green); }
+</style>

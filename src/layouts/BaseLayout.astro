@@ -1,0 +1,129 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteSettings } from '../lib/site';
+import {
+  websiteNode,
+  personNode,
+  breadcrumbNode,
+  serializeGraph,
+  type SchemaNode,
+} from '../lib/schema';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  canonical?: string;
+  active?: 'atelier' | 'journal' | 'projets' | 'a-propos';
+  /** Page-specific JSON-LD nodes (e.g. BlogPosting, CreativeWork). */
+  schemaNodes?: SchemaNode[];
+  /** Optional breadcrumb trail — auto-emits BreadcrumbList. */
+  breadcrumbs?: { name: string; url: string }[];
+}
+
+const settings = getSiteSettings();
+
+const {
+  title,
+  description,
+  ogImage,
+  noindex = false,
+  canonical,
+  active,
+  schemaNodes = [],
+  breadcrumbs,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${settings.title}` : settings.title;
+const pageDescription = description ?? settings.description;
+const pageUrl = canonical ?? new URL(Astro.url.pathname, settings.baseUrl).toString();
+const pageOgImage =
+  ogImage ?? settings.defaultOgImage ?? `${settings.baseUrl}/images/jim-coding.webp`;
+
+// JSON-LD graph: WebSite + Person sitewide, + breadcrumbs si fournis, + nodes spécifiques
+const graphNodes = [
+  websiteNode(),
+  personNode(),
+  ...(breadcrumbs && breadcrumbs.length > 0 ? [breadcrumbNode(breadcrumbs)] : []),
+  ...schemaNodes,
+];
+const jsonLd = serializeGraph(graphNodes);
+---
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <link rel="canonical" href={pageUrl} />
+  {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+  {/* Favicons */}
+  <link rel="icon" href="/favicons/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicons/favicon-16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#06B6D4" />
+
+  {/* Fonts : preconnect + preload du critical Inter pour LCP */}
+  <link rel="preconnect" href="https://rsms.me" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="preload"
+    href="https://rsms.me/inter/font-files/InterVariable.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  </noscript>
+
+  {/* Sitemap + llms.txt */}
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="Pour les agents IA" />
+
+  {/* View Transitions (SPA-like navigation) */}
+  <ClientRouter />
+
+  {/* Open Graph */}
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content={settings.title} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:url" content={pageUrl} />
+  <meta property="og:image" content={pageOgImage} />
+
+  {/* Twitter */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+  <meta name="twitter:image" content={pageOgImage} />
+
+  {/* JSON-LD */}
+  <script type="application/ld+json" set:html={jsonLd} />
+
+  <slot name="head" />
+</head>
+<body>
+  <Nav active={active} />
+  <main id="contenu">
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

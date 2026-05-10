@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import UniverseCard from '../../components/UniverseCard.astro';
+import { getSiteSettings } from '../../lib/site';
+import { getProjects } from '../../lib/projects';
+
+const settings = getSiteSettings();
+const projects = await getProjects();
+
+const breadcrumbs = [
+  { name: 'Atelier', url: settings.baseUrl },
+  { name: 'Projets', url: `${settings.baseUrl}/projets` },
+];
+---
+<BaseLayout
+  title="Projets"
+  description="Les projets en cours de Jim Sagnier : Eurofiscalis, jimsagnier.com, La Puissance de l'Éveil, Second Cerveau MCP, CRM métier."
+  active="projets"
+  breadcrumbs={breadcrumbs}
+>
+  <header class="page-head">
+    <nav aria-label="Fil d'Ariane" class="breadcrumb">
+      <a href="/" class="home">Atelier</a>
+      <span class="sep">/</span>
+      <span class="current">Projets</span>
+    </nav>
+    <span class="kicker">// Projets · Mes mini-univers</span>
+    <h1>Ce sur quoi<br/>je passe mon <span class="accent">temps.</span></h1>
+    <p class="lede">
+      Tout ce qui m'occupe, chez Eurofiscalis, en perso, et les coups de main aux indépendants. Chaque projet a sa <strong>couleur</strong>, son <strong>histoire</strong>, son <strong>rythme</strong>. Pas de portfolio de freelance, pas de side-hustle déguisé : juste ce qui me tient, transparent.
+    </p>
+  </header>
+
+  <div class="anchor-nav">
+    <div class="inner">
+      <span class="lbl">Naviguer</span>
+      <div class="links">
+        <a href="#actifs" class="active">En cours <span class="count">{projects.length}</span></a>
+      </div>
+      <span class="meta"><b>{projects.length}</b> projets actifs aujourd'hui</span>
+    </div>
+  </div>
+
+  <div class="section-heading" id="actifs">
+    <span class="kicker">// 01 · Actifs</span>
+    <h2>En cours.</h2>
+    <p class="desc">Mini-univers qui m'occupent en parallèle. Chacun a son rythme, sa couleur, et son rôle dans ce que je suis en train d'apprendre.</p>
+  </div>
+
+  <div class="active-list">
+    {projects.map((p, i) => (
+      <UniverseCard project={p} position={i % 2 === 1 ? 'right' : 'left'} />
+    ))}
+  </div>
+
+  <section class="contribute">
+    <div class="contribute-card">
+      <h2>Reçois les fragments<br/>directement dans ta boîte.</h2>
+      <div>
+        <p>Une newsletter du Journal, sans calendrier forcé. Quand un texte mérite la peine, je l'envoie. Pas avant.</p>
+        <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="substack-cta">S'abonner sur Substack →</a>
+        <div class="meta-line">Substack · désabonnement en 1 clic · 0 spam</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    max-width: var(--max); margin: 0 auto;
+    padding: 80px 48px 56px;
+  }
+  .page-head h1 {
+    font-size: clamp(48px, 6vw, 76px);
+    line-height: 1; letter-spacing: -.035em;
+    font-weight: 600; margin-top: 16px;
+  }
+  .page-head h1 .accent {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic; font-weight: 500;
+  }
+  .page-head .lede {
+    font-size: 18px; line-height: 1.6; color: var(--fg-dim);
+    max-width: 60ch; margin-top: 22px;
+  }
+  .page-head .lede strong { color: var(--fg); font-weight: 500; }
+
+  .anchor-nav {
+    position: sticky; top: 67px; z-index: 40;
+    background: rgba(250,250,250,.85);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 48px;
+  }
+  .anchor-nav .inner {
+    max-width: var(--max); margin: 0 auto;
+    display: flex; align-items: center; gap: 24px;
+    font-size: 13px;
+  }
+  .anchor-nav .lbl {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--fg-mute); letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .anchor-nav .links { display: flex; gap: 18px; align-items: center; }
+  .anchor-nav .links a {
+    color: var(--fg-dim); transition: color .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .anchor-nav .links a:hover, .anchor-nav .links a.active { color: var(--fg); }
+  .anchor-nav .links a .count {
+    font-family: var(--mono); font-size: 11px;
+    padding: 2px 7px; border-radius: 4px;
+    background: var(--bg-2); color: var(--fg-mute);
+    border: 1px solid var(--line);
+  }
+  .anchor-nav .links a.active .count {
+    background: var(--accent); color: #0F172A; border-color: var(--accent);
+  }
+  .anchor-nav .meta {
+    margin-left: auto;
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .anchor-nav .meta::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 1.8s infinite;
+  }
+  .anchor-nav .meta b { color: var(--fg); font-weight: 500; }
+
+  .section-heading {
+    max-width: var(--max); margin: 0 auto;
+    padding: 80px 48px 32px;
+  }
+  .section-heading .kicker { display: inline-block; }
+  .section-heading h2 {
+    font-size: clamp(32px, 4vw, 44px);
+    letter-spacing: -.025em; font-weight: 600;
+    line-height: 1.1; margin-top: 12px;
+  }
+  .section-heading .desc {
+    font-size: 16px; color: var(--fg-dim); margin-top: 12px;
+    max-width: 52ch; line-height: 1.6;
+  }
+
+  .active-list {
+    max-width: var(--max); margin: 0 auto;
+    padding: 0 48px;
+    display: flex; flex-direction: column;
+    gap: 32px;
+  }
+
+  .contribute {
+    max-width: var(--max); margin: 0 auto;
+    padding: 96px 48px;
+  }
+  .contribute-card {
+    background: var(--fg); color: var(--bg);
+    border-radius: 24px;
+    padding: 56px 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .contribute-card::before {
+    content: ''; position: absolute; right: -120px; bottom: -120px;
+    width: 380px; height: 380px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,182,212,.45), transparent 70%);
+    filter: blur(50px);
+  }
+  .contribute-card h2 {
+    font-size: clamp(26px, 3vw, 36px); letter-spacing: -.025em;
+    line-height: 1.15; font-weight: 600; position: relative;
+  }
+  .contribute-card p {
+    color: rgba(250,250,250,.7); font-size: 15px; line-height: 1.6;
+    position: relative;
+  }
+  .contribute-card .substack-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #0F172A;
+    padding: 12px 24px; border-radius: 999px;
+    font-weight: 500; font-size: 14px;
+    text-decoration: none; margin-top: 20px;
+    transition: transform .2s; position: relative;
+  }
+  .contribute-card .substack-cta:hover { transform: translateY(-1px); }
+  .contribute-card .meta-line {
+    margin-top: 14px; font-family: var(--mono); font-size: 12px;
+    color: rgba(250,250,250,.5); position: relative;
+  }
+
+  @media (max-width: 980px) {
+    .contribute-card { grid-template-columns: 1fr; padding: 40px 28px; }
+    .page-head, .anchor-nav, .section-heading, .active-list, .contribute {
+      padding-left: 24px; padding-right: 24px;
+    }
+    .anchor-nav .meta { display: none; }
+  }
+</style>

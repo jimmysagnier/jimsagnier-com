@@ -1,0 +1,16 @@
+# robots.txt for jimsagnier.com
+# https://jimsagnier.com — L'Atelier de Jim Sagnier
+
+User-agent: *
+Allow: /
+
+# Bloquer le panel d'admin Keystatic et les routes API
+Disallow: /keystatic
+Disallow: /keystatic/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://jimsagnier.com/sitemap-index.xml
+
+# llms.txt (convention pour les agents IA)
+# https://jimsagnier.com/llms.txt

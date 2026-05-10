@@ -1,0 +1,20 @@
+---
+type NavKey = 'atelier' | 'journal' | 'projets' | 'a-propos';
+interface Props { active?: NavKey }
+const { active } = Astro.props;
+---
+<nav class="site" aria-label="Navigation principale">
+  <a href="/" class="brand">
+    <span class="avatar" aria-hidden="true"></span>
+    Jim Sagnier
+  </a>
+  <ul>
+    <li><a href="/" aria-current={active === 'atelier' ? 'page' : undefined}>Atelier</a></li>
+    <li><a href="/journal" aria-current={active === 'journal' ? 'page' : undefined}>Journal</a></li>
+    <li><a href="/projets" aria-current={active === 'projets' ? 'page' : undefined}>Projets</a></li>
+    <li><a href="/a-propos" aria-current={active === 'a-propos' ? 'page' : undefined}>À propos</a></li>
+  </ul>
+  <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="cta">
+    Newsletter →
+  </a>
+</nav>

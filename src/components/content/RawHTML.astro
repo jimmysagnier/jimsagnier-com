@@ -1,0 +1,9 @@
+---
+interface Props { html: string }
+const { html } = Astro.props;
+---
+<div class="block-raw" set:html={html}></div>
+
+<style>
+  .block-raw { margin: 32px 0; }
+</style>

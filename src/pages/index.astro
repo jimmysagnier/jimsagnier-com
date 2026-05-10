@@ -1,17 +1,658 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
+const isDev = import.meta.env.DEV;
+const allArticles = await getCollection('articles', ({ data }) => isDev ? true : !data.draft);
+allArticles.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+const recentArticles = allArticles.slice(0, 3);
+
+const territoryLabels = {
+  construire: 'Construire',
+  comprendre: 'Comprendre',
+  reflechir: 'Réfléchir',
+} as const;
+
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
+interface ProjectPreview {
+  slug: string;
+  color: 'cyan' | 'warm' | 'purple' | 'green' | 'pink';
+  badge: string;
+  badgeKind?: 'work' | 'help' | 'shipped';
+  year: string;
+  title: string;
+  summary: string;
+  stack: string[];
+}
+
+const projectsPreview: ProjectPreview[] = [
+  {
+    slug: 'eurofiscalis-refonte',
+    color: 'cyan',
+    badge: 'work · live',
+    badgeKind: 'work',
+    year: '2026',
+    title: 'Eurofiscalis, refonte complète',
+    summary: `Refonte du site corporate (15 pays, 7 templates) et pipeline éditorial assisté par IA. Astro + Sanity + skills Claude.`,
+    stack: ['astro', 'sanity', 'cloudflare', 'claude-skills'],
+  },
+  {
+    slug: 'jimsagnier-com',
+    color: 'warm',
+    badge: 'perso · live',
+    year: '2026',
+    title: 'jimsagnier.com',
+    summary: `Ce site. Atelier ouvert : Astro hybride, CSS artisanal, pas de framework, déployé sur Cloudflare Pages. Le code est public.`,
+    stack: ['astro', 'css', 'cloudflare'],
+  },
+  {
+    slug: 'la-puissance-de-leveil',
+    color: 'purple',
+    badge: 'coup de main · live',
+    badgeKind: 'help',
+    year: '2025–26',
+    title: `La Puissance de l'Éveil`,
+    summary: `Site personnel d'Eva Naudet, coach holistique. HTML pur, fonts variables, AVIF, zéro framework, le craft à l'os, pour une amie.`,
+    stack: ['html', 'css', 'craft'],
+  },
+  {
+    slug: 'second-cerveau-mcp',
+    color: 'green',
+    badge: 'outil · live',
+    year: '2025–26',
+    title: 'Second Cerveau MCP',
+    summary: `Vault Obsidian piloté par Claude via MCP. Ingestion de sources, lint sémantique, queries citées. Mon mémoire-mémoire.`,
+    stack: ['obsidian', 'mcp', 'claude'],
+  },
+];
 ---
+<BaseLayout
+  active="atelier"
+  title="L'atelier"
+  description="L'atelier de Jim Sagnier : responsable acquisition Eurofiscalis, vibecodeur, coup de main aux indépendants. Acquisition B2B, IA, SEO et expérimentation web."
+>
+  <section class="hero">
+    <div>
+      <span class="label">L'atelier est ouvert · 5 projets en cours</span>
+      <div class="kicker">SEO · Acquisition · IA</div>
+      <h1>L'atelier de <span class="accent">Jim.</span></h1>
+      <div class="roles" id="hero-roles">
+        <span class="primary">Acquisition B2B</span>
+        <span>SEO</span>
+        <span>IA appliquée</span>
+        <span>Web</span>
+      </div>
+      <p>Je suis le SEO derrière <strong>Eurofiscalis</strong>, une niche B2B qui m'a appris à construire vraiment. À côté, je vibecode des outils, je monte des projets perso, et je donne un coup de main à des projets qui me touchent. Ici, je partage mes trucs, mes tests, mes réflexions et mes doutes sur le SEO, l'acquisition B2B et l'IA sur le terrain.</p>
+      <div class="actions">
+        <a href="/journal" class="primary">Lire le journal →</a>
+        <a href="/projets">Voir les projets</a>
+      </div>
+    </div>
+    <div class="portrait">
+      <span class="badge"><span class="live"></span> Lyon · disponible</span>
+      <div class="frame"></div>
+      <div class="caption">
+        <span>Atelier · <b>Claude Code</b> + design</span>
+        <span>2026</span>
+      </div>
+    </div>
+  </section>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <div class="strip">
+    <div class="inner">
+      <div class="stat">
+        <div class="num" data-c="120">0<span class="small">+</span></div>
+        <div class="lbl"><b>articles publiés</b> sur le site Eurofiscalis depuis que je m'occupe de l'acquisition</div>
+      </div>
+      <div class="stat">
+        <div class="num"><span class="small" style="margin-left: 0; margin-right: 4px;">×</span><span data-c="16">0</span></div>
+        <div class="lbl"><b>le trafic organique</b> d'Eurofiscalis en 4 ans, de 60 000 à 1 million de visites</div>
+      </div>
+      <div class="stat">
+        <div class="num" data-c="5">0</div>
+        <div class="lbl"><b>projets en cours</b> entre Eurofiscalis et les projets perso/coup de main</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="journal">
+    <div class="section-head">
+      <div>
+        <h2>Derniers fragments</h2>
+        <div class="sub">Trois territoires : <b>construire</b>, <b>comprendre</b>, <b>réfléchir</b>.</div>
+      </div>
+      <a class="all" href="/journal">Tout le journal →</a>
+    </div>
+
+    {recentArticles.length === 0 ? (
+      <div class="empty-articles">
+        <span class="empty-mono">// les premiers fragments arrivent</span>
+        <p>Le journal sera nourri en continu. Pour ne rien rater, <a href="https://jsagnier.substack.com" target="_blank" rel="noopener">abonne-toi à la newsletter</a>.</p>
+      </div>
+    ) : (
+      <div class="grid-articles">
+        {recentArticles.map((article) => (
+          <a class={`article-card ${article.data.territory}`} href={`/${article.id}`}>
+            <div class="cover"></div>
+            <div class="body">
+              <span class={`terr-tag ${article.data.territory}`}>{territoryLabels[article.data.territory]}</span>
+              <h3>{article.data.title}</h3>
+              <p>{article.data.summary}</p>
+              <div class="meta">
+                <span>{dateFormatter.format(article.data.publishedAt).toUpperCase()}</span>
+                <span class="read">Lire <span>→</span></span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section class="now">
+    <div class="section-head">
+      <div>
+        <h2>En ce moment</h2>
+        <div class="sub">Mis à jour le 28 avril 2026.</div>
+      </div>
+      <a class="all" href="/a-propos#now">Voir tout →</a>
+    </div>
+    <div class="now-grid">
+      <div class="now-card">
+        <div class="label"><span class="ico">🔧</span> Je développe</div>
+        <div class="title">Un CRM métier pour Eurofiscalis</div>
+        <div class="meta">Sur mesure, en vibecoding. Pensé pour le cycle de vente B2B niche fiscale.</div>
+      </div>
+      <div class="now-card">
+        <div class="label"><span class="ico">🔨</span> Je construis</div>
+        <div class="title">La refonte d'Eurofiscalis</div>
+        <div class="meta">Astro 6 + Sanity v3, avec Max au dev. Go-live juillet.</div>
+        <div class="progress">
+          <div class="bar"><div style="--p: 34%;"></div></div>
+          <div class="label-row"><span>34% complété</span><span>juillet 2026</span></div>
+        </div>
+      </div>
+      <div class="now-card">
+        <div class="label"><span class="ico">⚡</span> Je vibecode</div>
+        <div class="title">Outils pour la déclaration TVA CA3</div>
+        <div class="meta">Automatiser les calculs et la mise en forme pour les clients Eurofiscalis.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects">
+    <div class="section-head">
+      <div>
+        <h2>Projets en cours</h2>
+        <div class="sub">Mon travail, mes outils, et les projets indépendants où je donne un coup de main.</div>
+      </div>
+      <a class="all" href="/projets">Tous les projets →</a>
+    </div>
+    <div class="grid-projects">
+      {projectsPreview.map((p) => (
+        <a href={`/projets/${p.slug}`} class={`proj ${p.color}`}>
+          <div class="top">
+            <span class={`badge${p.badgeKind === 'help' ? ' help' : p.badgeKind === 'shipped' ? ' shipped' : ''}`}>{p.badge}</span>
+            <span class="year">{p.year}</span>
+          </div>
+          <h3>{p.title}</h3>
+          <p>{p.summary}</p>
+          <div class="stack">{p.stack.map((s) => <span>{s}</span>)}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="about-inner">
+      <div class="about-portrait" aria-hidden="true"></div>
+      <div class="about-text">
+        <div class="kicker">À propos</div>
+        <h2>Je pilote l'acquisition. <span class="accent">L'atelier, c'est pour transmettre.</span></h2>
+        <p>Expert SEO et spécialiste en acquisition, en vrai, ça veut dire quoi ? Ça veut dire que je m'occupe de tout ce qui ramène des clients. Le SEO de notre site, les appels commerciaux avec nos prospects, les créations d'articles de blog qui convertissent, la conception d'outils IA qui font gagner du temps dans la prise de décision ou dans la production.</p>
+        <p>En 4 ans chez <strong>Eurofiscalis</strong>, on est passé de 60 000 à 1 million de visites organiques par an. Ce n'est pas de la chance, c'est une technique maîtrisée, un travail répété, des tests effectués, des erreurs commises (beaucoup en fait) mais identifiées et corrigées. Et dans la niche de la TVA à l'international, voire une ultra-niche, chaque action compte. Pas d'audience large pour tester à l'infini. On analyse plus, on itère vite, on assume les choix.</p>
+        <p>Ce site, c'est pas un portfolio. C'est un atelier ouvert. J'y pose ce que j'apprends en faisant : ce qui marche, ce qui ne marche pas, ce qui a marché et ne marche plus, les questions que je n'ai pas encore résolues, mais aussi des réflexions sur le SEO, le marketing, l'IA et la vente B2B. Je n'ai pas de réponses parfaites. J'ai des pratiques qui évoluent et l'envie de les documenter honnêtement.</p>
+        <div class="signature">
+          <span><b>Lyon</b>, France</span>
+          <span>écrit en <b>français</b></span>
+          <span><a href="/a-propos">Lire mon parcours →</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-card">
+      <h2>Reçois les fragments<br/>directement dans ta boîte.</h2>
+      <div class="right">
+        <p>Une newsletter du Journal, sans calendrier forcé. Quand un texte mérite la peine, je l'envoie. Pas avant.</p>
+        <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="substack-cta">S'abonner sur Substack →</a>
+        <div class="meta">Substack · désabonnement en 1 clic · 0 spam</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Counter animations
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target as HTMLElement;
+        const target = parseInt(el.dataset.c ?? '0', 10);
+        const dur = 1400;
+        const t0 = performance.now();
+        const small = el.querySelector('.small');
+        const smallHTML = small ? small.outerHTML : '';
+        const tick = (t: number) => {
+          const p = Math.min(1, (t - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const v = Math.round(target * eased);
+          el.innerHTML = v + smallHTML;
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        obs.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll<HTMLElement>('[data-c]').forEach((el) => obs.observe(el));
+
+    // Cycle .primary highlight through hero role tags
+    const tags = document.querySelectorAll<HTMLSpanElement>('#hero-roles span');
+    let cycleInterval: ReturnType<typeof setInterval> | null = null;
+    if (tags.length >= 2) {
+      let index = 0;
+      cycleInterval = setInterval(() => {
+        tags.forEach((t) => t.classList.remove('primary'));
+        index = (index + 1) % tags.length;
+        tags[index].classList.add('primary');
+      }, 2000);
+    }
+
+    document.addEventListener('astro:before-swap', () => {
+      obs.disconnect();
+      if (cycleInterval) clearInterval(cycleInterval);
+    }, { once: true });
+  });
+</script>
+
+<style>
+  .hero {
+    padding: 96px 48px 64px;
+    display: grid; grid-template-columns: 1fr 1.15fr;
+    gap: 64px; align-items: center;
+    max-width: var(--max); margin: 0 auto;
+  }
+  .hero .label {
+    font-size: 13px; color: var(--fg-dim);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--bg-2);
+  }
+  .hero .label::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.8s infinite;
+  }
+
+  .hero .kicker {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute); letter-spacing: .12em;
+    text-transform: uppercase; margin-top: 36px;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 6.4vw, 88px);
+    line-height: .98; letter-spacing: -.04em;
+    font-weight: 600; margin-top: 8px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic; font-weight: 500;
+  }
+  .hero .roles {
+    margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .hero .roles span {
+    font-family: var(--mono); font-size: 12px;
+    padding: 5px 11px; border-radius: 6px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    color: var(--fg-dim);
+    transition: background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  .hero .roles span.primary {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+  .hero p {
+    font-size: 18px; line-height: 1.55; color: var(--fg-dim);
+    max-width: 52ch; margin-top: 28px;
+  }
+  .hero p strong { color: var(--fg); font-weight: 500; }
+  .hero .actions { display: flex; gap: 12px; margin-top: 32px; }
+  .hero .actions a {
+    padding: 13px 22px; border-radius: 12px;
+    font-size: 14px; font-weight: 500;
+    transition: all .2s;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .hero .actions a:hover { background: var(--bg); border-color: var(--fg-mute); transform: translateY(-1px); }
+  .hero .actions a.primary {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+  .hero .actions a.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+
+  .portrait {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
+    background-color: var(--bg-3);
+    background-size: cover; background-position: center;
+    background-image: image-set(
+      url("/images/jim-coding.webp") type("image/webp"),
+      url("/images/jim-coding.jpg") type("image/jpeg")
+    );
+    transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .portrait:hover { transform: translateY(-4px) rotate(-.4deg); }
+  .portrait .frame {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,.35) 100%);
+  }
+  .portrait .badge {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(0,0,0,.4);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px; border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; color: white;
+    border: 1px solid rgba(255,255,255,.18);
+    letter-spacing: .05em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .portrait .badge .live {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 1.8s infinite;
+  }
+  .portrait .caption {
+    position: absolute; left: 20px; right: 20px; bottom: 18px;
+    color: rgba(255,255,255,.92); font-size: 12px;
+    font-family: var(--mono); letter-spacing: .04em;
+    display: flex; justify-content: space-between;
+  }
+  .portrait .caption b { font-weight: 500; color: white; }
+
+  .strip {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    margin-top: 64px;
+  }
+  .strip .inner {
+    max-width: var(--max); margin: 0 auto; padding: 36px 48px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+  }
+  .strip .stat .num {
+    font-size: 44px; font-weight: 600; letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .strip .stat .num .small {
+    font-size: 22px; color: var(--fg-mute); margin-left: 6px;
+  }
+  .strip .stat .lbl {
+    font-size: 13px; color: var(--fg-dim); margin-top: 8px;
+    line-height: 1.4; max-width: 28ch;
+  }
+  .strip .stat .lbl b { color: var(--fg); font-weight: 500; }
+
+  section.journal {
+    padding: 96px 48px 64px;
+    max-width: var(--max); margin: 0 auto;
+  }
+  .grid-articles {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .empty-articles {
+    border: 1px dashed var(--line);
+    border-radius: 18px;
+    padding: 56px 40px;
+    background: var(--bg-2);
+    text-align: center;
+  }
+  .empty-articles .empty-mono {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute); letter-spacing: .1em;
+  }
+  .empty-articles p {
+    margin-top: 12px; color: var(--fg-dim); font-size: 16px;
+  }
+  .empty-articles a {
+    color: var(--accent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  section.now {
+    padding: 32px 48px 96px;
+    max-width: var(--max); margin: 0 auto;
+  }
+  .now-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    border: 1px solid var(--line); border-radius: 20px;
+    background: var(--bg-2); padding: 8px;
+  }
+  .now-card {
+    background: var(--bg); border-radius: 14px;
+    padding: 24px;
+    display: flex; flex-direction: column;
+    transition: transform .25s;
+  }
+  .now-card:hover { transform: translateY(-2px); }
+  .now-card .label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--fg-mute); letter-spacing: .12em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .now-card .label .ico {
+    width: 18px; height: 18px; border-radius: 5px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    display: grid; place-items: center; font-size: 11px;
+  }
+  .now-card .title {
+    font-size: 16px; font-weight: 500; line-height: 1.35;
+    letter-spacing: -.005em;
+  }
+  .now-card .meta {
+    color: var(--fg-dim); font-size: 13px; margin-top: 8px;
+    line-height: 1.5;
+  }
+  .now-card .progress { margin-top: auto; padding-top: 16px; }
+  .now-card .progress .bar {
+    height: 4px; background: var(--bg-2); border-radius: 99px;
+    overflow: hidden; position: relative;
+  }
+  .now-card .progress .bar > div {
+    height: 100%; background: var(--accent); border-radius: 99px;
+    width: var(--p, 50%);
+  }
+  .now-card .progress .label-row {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 10px; color: var(--fg-mute);
+    margin-top: 8px;
+  }
+
+  section.projects {
+    padding: 64px 48px 96px;
+    max-width: var(--max); margin: 0 auto;
+  }
+  .grid-projects {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  }
+  .proj {
+    border: 1px solid var(--c, var(--accent));
+    border-radius: 18px;
+    background: var(--bg);
+    padding: 28px;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .25s, border-color .25s, background .25s, box-shadow .25s;
+  }
+  .proj::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--c, var(--accent));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .45s cubic-bezier(.2,.8,.2,1);
+  }
+  .proj:hover {
+    transform: translateY(-3px);
+    border-color: var(--c, var(--accent));
+    box-shadow: 0 20px 40px -16px rgba(0,0,0,.06);
+  }
+  .proj:hover::before { transform: scaleX(1); }
+  .proj.cyan { --c: var(--accent); }
+  .proj.warm { --c: var(--warm); }
+  .proj.purple { --c: var(--purple); }
+  .proj.green { --c: var(--green); }
+  .proj .top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 28px;
+  }
+  .proj .badge {
+    font-family: var(--mono); font-size: 11px; color: var(--green);
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25);
+    display: flex; align-items: center; gap: 6px;
+    font-weight: 500;
+  }
+  .proj .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+  .proj .badge.help { color: var(--purple); background: rgba(167,139,250,.08); border-color: rgba(167,139,250,.25); }
+  .proj .badge.help::before { background: var(--purple); }
+  .proj .badge.shipped { color: var(--fg-dim); background: var(--bg-2); border-color: var(--line); }
+  .proj .badge.shipped::before { background: var(--fg-mute); }
+  .proj .year {
+    font-family: var(--mono); font-size: 12px; color: var(--fg-mute);
+  }
+  .proj h3 {
+    font-size: 24px; letter-spacing: -.02em; font-weight: 600;
+  }
+  .proj p {
+    color: var(--fg-dim); font-size: 14px; line-height: 1.55;
+    margin-top: 10px;
+  }
+  .proj .stack {
+    display: flex; gap: 6px; margin-top: 20px; flex-wrap: wrap;
+  }
+  .proj .stack span {
+    font-family: var(--mono); font-size: 11px;
+    padding: 4px 9px; border-radius: 5px;
+    background: var(--bg-2); color: var(--fg-dim);
+    border: 1px solid var(--line);
+  }
+
+  section.about {
+    padding: 96px 48px;
+    background: var(--bg-2);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .about-inner {
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.3fr; gap: 64px;
+    align-items: center;
+  }
+  .about-portrait {
+    aspect-ratio: 4/3;
+    border-radius: 20px; overflow: hidden;
+    background-color: var(--bg-3);
+    background-size: cover; background-position: center;
+    background-image: image-set(
+      url("/images/jim-laughing.webp") type("image/webp"),
+      url("/images/jim-laughing.jpg") type("image/jpeg")
+    );
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,.18);
+    position: relative;
+  }
+  .about-text .kicker {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--fg-mute); letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .about-text h2 {
+    font-size: 44px; letter-spacing: -.03em; font-weight: 600;
+    line-height: 1.1; margin-top: 12px;
+  }
+  .about-text h2 .accent {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic; font-weight: 500;
+  }
+  .about-text p {
+    color: var(--fg-dim); font-size: 17px; line-height: 1.6;
+    margin-top: 20px;
+  }
+  .about-text p strong { color: var(--fg); font-weight: 500; }
+  .about-text .signature {
+    margin-top: 28px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 13px; color: var(--fg-dim);
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .about-text .signature b { color: var(--fg); font-weight: 500; }
+  .about-text .signature a { color: var(--accent); }
+
+  section.cta { padding: 96px 48px; }
+  .cta-card {
+    max-width: var(--max); margin: 0 auto;
+    background: var(--fg); color: var(--bg);
+    border-radius: 28px; padding: 72px 64px;
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 64px;
+    align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: ''; position: absolute; right: -120px; top: -120px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,182,212,.5), transparent 70%);
+    filter: blur(50px);
+  }
+  .cta-card h2 {
+    font-size: 44px; letter-spacing: -.03em; line-height: 1.05;
+    font-weight: 600; position: relative;
+  }
+  .cta-card .right { position: relative; }
+  .cta-card p { color: rgba(250,250,250,.72); font-size: 16px; line-height: 1.6; }
+  .cta-card .substack-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #0F172A;
+    padding: 12px 24px; border-radius: 999px;
+    font-weight: 500; font-size: 14px;
+    text-decoration: none; margin-top: 20px;
+    transition: transform .2s;
+  }
+  .cta-card .substack-cta:hover { transform: translateY(-1px); }
+  .cta-card .meta {
+    margin-top: 14px; font-family: var(--mono); font-size: 12px;
+    color: rgba(250,250,250,.5);
+  }
+
+  @media (max-width: 980px) {
+    .hero { grid-template-columns: 1fr; gap: 48px; }
+    .strip .inner, .grid-articles, .now-grid, .grid-projects, .about-inner, .cta-card {
+      grid-template-columns: 1fr;
+    }
+    .hero, section.journal, section.now, section.projects, section.about, section.cta {
+      padding-left: 24px; padding-right: 24px;
+    }
+    .strip .inner { padding: 24px; gap: 24px; }
+    .cta-card { padding: 48px 32px; }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+interface Props { src: string; titre: string; hauteur?: number; allowFullscreen?: boolean }
+const { src, titre, hauteur = 400, allowFullscreen = false } = Astro.props;
+---
+<div class="block-embed">
+  <iframe
+    src={src}
+    title={titre}
+    height={hauteur}
+    loading="lazy"
+    allowfullscreen={allowFullscreen ? '' : undefined}
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>
+
+<style>
+  .block-embed {
+    margin: 32px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .block-embed iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+</style>
