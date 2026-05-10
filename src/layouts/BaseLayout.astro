@@ -23,6 +23,8 @@ interface Props {
   schemaNodes?: SchemaNode[];
   /** Optional breadcrumb trail — auto-emits BreadcrumbList. */
   breadcrumbs?: { name: string; url: string }[];
+  /** Image LCP à précharger (ex: hero portrait). */
+  lcpImage?: string;
 }
 
 const settings = getSiteSettings();
@@ -36,6 +38,7 @@ const {
   active,
   schemaNodes = [],
   breadcrumbs,
+  lcpImage,
 } = Astro.props;
 
 const pageTitle = title ? `${title} · ${settings.title}` : settings.title;
@@ -70,7 +73,7 @@ const jsonLd = serializeGraph(graphNodes);
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#06B6D4" />
 
-  {/* Fonts : preconnect + preload du critical Inter pour LCP */}
+  {/* Fonts : preconnect + @font-face inline pour Inter (zéro CSS bloquant) */}
   <link rel="preconnect" href="https://rsms.me" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -81,7 +84,22 @@ const jsonLd = serializeGraph(graphNodes);
     type="font/woff2"
     crossorigin
   />
-  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <style is:inline>
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url('https://rsms.me/inter/font-files/InterVariable.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: italic;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url('https://rsms.me/inter/font-files/InterVariable-Italic.woff2') format('woff2');
+    }
+  </style>
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -91,6 +109,11 @@ const jsonLd = serializeGraph(graphNodes);
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" />
   </noscript>
+
+  {/* Préchargement de l'image LCP (hero portrait) */}
+  {lcpImage && (
+    <link rel="preload" as="image" href={lcpImage} type="image/webp" fetchpriority="high" />
+  )}
 
   {/* Sitemap + llms.txt */}
   <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
