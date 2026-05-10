@@ -1,0 +1,39 @@
+name: Scheduled Publish
+
+on:
+  schedule:
+    # Deux fois par jour : 8h et 14h (UTC)
+    - cron: '0 8,14 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check for scheduled articles
+        id: check
+        run: node scripts/check-scheduled.mjs
+
+      - name: Build production
+        if: steps.check.outputs.has_scheduled == 'true'
+        run: npm ci --legacy-peer-deps && npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.check.outputs.has_scheduled == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=jimsagnier-com --branch=main
