@@ -456,7 +456,7 @@ export default config({
         }),
         tagline: fields.text({
           label: 'Tagline',
-          defaultValue: "L'atelier d'un acquisitionneur qui écrit et qui vibecode.",
+          defaultValue: "L'atelier d'un Lead acquisition qui écrit et qui vibecode.",
         }),
         description: fields.text({
           label: 'Description du site',

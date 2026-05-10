@@ -27,7 +27,7 @@ export interface SiteSettings {
 
 const DEFAULT_SETTINGS: SiteSettings = {
   title: "L'Atelier de Jim Sagnier",
-  tagline: "L'atelier d'un acquisitionneur qui écrit et qui vibecode.",
+  tagline: "L'atelier d'un Lead acquisition qui écrit et qui vibecode.",
   description:
     "Acquisition B2B, IA, SEO et expérimentation web. Le journal d'un responsable acquisition qui code à côté.",
   baseUrl: 'https://jimsagnier.com',
