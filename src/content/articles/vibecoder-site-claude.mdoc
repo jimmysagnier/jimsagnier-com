@@ -1,8 +1,10 @@
 ---
-title: "Vibecoder son site avec Claude : retour d'expérience complet"
+title: 'Vibecoder son site avec Claude : retour d''expérience complet'
 territory: construire
 publishedAt: 2026-05-07
-summary: "Trois ratios qui changent tout, cinq outils qui marchent, et les limites honnêtes du vibecoding pour un acquisitionneur SEO qui code à côté."
+summary: >-
+  Trois ratios qui changent tout, cinq outils qui marchent, et les limites
+  honnêtes du vibecoding pour un acquisitionneur SEO qui code à côté.
 readingTime: 12
 tags:
   - vibecoding
@@ -12,44 +14,65 @@ tags:
   - Markdoc
   - SEO
 essentiel:
-  readingTime: "3 min · ou 12 min en entier"
-  sousTitre: "Les points essentiels."
+  sousTitre: Les points essentiels.
+  readingTime: 3 min · ou 12 min en entier
   items:
-    - "**jimsagnier.com construit en vibecoding avec Claude Code**, 20 heures de travail réparties sur dix jours."
-    - "**Stack** : Astro 6, Markdoc, Keystatic, Cloudflare Pages."
-    - "**Ratio 75/25** : 15 heures de préparation (design, tone of voice, brief) pour 5 heures de code."
-    - "**Coût marginal** : 1 €/mois pour le domaine, parce que l'abo Claude Code à 100 €/mois est déjà amorti sur d'autres projets pro et perso."
-    - "**Schema markup, FAQ et encarts EEAT** générés automatiquement par les content components Markdoc."
-    - "*Le copywriting reste l'étape la plus longue, même avec l'IA.*"
-    - "Pas une baguette magique : la **stratégie d'acquisition reste 100% humaine**."
+    - >-
+      **jimsagnier.com construit en vibecoding avec Claude Code**, 20 heures de
+      travail réparties sur dix jours.
+    - '**Stack** : Astro 6, Markdoc, Keystatic, Cloudflare Pages.'
+    - >-
+      **Ratio 75/25** : 15 heures de préparation (design, tone of voice, brief)
+      pour 5 heures de code.
+    - >-
+      **Coût marginal** : 1 €/mois pour le domaine, parce que l'abo Claude Code
+      à 100 €/mois est déjà amorti sur d'autres projets pro et perso.
+    - >-
+      **Schema markup, FAQ et encarts EEAT** générés automatiquement par les
+      content components Markdoc.
+    - '*Le copywriting reste l''étape la plus longue, même avec l''IA.*'
+    - >-
+      Pas une baguette magique : la **stratégie d'acquisition reste 100%
+      humaine**.
 coverImage:
-  src: /images/jim-coding.webp
+  src: /images/articles/vibecoder-site-claude/coverImage/src.avif
   alt: Jim Sagnier devant son écran avec Claude Code ouvert sur le projet
-  caption: "L'atelier en train de tourner."
+  caption: L'atelier en train de tourner.
 seo:
-  title: "Vibecoder son site avec Claude : retour d'expérience complet"
-  description: "Récit complet de la construction de jimsagnier.com en vibecoding avec Claude Code. Process, choix techniques, leçons, et ce que ça change pour mon SEO."
+  title: 'Vibecoder son site avec Claude : retour d''expérience complet'
+  description: >-
+    Récit complet de la construction de jimsagnier.com en vibecoding avec Claude
+    Code. Process, choix techniques, leçons, et ce que ça change pour mon SEO.
+  ogImage: /images/og/vibecoder-site-claude/seo/ogImage.avif
   schemaType: BlogPosting
   noindex: false
-draft: true
+howTo:
+  steps: []
+faq: []
+draft: false
 featured: true
 ---
-
-[Le site que tu lis](/projets/jimsagnier-com) a été construit en vibecoding avec Claude Code. Pas un prototype, pas une maquette qu'on jette dans deux mois, la version qui tourne en production. J'y ai passé environ **20 heures de travail effectif**, dont 5 sur la mise en code et 15 en préparation. C'est ce ratio 75/25 qui résume mieux le vibecoding que tous les guides débutant ne te disent pas. Voilà le récit, les outils que j'utilise vraiment, les choix techniques, et surtout les leçons qui valent autant pour un dev junior que pour un acquisitionneur ou un marketeur qui code à côté.
+Ce site [jimsagnier.com](/) que tu lis a été construit en vibecoding avec Claude Code. Pas un prototype, pas une maquette qu'on jette dans deux mois, la version qui tourne en production. J'y ai passé environ **20 heures de travail effectif**, dont 5 sur la mise en code et 15 en préparation. C'est ce ratio 75/25 qui résume mieux le vibecoding que tous les guides débutant ne te disent pas. Voilà le récit, les outils que j'utilise vraiment, les choix techniques, et surtout les leçons qui valent autant pour un dev junior que pour un lead acquisition ou un marketeur qui code à côté.
 
 ## Le résultat avant le process
 
 ### Le site en chiffres
 
-Quatre pages publiées (accueil, journal, projets, à propos), un premier article en ligne (celui que tu lis), un panel d'admin Keystatic câblé, JSON-LD `WebSite` et `Person` injectés sitewide, breadcrumbs automatiques, Open Graph propre. Côté code : Astro 6, CSS artisanal sans framework, TypeScript strict. Hébergé sur Cloudflare Pages, déployé en deux clics depuis GitHub.
+- Quatre pages publiées (accueil, journal, projets, à propos),
+- Un premier article en ligne (celui que tu lis),
+- Un panel d'admin Keystatic câblé, JSON-LD `WebSite` et `Person` injectés sitewide, breadcrumbs automatiques, Open Graph propre.
+- Côté code : Astro 6, CSS artisanal sans framework, TypeScript strict.
+- Hébergé sur Cloudflare Pages, déployé en deux clics depuis GitHub.
 
-Score Lighthouse à mesurer en finalisation, mais l'architecture est calibrée pour viser 95 et plus partout : preload des fonts, images dimensionnées, zéro JS inutile, pas de tracker.
+Score Lighthouse (il me reste encore un peu de travail )
+
+![](/images/articles/vibecoder-site-claude/PageSpeed-Insights-05-10-2026_11_59_PM%20\(1).png)
 
 ### Ce qui m'a surpris en bien
 
 La densité de ce qu'on peut produire en cinq heures quand le terrain est préparé. Pas du code à jeter, du code qui passe le linter, qui tient en TypeScript strict, et qui est cohérent d'un fichier à l'autre. L'agent ne perd pas le fil entre deux composants.
 
-Surtout : la première fois que la home s'est affichée avec mes mockups portés en Astro, j'ai eu un moment qui ne s'oublie pas.
+Surtout : la première fois que la home s'est affichée avec mes mockups portés en Astro, j'étais bluffé, pas pour la qualité du design, mais par la vitesse à laquelle l'idée avait pris forme.
 
 {% MonAvis sentiment="positif" %}
 Même quand tu as déjà généré des outils ou des SaaS internes au boulot, l'affichage de la première version d'un projet purement personnel, c'est incroyable. Il y a eu de l'itération pour ajuster, bien sûr. Mais le moment où ton idée prend forme à l'écran, sans intermédiaire, c'est ce qui fait revenir au prochain side project.
@@ -61,7 +84,7 @@ Le copywriting. On y reviendra plus bas, c'est l'étape qui ne raccourcit pas vr
 
 Et un classique vibecoding : le cache Vite désynchronisé qui m'a fait croire pendant cinq minutes que tout le CSS de la home était cassé, alors qu'un `rm -rf .astro node_modules/.vite` réglait le problème. Petite anecdote à garder en mémoire pour ceux qui débutent.
 
-## Vibecoding, mot de l'année 2025 : pourquoi ça concerne tout le monde
+## Vibecoding, mot de l'année 2026 : pourquoi ça concerne tout le monde
 
 ### La définition courte
 
@@ -82,8 +105,8 @@ C'est ça qui change la productivité, pas la génération brute. La capacité �
 J'ai testé Cursor, j'ai testé Copilot, j'ai utilisé ChatGPT pendant des mois. Claude Code gagne sur trois points concrets pour mon usage :
 
 1. **L'agent autonome** est plus fiable que la complétion en ligne. Il ouvre les fichiers, modifie ce qu'il faut, lance les tests, corrige.
-2. **Les sub-agents et skills** permettent de cadrer son comportement par contexte : un sub-agent pour le design, un skill pour le SEO, un skill pour la rédaction.
-3. **Le MCP** (Model Context Protocol) ouvre l'accès à des données externes : mon vault Obsidian, Search Console, Sanity, GitHub. C'est pas un détail.
+1. **Les sub-agents et skills** permettent de cadrer son comportement par contexte : un sub-agent pour le design, un skill pour le SEO, un skill pour la rédaction.
+1. **Le MCP** (Model Context Protocol) ouvre l'accès à des données externes : mon vault Obsidian, Search Console, GitHub. C'est pas un détail.
 
 Si tu n'as pas besoin de ça, d'autres outils suffisent largement. Pour ce que je fais au quotidien, Claude Code est l'outil que j'ai choisi.
 
@@ -99,6 +122,10 @@ Cinq mockups complets ont été produits avant qu'une seule ligne d'Astro n'exis
 
 C'est aussi à cette étape que j'ai détouré les logos, optimisé les photos en WebP sous 70 Ko chacune, généré le set complet de favicons, défini la palette CSS variables.
 
+{% EnPratique titre="En pratique" %}
+Si comme moi tu n'as pas de formation design et que tu n'as aucune idée de ce que tu veux visuellement, Dribbble et Pinterest sont tes meilleurs points de départ. Une heure à faire des screenshots de layouts et de sections qui te plaisent, c'est suffisant pour donner une vraie direction à Stitch ou à Claude. Sans ça, tu obtiens du générique.
+{% /EnPratique %}
+
 ### Le tone of voice extrait depuis 8 calls Fireflies
 
 J'ai lancé un sub-agent Claude Opus sur 30 000 mots transcrits depuis huit calls Fireflies. L'objectif : extraire ma voix, mes mots fétiches, mes patterns de phrase, sans l'inventer ni la lisser.
@@ -106,6 +133,10 @@ J'ai lancé un sub-agent Claude Opus sur 30 000 mots transcrits depuis huit call
 Le résultat : un tone of voice multi-blocs avec une voix de fond et cinq modulations selon le bloc d'article (BLUF, EEAT, anecdote, conclusion, voix générale). Quand l'IA rédige, elle ne sort plus du jus IA générique. Elle sort des phrases qui sonnent comme moi.
 
 Sans ce travail amont, le copy aurait été acceptable mais générique. C'est probablement l'heure investie qui a le plus de ROI sur le projet entier.
+
+{% Conseil titre="Mon conseil" %}
+Si tu rédiges des articles sur d'autres sites ou sur les reseaux sociaux, ou que, comme moi, tu as des calls prospects / clients enregistrer avec Fireflies, Noota ou autres, sers-toi de cette formidable matière pour créer ton TOV (Tone of Voice).
+{% /Conseil %}
 
 ### Le CLAUDE.md, mémoire externe du projet
 
@@ -171,7 +202,7 @@ Mon vault Obsidian (environ 600 notes accumulées sur dix ans) est piloté par C
 
 Hébergement gratuit, build automatique sur push GitHub, edge network mondial, certificat SSL automatique. Zéro friction, zéro coût supplémentaire. Et depuis que Cloudflare a racheté Astro fin 2025, l'intégration est encore plus serrée.
 
-## Ce que ça change pour mon métier d'acquisitionneur
+## Ce que ça change pour mon métier de Growth lead
 
 C'est probablement la partie où le vibecoding fait la plus grande différence pour quelqu'un comme moi, qui n'est pas dev pur mais qui s'occupe d'acquisition au quotidien.
 
@@ -234,11 +265,12 @@ Du coup, le coût marginal de jimsagnier.com tombe à 1 euro par mois. Juste le 
 ## FAQ
 
 {% FAQ titre="Questions fréquentes" items=[
-  { question: "Faut-il savoir coder pour vibecoder son site ?", reponse: "Pas pour écrire le code, oui pour lire et juger ce que produit l'agent. Sans cette capacité de lecture critique, tu construis sur du sable. Si tu n'as jamais écrit une ligne de HTML ou JS, commence par un crash course de quelques heures avant de te lancer." },
-  { question: "Est-ce que ça remplace WordPress ou Webflow ?", reponse: "Pour un blog ou un site de contenu, oui : la stack Astro plus Keystatic plus Cloudflare est plus rapide, plus performante côté SEO, et plus durable techniquement. Pour un site qui demande beaucoup de plugins tiers ou l'écosystème WordPress, non, reste sur ce que tu connais." },
-  { question: "Le code généré est-il sécurisé ?", reponse: "Pas par défaut. Claude Code peut produire du code propre mais aussi introduire des failles si on lui donne mal le contexte. Tu dois auditer ce qui touche à l'authentification, aux formulaires publics, aux uploads de fichiers. Sur ce site, il n'y a quasiment rien de sensible donc le risque est minimal." },
-  { question: "Combien de temps faut-il vraiment pour un premier site live ?", reponse: "Si tu pars de zéro sans rien préparer, compte 30 à 50 heures pour un résultat correct. Si tu prépares un brief design solide, un tone of voice et un CLAUDE.md, tu peux descendre à 20 heures. Sans préparation, le code prend du temps à converger." },
-  { question: "Vibecoder ou apprendre à coder ?", reponse: "Les deux. Le vibecoding ne remplace pas la compréhension du code, il la complète. Tu pilotes mieux Claude quand tu sais ce que tu lui demandes. Si tu débutes, considère que le vibecoding accélère ton apprentissage plus qu'il ne le remplace." }
+  { question: "Faut-il savoir coder pour se lancer ?", reponse: "Pas pour écrire le code. Oui pour lire ce que produit l'agent et juger si c'est solide. Sans ça, tu construis sur du sable. Une base HTML/CSS suffit. Si tu n'as jamais ouvert un fichier de code, commence par quelques heures de crash course avant de te lancer." },
+  { question: "Combien de temps pour un premier site live ?", reponse: "Sans préparation : 30 à 50 heures pour un résultat correct. Avec un brief design, un tone of voice et un CLAUDE.md : tu peux descendre à 20 heures. La préparation comprime le code, pas l'inverse. C'est le ratio que personne ne te dit." },
+  { question: "La stack Astro + Keystatic, c'est vraiment mieux que WordPress ?", reponse: "Pour un blog ou un site de contenu : oui. Plus rapide, plus performant SEO, zéro base de données, zéro plugin à maintenir. Pour un site qui a besoin d'un écosystème de plugins tiers ou d'une équipe non-technique qui édite au quotidien : WordPress reste plus simple à déléguer." },
+  { question: "Je ne suis pas designer. Par où commencer ?", reponse: "Par Dribbble et Pinterest. Une heure à faire des screenshots de layouts qui te plaisent, c'est suffisant pour donner une direction à Google Stitch ou à Claude. Stitch génère des premières pistes visuelles, tu itères. Sans cette étape d'inspiration, tu obtiens du générique." },
+  { question: "L'abonnement Claude Code à 100 €/mois, ça vaut le coup ?", reponse: "Ça dépend du calcul. Si tu l'utilises uniquement pour faire un site perso : non. Si comme moi tu l'utilises au quotidien sur plusieurs projets pro et perso, le coût marginal de chaque projet supplémentaire tombe à zéro. Amortis sur combien de projets, voilà la vraie question." },
+  { question: "Vibecoder ou apprendre à coder proprement ?", reponse: "Les deux, dans l'ordre que tu veux. Le vibecoding n'annule pas la compréhension du code, il la complète. Tu pilotes mieux Claude quand tu sais ce que tu lui demandes. Et Claude t'apprend en produisant : tu lis du vrai code, dans un vrai projet, tout de suite." }
 ] /%}
 
 ## Pour finir
