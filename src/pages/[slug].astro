@@ -8,9 +8,14 @@ import { blogPostingNode, howToNode, faqPageNode, type SchemaNode } from '../lib
 
 export async function getStaticPaths() {
   const isDev = import.meta.env.DEV;
-  const articles = await getCollection('articles', ({ data }) =>
-    isDev ? true : !data.draft
-  );
+  const now = new Date();
+  const articles = await getCollection('articles', ({ data }) => {
+    if (isDev) return true;
+    if (data.draft) return false;
+    // Vérifier que la date de publication planifiée est passée (ou non définie)
+    if (data.scheduledPublishAt && data.scheduledPublishAt > now) return false;
+    return true;
+  });
   return articles.map((article) => ({
     params: { slug: article.id },
     props: { article },

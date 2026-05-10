@@ -6,9 +6,14 @@ import { getSiteSettings } from '../../lib/site';
 const settings = getSiteSettings();
 const isDev = import.meta.env.DEV;
 
-const allArticles = await getCollection('articles', ({ data }) =>
-  isDev ? true : !data.draft
-);
+const now = new Date();
+const allArticles = await getCollection('articles', ({ data }) => {
+  if (isDev) return true;
+  if (data.draft) return false;
+  // Vérifier que la date de publication planifiée est passée (ou non définie)
+  if (data.scheduledPublishAt && data.scheduledPublishAt > now) return false;
+  return true;
+});
 allArticles.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );

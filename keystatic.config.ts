@@ -43,6 +43,11 @@ export default config({
           validation: { isRequired: true },
         }),
 
+        scheduledPublishAt: fields.date({
+          label: 'Programmé pour publication le',
+          description: 'Optionnel — si défini, l\'article ne sera visible qu\'à partir de cette date.',
+        }),
+
         updatedAt: fields.date({
           label: 'Mis à jour le',
           description: 'Optionnel — sert au schema markup `dateModified`.',
