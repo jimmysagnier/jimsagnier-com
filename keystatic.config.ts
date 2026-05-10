@@ -280,10 +280,12 @@ export default config({
                 src: fields.url({
                   label: 'URL de l\'iframe',
                   description: 'Peut être une page de ton site (ex: /tools/calculateur) ou un service externe.',
+                  validation: { isRequired: true },
                 }),
                 titre: fields.text({
                   label: 'Titre accessibilité',
                   description: 'Décrit ce que contient l\'iframe pour les lecteurs d\'écran.',
+                  validation: { length: { min: 1 } },
                 }),
                 hauteur: fields.integer({
                   label: 'Hauteur (px)',
@@ -304,6 +306,7 @@ export default config({
                 html: fields.text({
                   label: 'Code HTML/JS',
                   multiline: true,
+                  validation: { length: { min: 1 } },
                 }),
               },
             }),
