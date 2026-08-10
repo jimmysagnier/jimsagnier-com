@@ -20,6 +20,9 @@ const articles = defineCollection({
     title: z.string().max(120),
     territory: territoireSchema.default('construire'),
     publishedAt: z.coerce.date(),
+    // Date de publication programmée : tant qu'elle est dans le futur,
+    // l'article est exclu du build (cf. filtres dans les pages + cron scheduled-publish).
+    scheduledPublishAt: z.coerce.date().optional(),
     updatedAt: z.coerce.date().optional(),
     summary: z.string().min(50).max(220),
     readingTime: z.number().optional(),

@@ -1,0 +1,120 @@
+---
+title: 'Astro, Cloudflare et un CMS que la cliente peut piloter'
+territory: construire
+publishedAt: 2026-08-17
+scheduledPublishAt: 2026-08-17T06:00:00Z
+summary: >-
+  Les choix techniques du nouveau site de La Puissance de l'Éveil : Astro pour
+  la vitesse, Cloudflare pour l'hébergement gratuit, et un CMS visuel pour
+  qu'Eva édite son site sans jamais pouvoir le casser.
+readingTime: 6
+tags:
+  - making-of
+  - Astro
+  - Cloudflare
+  - CMS
+  - La Puissance de l'Éveil
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 6 min en entier
+  items:
+    - >-
+      **Astro** : du HTML statique, taillé pour l'éditorial, avec d'excellents
+      Core Web Vitals et un portage du prototype quasi sans friction.
+    - >-
+      **Cloudflare Pages** : gratuit, `git push` = déploiement, previews
+      automatiques, CDN mondial et HTTPS géré tout seul.
+    - >-
+      **Le vrai sujet** : donner à une cliente non technique l'autonomie
+      éditoriale **sans jamais lui laisser casser le design**.
+    - >-
+      **La solution** : un CMS visuel git-based, TinaCMS en tête, où Eva clique
+      sur son site et modifie en live. Chaque modif devient un commit.
+    - >-
+      **Les garde-fous** : seuls les textes et les photos sont éditables. La
+      structure, les couleurs, la typo et le layout restent verrouillés.
+    - >-
+      **Le coût réel** : environ **12€ par an** (le domaine), contre 20 à 50€
+      par mois sur Wix.
+coverImage:
+  src: /images/articles/astro-cloudflare-cms-client/coverImage/src.avif
+  alt: La stack technique du site de La Puissance de l'Éveil, Astro et Cloudflare
+  caption: Des choix techniques pensés pour durer, pas pour impressionner.
+seo:
+  title: 'Astro, Cloudflare et un CMS que la cliente peut piloter'
+  description: >-
+    Making-of technique du site de La Puissance de l'Éveil : pourquoi Astro et
+    Cloudflare Pages, et comment donner l'autonomie éditoriale à une cliente non
+    technique sans risquer de casser le site.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Un bon choix technique, ce n'est pas le plus impressionnant. C'est **celui qui tient dans le temps sans devenir un poids**. Pour le site d'Eva, trois décisions comptaient vraiment : le framework, l'hébergement, et la façon dont elle allait pouvoir mettre à jour son site toute seule. Le titre de travail de cette série parlait de « zéro CMS ». C'était faux. Eva n'a aucune compétence technique, et elle doit pouvoir modifier ses textes et ses photos sans m'appeler. **Il y a donc bien un CMS, choisi précisément pour ça.**
+
+Je suis Jimmy. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après avoir posé [le prototype en HTML avant de passer au framework](/html-d-abord-framework-ensuite/), voici les fondations sur lesquelles tout repose.
+
+## Astro : du HTML statique, sans le poids
+
+**Astro génère des pages en HTML statique.** Pas de couche JavaScript lourde qui s'exécute à chaque visite pour afficher un titre. La page est construite une fois, au moment du build, puis servie telle quelle. Résultat : elle s'affiche vite, très vite.
+
+Pour un site comme celui d'Eva, c'est exactement le bon outil. Le contenu est éditorial : des textes, des photos, quelques animations, une vidéo en fond de hero. Peu d'interactivité complexe. **Astro est pensé pour ce type de site, là où la plupart des frameworks modernes sont taillés pour des applications qui n'ont rien à voir.**
+
+Il y a un deuxième argument, plus terre à terre. J'avais construit le prototype en HTML et CSS purs, en sessions de travail avec Eva. Astro accepte ce HTML presque tel quel. Le portage s'est fait sans réécrire le design : j'ai isolé la nav et le footer dans des composants, remplacé les textes en dur par du contenu éditable, et branché l'optimisation des images. Le rendu visuel, lui, n'a pas bougé d'un pixel.
+
+{% Conseil titre="Le bon outil dépend du site, pas de la mode" %}
+On choisit trop souvent une technologie parce qu'elle est populaire, puis on tord le projet pour la faire rentrer dedans. La bonne question est l'inverse : de quoi ce site a-t-il besoin ? Un site de contenu qui doit charger vite et bien se référencer n'a pas les mêmes besoins qu'une application. Astro répond au premier, pas forcément au second.
+{% /Conseil %}
+
+Concrètement, Astro apporte aussi ce qui compte pour le référencement sans effort supplémentaire : d'excellents Core Web Vitals par défaut, un sitemap et un robots.txt générés automatiquement, et la conversion des images en formats modernes (AVIF, WebP) au moment du build. Autant de choses que je devais bricoler à la main sur d'autres stacks.
+
+## Cloudflare Pages : gratuit, et pratiquement invisible
+
+**L'hébergement du site coûte zéro euro.** Cloudflare Pages est gratuit pour un projet de cette taille, et le « gratuit » n'est pas une version bridée qui pousse à payer trois mois plus tard. C'est large : des centaines de builds par mois, une bande passante non facturée à l'usage.
+
+Mais le prix n'est pas la vraie raison. C'est le workflow. **Je pousse mon code sur Git, et le site se déploie tout seul.** Pas de transfert de fichiers manuel, pas de serveur à configurer. Chaque branche génère en plus une preview, une URL privée où Eva peut valider une nouvelle page avant qu'elle soit en ligne pour de vrai.
+
+Le reste suit sans que j'aie à m'en occuper. Le HTTPS est géré automatiquement, le certificat se renouvelle seul. Le site est distribué sur le réseau mondial de Cloudflare, donc servi depuis un point proche du visiteur, où qu'il soit.
+
+{% MonAvis sentiment="positif" %}
+Ce que j'apprécie le plus avec cette stack, c'est qu'elle disparaît. Une fois en place, je ne pense plus à l'hébergement, aux certificats, aux mises à jour serveur. Je pense au contenu et au design. L'infrastructure devient un détail, et c'est précisément ce qu'on lui demande.
+{% /MonAvis %}
+
+## Le vrai sujet : l'autonomie d'Eva, sans le risque
+
+Voilà où se joue la partie la plus intéressante. **Eva doit pouvoir vivre sur son site.** Changer un paragraphe, remplacer une photo, corriger une phrase, sans dépendre de moi et sans ouvrir une ligne de code. Un site qu'elle ne peut pas mettre à jour seule serait déjà mort le jour de sa mise en ligne.
+
+Le piège classique, c'est de lui donner les clés de tout. Un éditeur trop libre, et la première mise à jour casse une mise en page, déforme une couleur, déséquilibre une section. **L'objectif n'est pas de tout ouvrir. C'est d'ouvrir exactement ce qu'il faut, et de verrouiller le reste.**
+
+C'est là qu'intervient le CMS, et pas n'importe lequel. Je vise un CMS visuel git-based, avec **TinaCMS** en tête. Le principe : Eva ouvre son propre site, clique directement sur un texte, et le modifie en le voyant changer en direct. Aucune interface abstraite à apprendre, aucun tableau de bord intimidant. Elle édite ce qu'elle voit.
+
+Et sous le capot, chaque modification devient un commit Git. Autrement dit : une sauvegarde automatique et un historique complet. Si quelque chose déraille, on revient à la version d'avant en un geste. Eva n'a pas à le savoir, mais moi je dors mieux.
+
+Le point décisif, ce sont les garde-fous. Les champs éditables sont figés à l'avance : les textes du hero, le manifeste, les photos, les descriptions des offres, les mentions du footer. **Tout le reste (la structure, les couleurs, la typographie, le layout, les animations) reste verrouillé, hors de portée.** Eva ne peut pas créer de page, ni déplacer un bloc, ni changer une nuance d'or. Elle a toute la liberté sur le contenu, zéro sur le design. C'est exactement le bon partage.
+
+{% Conseil titre="Autonomie ne veut pas dire tout permettre" %}
+Donner l'autonomie à un client non technique, ce n'est pas lui remettre un outil qui fait tout. C'est concevoir en amont ce qu'il peut toucher et ce qu'il ne peut pas. Le travail du dev, c'est de dessiner cette frontière : assez large pour qu'il soit vraiment indépendant, assez stricte pour que le design reste intact dans un an.
+{% /Conseil %}
+
+Une précision honnête, parce que rien n'est encore gravé. Astro et Cloudflare sont actés, testés, validés. Le CMS, lui, est le dernier choix à verrouiller. TinaCMS est le meilleur candidat pour ce besoin d'édition en direct. Sanity reste l'alternative sérieuse si Tina pose le moindre souci à l'usage. Mais le principe, lui, ne bougera pas : édition visuelle, garde-fous stricts, chaque modif sauvegardée.
+
+## Ce que ça change, en euros
+
+Le plus parlant reste le coût. Voici la comparaison, une fois le site en place :
+
+| Poste | Wix (avant) | Nouvelle stack |
+|---|---|---|
+| Hébergement | inclus dans l'abonnement | 0€ (Cloudflare Pages) |
+| CMS / éditeur | inclus dans l'abonnement | 0€ (offre gratuite) |
+| Domaine | inclus la 1re année | environ 12€ / an |
+| **Total** | **20 à 50€ / mois** | **environ 12€ / an** |
+
+Sur une année, on passe de plusieurs centaines d'euros à une douzaine. **Et le site est plus rapide, mieux référencé, entièrement maîtrisé.** L'économie n'est pas le but, c'est un effet de bord d'avoir choisi les bons outils. Mais pour une entrepreneuse indépendante, cette différence n'est pas anecdotique.
+
+## La suite
+
+**Un site rapide n'est pas qu'un confort pour le visiteur. C'est un levier de visibilité.** Google mesure la vitesse, la stabilité de l'affichage, le temps avant le premier contenu utile, et il en tient compte pour classer les pages. Choisir Astro et Cloudflare, ce n'était donc pas qu'une question de propreté technique.
+
+C'est l'objet du prochain article : [la performance comme stratégie SEO](/performance-strategie-seo/), ou comment la vitesse d'un site devient un atout de référencement à part entière.

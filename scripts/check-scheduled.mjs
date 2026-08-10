@@ -12,7 +12,7 @@ try {
   let hasScheduled = false;
 
   for (const file of files) {
-    if (!file.endsWith('.md')) continue;
+    if (!/\.(md|mdoc|mdx)$/.test(file)) continue;
 
     const filePath = join(ARTICLES_DIR, file);
     const content = await readFile(filePath, 'utf-8');
@@ -27,9 +27,13 @@ try {
     const scheduledDate = frontmatter.scheduledPublishAt;
     if (!scheduledDate) continue;
 
+    // On ne déclenche un rebuild que si l'article est devenu publiable
+    // récemment (fenêtre de 48h), pour éviter de redéployer indéfiniment
+    // à chaque cron une fois toutes les dates passées.
     const scheduled = new Date(scheduledDate);
-    if (scheduled <= now) {
-      console.log(`✓ Article ready: ${file} (was scheduled for ${scheduledDate})`);
+    const WINDOW_MS = 48 * 60 * 60 * 1000;
+    if (scheduled <= now && scheduled > new Date(now.getTime() - WINDOW_MS)) {
+      console.log(`✓ Article due: ${file} (scheduled for ${scheduledDate})`);
       hasScheduled = true;
     }
   }
