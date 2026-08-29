@@ -117,8 +117,15 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 
       <section class="grid-section">
         <div class="grid">
-          {others.map((article) => (
-            <a class={`article-card ${article.data.territory}`} data-territory={article.data.territory} href={`/${article.id}`}>
+          {others.map((article) => {
+            const project = article.data.tags?.includes("La Puissance de l'Éveil") ? 'eveil' : undefined;
+            return (
+            <a
+              class={`article-card ${article.data.territory}`}
+              data-territory={article.data.territory}
+              data-project={project}
+              href={`/${article.id}`}
+            >
               <div class="cover"></div>
               <div class="body">
                 <span class={`terr-tag ${article.data.territory}`}>{territoryLabels[article.data.territory]}</span>
@@ -130,7 +137,8 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
                 </div>
               </div>
             </a>
-          ))}
+            );
+          })}
         </div>
       </section>
     </>

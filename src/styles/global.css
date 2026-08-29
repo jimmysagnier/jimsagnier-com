@@ -241,6 +241,7 @@ nav.site .cta:hover { transform: translateY(-1px); }
 .article-card.construire .cover { --c1: #18181B; --c2: #06B6D4; }
 .article-card.comprendre .cover { --c1: #134E4A; --c2: #FB923C; }
 .article-card.reflechir  .cover { --c1: #422006; --c2: #A78BFA; }
+.article-card[data-project="eveil"] .cover { --c1: #2E1065; --c2: #A78BFA; }
 
 /* ============== FOOTER ============== */
 footer.site {
