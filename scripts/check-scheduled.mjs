@@ -27,11 +27,13 @@ try {
     const scheduledDate = frontmatter.scheduledPublishAt;
     if (!scheduledDate) continue;
 
-    // On ne déclenche un rebuild que si l'article est devenu publiable
-    // récemment (fenêtre de 48h), pour éviter de redéployer indéfiniment
-    // à chaque cron une fois toutes les dates passées.
+    // Fenêtre de rattrapage de 30 jours : un article devenu publiable est
+    // republié à chaque cron pendant 30 jours. Ça survit à des semaines de
+    // crons GitHub Actions ratés (l'ancienne fenêtre de 48h avait perdu
+    // 7 articles en août 2026 pour cette raison), et ça reste borné pour
+    // ne pas redéployer indéfiniment une fois toutes les dates dépassées.
     const scheduled = new Date(scheduledDate);
-    const WINDOW_MS = 48 * 60 * 60 * 1000;
+    const WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
     if (scheduled <= now && scheduled > new Date(now.getTime() - WINDOW_MS)) {
       console.log(`✓ Article due: ${file} (scheduled for ${scheduledDate})`);
       hasScheduled = true;
