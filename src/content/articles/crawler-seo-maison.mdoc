@@ -1,0 +1,112 @@
+---
+title: 'Pourquoi j''ai codé mon propre crawler SEO'
+territory: construire
+publishedAt: 2026-09-28
+scheduledPublishAt: 2026-09-28T06:00:00Z
+summary: >-
+  Pour la migration, j'ai codé mon propre crawler SEO. Pas parce que les autres
+  étaient mauvais, parce que leur résultat était inexploitable. Le making-of
+  d'un outil maison, deux bugs compris.
+readingTime: 8
+tags:
+  - making-of
+  - Eurofiscalis
+  - SEO
+  - crawler
+  - Python
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 8 min en entier
+  items:
+    - >-
+      **Le déclic** : les crawlers du commerce crawlent bien, mais crachent un
+      résultat inexploitable ou coûtent cher au-delà de 500 URLs.
+    - >-
+      **Le vrai besoin** : pas crawler (le sitemap suffit), mais un tableau
+      propre, filtrable, exportable.
+    - >-
+      **L'outil** : une petite app Python/Flask, un tableau de 16 colonnes avec
+      un mini-audit on-page intégré.
+    - >-
+      **Le bug qui gelait tout** : l'endpoint de progression renvoyait tout
+      l'état à chaque sondage. Le fix : ne renvoyer que le delta.
+    - >-
+      **Le pire bug** : un mot de passe faux faisait enregistrer une page "Accès
+      restreint" partout, en silence.
+coverImage:
+  src: /images/articles/crawler-seo-maison/coverImage/src.avif
+  alt: Un crawler SEO maison codé en Python pour la migration du site Eurofiscalis
+  caption: Le meilleur outil n'est pas toujours celui qu'on achète.
+seo:
+  title: 'Pourquoi j''ai codé mon propre crawler SEO'
+  description: >-
+    Le making-of d'un crawler SEO maison pour une migration de 2700 pages :
+    pourquoi le coder plutôt que Screaming Frog, ce qu'il fait, et les deux bugs
+    qui m'ont marqué.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Le meilleur outil, ce n'est pas toujours celui qu'on achète. Pour cartographier les 2700 pages du site avant de le déménager, j'ai fini par coder mon propre crawler. Pas parce que les outils du marché étaient mauvais. Parce que leur résultat était inexploitable.
+
+Je suis Jimmy. Petit aparté dans la saga de la refonte Eurofiscalis, sur un outil que je me suis fabriqué en chemin. Quand tu migres un site de 2700 pages en 7 langues, la première chose qu'il te faut, c'est un inventaire propre de l'existant : chaque page, son adresse, son titre, son statut. Voilà comment j'ai obtenu cet inventaire, et les deux bugs qui m'ont appris deux bonnes leçons.
+
+## Pourquoi pas un outil du commerce
+
+J'ai commencé par essayer les outils qui existent, comme tout le monde. Deux candidats, deux impasses.
+
+**SiteOne** crawle très bien, mais crache un résultat inexploitable : des dizaines de mégaoctets de JSON, un rapport HTML tout aussi lourd. Impossible d'en tirer un simple tableau filtrable. **Screaming Frog**, lui, a l'interface de tableau parfaite, mais il est payant au-delà de 500 URLs, et surtout bien trop complet pour mon besoin du moment.
+
+Et c'est là que j'ai compris mon erreur de cadrage. Mon problème n'était pas de crawler le site. Ça, c'était déjà réglé : j'avais le sitemap, avec ses 2799 adresses. Mon vrai besoin, c'était d'**exploiter** ce crawl. Un tableau propre, filtrable, exportable, avec seulement les colonnes utiles à une migration. L'outil du commerce faisait 90% du travail, et butait pile sur les 10% qui étaient mon goulot.
+
+{% Conseil titre="L'outil du commerce fait 90% du job" %}
+Avant de coder ton propre outil, identifie précisément ce qui te manque. Souvent, l'outil existant fait très bien le gros du travail, et coince sur un dernier détail qui se trouve être justement le tien. Coder, ce n'est pas remplacer l'outil, c'est combler ce dernier écart. Le reste, laisse-le à ceux dont c'est le métier.
+{% /Conseil %}
+
+## Ce que fait le crawler
+
+Le résultat est une petite application locale, sans prétention. Tu colles une adresse, tu lances, et tu obtiens un tableau que tu peux trier, filtrer, et exporter en Excel ou en CSV. Deux modes : partir du sitemap, ou explorer le site de lien en lien.
+
+Pour chaque page, il extrait ce qui compte vraiment pour une migration : la langue, le statut HTTP, le H1, le titre, la méta description, chacun avec son compteur de caractères, les balises hreflang, et la cible de redirection quand il y en a une.
+
+Il embarque même un petit audit en prime : une colonne d'alertes qui signale un titre absent, trop long ou trop court, une description qui déborde, un H1 manquant. Rien de sorcier, mais ça transforme un simple inventaire en outil de contrôle qualité.
+
+## La stack, minimaliste
+
+Sous le capot, c'est volontairement pauvre. Du Python avec Flask, un seul script pour tout démarrer, et une page web locale. Pas de navigateur headless, pas de rendu JavaScript : les pages du site sont générées côté serveur, donc une simple requête HTTP suffit à tout lire.
+
+J'ai construit ça proprement, en séparant les responsabilités (un module crawle, un module extrait, un module exporte) et en écrivant les tests avant le code. Mais j'ai surtout appliqué une règle stricte : ne pas reconstruire Screaming Frog. Pas de scoring SEO avancé, pas de rendu JS, pas de multi-utilisateur. Juste le tableau dont j'avais besoin, rien de plus. C'est cette discipline qui fait qu'un outil maison reste un outil, et ne devient pas un projet sans fin.
+
+## Le bug qui gelait le navigateur
+
+Premier bug, et première leçon. Pour afficher la progression d'un crawl, la page interroge le serveur en boucle. Au début, à chaque interrogation, le serveur re-sérialisait la totalité de l'état, toutes les pages déjà trouvées comprises.
+
+Sur un petit site, invisible. Sur un crawl de plusieurs milliers d'adresses, catastrophe : le navigateur se figeait, et pire, le crawl lui-même se bloquait, parce que ce gros paquet de données se construisait au mauvais endroit et coinçait tout le reste.
+
+Le fix tient en une idée : ne renvoyer que ce qui a changé depuis la dernière fois, pas tout l'état à chaque coup. À l'échelle, "tout renvoyer à chaque fois" te tue.
+
+## Le faux positif qui falsifiait tout
+
+Deuxième bug, et de loin le plus vicieux. Le site en préparation était protégé par un mot de passe. Le crawler sait le franchir. Mais quand le mot de passe fourni était faux, la protection ne renvoyait pas une erreur. Elle renvoyait une page "Accès restreint", avec un statut qui disait "tout va bien".
+
+Résultat : le crawler enregistrait tranquillement cette page "Accès restreint" à la place de chaque vraie page. Un export de contrôle qualité entièrement faux. Et le pire, c'est qu'aucune alerte ne se déclenchait. Tout paraissait vert.
+
+{% MonAvis sentiment="negatif" %}
+Le bug le plus dangereux n'est pas celui qui fait planter. Un plantage, tu le vois, tu le corriges. Le bug qui te ruine vraiment, c'est le faux positif silencieux : celui qui te rend un résultat propre, crédible, et complètement faux. Tu lui fais confiance, tu construis dessus, et tu ne t'en rends compte que bien plus tard. Depuis, quand un outil me dit "tout va bien", je me demande d'abord s'il saurait me dire le contraire.
+{% /MonAvis %}
+
+Le correctif était simple : si aucun jeton d'authentification n'est posé, on lève une erreur qui remonte jusqu'à l'écran. Bon mot de passe, ça passe. Mauvais, ça s'arrête net.
+
+## Ce que ça a donné
+
+Au bout du compte, un inventaire réel et propre : 2799 adresses uniques, en 7 langues, dans un tableau filtrable. C'est ce tableau qui a servi de base au plan de redirections (grâce à la colonne des cibles de redirection) et à l'audit qualité (grâce à la colonne d'alertes) pendant toute la bascule.
+
+Un petit outil, construit en quelques sessions, qui a fait exactement ce que les outils chers et complexes ne savaient pas me livrer dans un format utilisable. C'est souvent ça, coder son propre outil : pas de l'orgueil, juste combler le trou précis que personne d'autre ne comble pour toi.
+
+## La suite
+
+Un crawler te dit ce qu'il y a sur ton site. Il ne te dit pas ce que Google, lui, en fait. Pour ça, il faut brancher Search Console. Et là, j'ai découvert que "page non indexée" voulait rarement dire ce que je croyais.
+
+C'est l'objet du prochain article : [brancher Search Console sur Claude, et la vérité sur l'indexation](/search-console-claude-indexation/).

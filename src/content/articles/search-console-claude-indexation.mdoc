@@ -1,0 +1,106 @@
+---
+title: 'Brancher Search Console sur Claude, et la vérité sur l''indexation'
+territory: comprendre
+publishedAt: 2026-10-01
+scheduledPublishAt: 2026-10-01T06:00:00Z
+summary: >-
+  Search Console dit souvent "page non indexée" à tort. Voilà comment je l'ai
+  branchée sur Claude, et ce que ça m'a appris : le vrai visage de l'indexation,
+  et le faux ami qu'est l'Indexing API.
+readingTime: 8
+tags:
+  - making-of
+  - Eurofiscalis
+  - SEO
+  - indexation
+  - MCP
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 8 min en entier
+  items:
+    - >-
+      **La surprise** : quand Search Console dit "non indexée", c'est souvent
+      faux, le rapport a juste du retard.
+    - >-
+      **Le branchement** : connecter Search Console à Claude via MCP, et ses
+      pièges (le MCP se charge au démarrage, les sous-agents n'en héritent pas).
+    - >-
+      **Le cas d'usage** : vérifier 120 pages "non indexées" en lot. 117
+      l'étaient déjà, 3 vraies exceptions.
+    - >-
+      **Le faux ami** : l'Indexing API de Google ne marche que pour les offres
+      d'emploi et les événements, pas pour un article.
+    - >-
+      **La vraie méthode** : sitemap à jour, inspection, et 2-3 liens internes
+      depuis des pages déjà explorées.
+coverImage:
+  src: /images/articles/search-console-claude-indexation/coverImage/src.avif
+  alt: Google Search Console branché sur Claude via MCP pour vérifier l'indexation
+  caption: Search Console dit souvent qu'une page n'est pas indexée. C'est rarement vrai.
+seo:
+  title: 'Brancher Search Console sur Claude, et la vérité sur l''indexation'
+  description: >-
+    Connecter Google Search Console à Claude via MCP : les pièges du
+    branchement, vérifier l'indexation en lot, et pourquoi l'Indexing API est un
+    faux ami pour un blog.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Google Search Console t'affiche "cette page n'est pas indexée". Le plus souvent, c'est faux. La page est bien dans Google, le rapport a juste du retard. J'ai perdu des heures à vérifier ces pages une par une, à la main, avant de brancher Search Console directement sur Claude. Voilà ce que ça a changé, et ce que ça m'a appris sur l'indexation.
+
+Je suis Jimmy. Deuxième volet de l'aparté "outils" dans la saga Eurofiscalis. Après [mon crawler maison](/crawler-seo-maison/), qui me dit ce qu'il y a sur le site, place à l'outil qui me dit ce que Google, lui, en fait : Search Console.
+
+## Brancher Search Console sur Claude
+
+L'interface web de Search Console est lente, et elle cache une grande partie de la donnée. Je voulais pouvoir l'interroger en langage naturel, et surtout automatiser les vérifications fastidieuses. Alors je l'ai reliée à Claude par un pont, le même type de pont que celui dont je parlais dans [l'article sur nos skills](/usine-skills-claude-mcp/) : le MCP.
+
+Une bonne pratique au passage : avant de brancher quoi que ce soit, j'ai vérifié que l'accès fonctionnait vraiment, que le compte de service dédié voyait bien la propriété du site. Tester l'accès avant de connecter, ça évite de croire qu'on est relié alors qu'on ne l'est pas. Une fois en place, Claude avait sous la main tout un jeu d'outils Search Console : les statistiques, l'inspection d'URL, les sitemaps.
+
+## Ce qui a coincé
+
+Le blocage n'était pas dans la configuration, mais dans l'usage. Deux pièges qui ne sont écrits nulle part.
+
+D'abord, **un serveur MCP ne se charge qu'au démarrage d'une session.** Tu le branches en cours de conversation, et ses outils ne sont pas encore appelables tant que tu n'as pas relancé. La première fois, tu tournes en rond sans comprendre.
+
+Ensuite, **les sous-agents n'héritent pas de la connexion.** Je lance souvent des recherches en parallèle, réparties sur plusieurs agents. Tous m'ont remonté la même chose : "pas d'accès à Search Console". Le pont est propre à la session principale, il ne se partage pas automatiquement avec les assistants qu'on lance à côté. Ce sont des leçons de plomberie, pas glorieuses, mais bonnes à connaître avant de perdre une heure.
+
+## "Explorée, actuellement non indexée" : le grand malentendu
+
+Voici le cas qui a tout déclenché. Dans Search Console, 120 pages étaient marquées "explorée, actuellement non indexée". De quoi paniquer.
+
+Sauf que, quand je cliquais sur l'une d'elles pour relancer l'analyse, Google me répondait qu'elle était bien indexée. Pour connaître la vérité, il aurait donc fallu cliquer sur les 120, une par une. Insupportable.
+
+Avec Claude relié à Search Console, je l'ai fait en lot. L'API d'inspection d'URL renvoie exactement le même verdict que le clic manuel, donc j'ai vérifié les 120 pages d'un coup. Résultat : **117 étaient déjà indexées.** Le rapport avait simplement du retard. Il ne restait que 3 vrais problèmes : deux catégories de blog vides (des pages sans contenu) et une fiche de glossaire trop maigre pour mériter sa place.
+
+Le détail qui m'a mis sur la piste : Claude a repéré dans l'export que ces 120 pages étaient passées "de 0 à 120 en un seul jour". Pas une lente dégradation, un événement ponctuel : un ré-explorage massif après que j'avais resoumis le sitemap. Savoir ça change toute la lecture. Ce n'était pas un problème, c'était une photo prise pendant que Google faisait le ménage.
+
+Une limite à garder en tête : cette inspection est bridée (quelques milliers de vérifications par jour, une URL par appel, quelques secondes chacune). C'est parfait pour un lot ciblé, pas pour scanner tout le site tous les jours.
+
+## L'Indexing API, ce faux ami
+
+Passons au conseil qu'on lit partout, et qui est un piège. "Utilise l'Indexing API de Google pour forcer l'indexation de tes pages."
+
+Faux. L'Indexing API ne fonctionne officiellement que pour deux types de pages : les offres d'emploi et les événements en direct. L'utiliser pour pousser un article de blog ordinaire ne fait **rien**. Absolument rien. Beaucoup la branchent, se sentent efficaces, et ne changent strictement rien à leur indexation.
+
+{% MonAvis sentiment="mitige" %}
+L'Indexing API est le faux ami le plus recommandé du SEO technique. Elle existe, elle est bien réelle, et elle n'est tout simplement pas faite pour ton blog. C'est un bon rappel : avant de brancher une API parce qu'un article de blog te l'a conseillée, lis à quoi elle sert vraiment. Le temps que tu passes à câbler un outil inutile, tu ne le passes pas sur ce qui marche.
+{% /MonAvis %}
+
+## Comment accélérer vraiment l'indexation
+
+Alors comment pousser une page à être indexée plus vite, pour de bon ? Trois choses ennuyeuses et efficaces. Un sitemap à jour. Une inspection manuelle de l'URL (via cette même API d'inspection, pour donner un coup de coude à Google). Et surtout, deux ou trois liens internes depuis des pages que Google explore déjà régulièrement.
+
+Un exemple concret : une page de glossaire coincée dans le fameux "explorée, non indexée". On a enrichi son contenu, et surtout on lui a ajouté une poignée de liens internes réciproques depuis des pages voisines déjà bien indexées. C'est ça qui l'a sortie de la salle d'attente. Pas d'API magique. Une page bien reliée, dans un site bien exploré.
+
+{% Conseil titre="La vraie recette pour accélérer l'indexation" %}
+Oublie les API "magiques". Pour qu'une page soit indexée vite : elle doit être dans le sitemap, tu peux demander son inspection pour signaler son existence, et surtout elle doit recevoir des liens internes depuis des pages que Google visite souvent. L'indexation suit la découverte, et la découverte suit les liens. C'est du maillage, pas de la sorcellerie.
+{% /Conseil %}
+
+## La fin de la saga
+
+Deux outils, deux leçons. Le crawler m'a appris à me méfier d'un outil incapable de dire "ça ne va pas". Search Console m'a appris à me méfier de son propre rapport, et à préférer la vérification en lot au clic manuel.
+
+Et c'est le dernier article de cette longue saga sur la refonte d'Eurofiscalis. En onze articles, on a [quitté WordPress](/quitter-wordpress-site-2700-pages/), choisi Astro et Payload, déménagé 2700 pages, monté une fabrique de contenu en 7 langues, et bricolé les outils qui vont avec. Un an de chantier, raconté du dedans. Le site, lui, tourne. Et il est un peu plus haut qu'avant.
