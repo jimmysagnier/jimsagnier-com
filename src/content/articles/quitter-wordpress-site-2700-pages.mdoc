@@ -1,0 +1,133 @@
+---
+title: 'Pourquoi on a quitté WordPress pour un site à 2700 pages'
+territory: construire
+publishedAt: 2026-09-01
+scheduledPublishAt: 2026-09-01T06:00:00Z
+summary: >-
+  Un site corporate à 2700 pages, 7 langues et 1,4 million de visites par an.
+  Les cinq raisons concrètes qui nous ont fait quitter WordPress pour tout
+  reconstruire.
+readingTime: 7
+tags:
+  - making-of
+  - Eurofiscalis
+  - WordPress
+  - Astro
+  - migration
+  - SEO
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 7 min en entier
+  items:
+    - >-
+      **Les accès** : sur WordPress, cadrer qui touche à quoi relève du
+      bricolage. N'importe quel rédacteur pouvait modifier n'importe quelle
+      langue.
+    - >-
+      **Les mises à jour** : core, plugins, thèmes. À chaque update, quelque
+      chose casse. Sur 2700 pages, ce n'est plus un risque acceptable.
+    - >-
+      **La performance** : Core Web Vitals à la traîne, et Google s'en sert pour
+      classer les pages.
+    - >-
+      **Le design** : repartir d'une page blanche pour un site moderne,
+      construit vite grâce à l'IA.
+    - >-
+      **Les données fiscales** : taux de TVA et seuils Intrastat à mettre à jour
+      d'un coup partout, pas page par page.
+    - >-
+      **Le verdict** : reconstruire plutôt que rustiner, sur Astro, à l'échelle
+      de 2700 pages et 7 langues.
+coverImage:
+  src: /images/articles/quitter-wordpress-site-2700-pages/coverImage/src.avif
+  alt: Le site corporate Eurofiscalis, 2700 pages en 7 langues, avant sa refonte
+  caption: On ne refait pas un site à 1,4 million de visites pour le plaisir. On le fait quand rester coûte plus cher que partir.
+seo:
+  title: 'Pourquoi on a quitté WordPress pour un site à 2700 pages'
+  description: >-
+    Refonte d'un site corporate de 2700 pages en 7 langues : les cinq raisons
+    concrètes qui nous ont fait quitter WordPress (accès, mises à jour,
+    performance, données dynamiques).
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Refaire un site, c'est risqué. Refaire un site de 2700 pages, en 7 langues, qui encaisse 1,4 million de visites par an, c'est franchement flippant. On l'a fait quand même. Parce qu'au bout d'un moment, garder WordPress était devenu plus risqué que tout reconstruire.
+
+Je suis Jimmy. Chez Eurofiscalis, je m'occupe de l'acquisition, du SEO et du contenu. Cette année, j'ai piloté deux refontes de site. Une petite, celle du [site d'une amie](/astro-cloudflare-cms-client/), une entrepreneuse seule. Une énorme, celle du site corporate d'Eurofiscalis. Mêmes fondations techniques au départ, et pourtant plus rien à voir dès qu'on parle d'échelle et d'équipe. Cette série raconte la deuxième. On commence par la décision qui lance tout : quitter WordPress.
+
+## Le décor : 2700 pages qu'on n'a pas le droit de casser
+
+Posons les chiffres, parce que tout part de là. Le site, c'est **2700 pages et articles**, en **7 langues** (français, anglais, allemand, italien, polonais, tchèque, norvégien). Sur les douze derniers mois : **800 000 visites venues du SEO**, **1,4 million de visites au total**.
+
+Pour te donner une idée, ce trafic, c'est du business. Des prospects, des clients, du chiffre. Tu ne bricoles pas un truc pareil un dimanche soir en te disant "on verra bien".
+
+Le site tournait sur WordPress, avec Elementor pour le design. Et honnêtement, ça a fait le job pendant des années. Le problème n'est pas que WordPress soit mauvais. Le problème, c'est qu'à cette échelle, chaque habitude WordPress était devenue un risque. Voilà les cinq qui ont fini par nous décider.
+
+## Raison 1 : personne ne devrait pouvoir tout casser
+
+Première douleur, et pas la plus visible : les accès.
+
+On a une équipe répartie sur plusieurs pays. Un rédacteur polonais, un traducteur allemand, un consultant tchèque. La règle de bon sens, c'est que chacun touche à sa langue, et à rien d'autre. Sur WordPress, cadrer ça proprement relève du bricolage. Tu empiles des plugins de gestion de rôles, tu pries pour qu'ils ne se marchent pas dessus, et au final n'importe qui avec un accès rédacteur peut aller modifier une page dans une langue qu'il ne parle même pas.
+
+À une personne, ça passe. À une équipe multi-pays sur 2700 pages, c'est une bombe à retardement. Cette histoire de rôles, tu vas voir, c'est elle qui a tranché le choix du CMS. J'y reviens dans le prochain article.
+
+## Raison 2 : la roue de hamster des mises à jour
+
+Deuxième douleur : maintenir WordPress en vie.
+
+Le core, les plugins, les thèmes. Tout ça se met à jour en permanence. Et à chaque fois, la même prière : pourvu que rien ne casse. Sauf que quelque chose casse toujours. Un plugin qui ne s'entend plus avec un autre, une mise à jour de thème qui déforme une mise en page, une extension abandonnée qui ouvre une faille de sécurité.
+
+{% MonAvis sentiment="negatif" %}
+Ce qui m'a le plus usé sur WordPress, ce n'est pas la lenteur. C'est cette peur permanente de la mise à jour. Tu finis par ne plus oser toucher à rien, ce qui est la pire situation possible. Un site qu'on a peur de mettre à jour est un site déjà en danger.
+{% /MonAvis %}
+
+Sur un petit blog, tu vis avec. Sur un site à 1,4 million de visites, chaque incident se compte en trafic perdu et en clients qui tombent sur une page cassée. Pas acceptable.
+
+## Raison 3 : la vitesse, que Google mesure
+
+Troisième douleur : les performances.
+
+WordPress plus Elementor, empilé de plugins, ça finit lourd. Les Core Web Vitals (ces indicateurs de vitesse et de stabilité d'affichage que Google surveille) étaient à la traîne. Et Google s'en sert pour classer les pages.
+
+Je ne vais pas te réexpliquer ici pourquoi la vitesse est un levier SEO, je l'ai déjà détaillé [dans un autre article](/performance-strategie-seo/). Retiens juste ceci : quand plus de 800 000 de tes 1,4 million de visites viennent du référencement naturel, laisser filer la performance, c'est laisser filer de l'argent.
+
+## Raison 4 : un design moderne, construit vite
+
+Quatrième raison, plus positive celle-là : l'envie.
+
+L'envie d'un site qui ait l'air de 2026, pas de 2018. Un design plus dynamique, une vraie direction artistique. Avec Elementor, tu es vite au plafond : tu assembles des blocs préfabriqués, tu ne construis pas vraiment.
+
+Kévin, le fondateur d'Eurofiscalis, avait une idée précise de ce qu'il voulait côté design. Repartir d'une page blanche, sans les contraintes d'Elementor, nous laissait enfin le faire pour de vrai. Et avec l'IA pour accélérer la conception et le code, ce qui aurait pris des mois devenait jouable en semaines.
+
+## Raison 5 : un chiffre, un seul endroit
+
+Cinquième douleur, et la plus spécifique à notre métier : les données qui changent.
+
+On parle de fiscalité. Nos pages sont bourrées de chiffres qui bougent : taux de TVA par pays, seuils Intrastat, délais de déclaration. Le même taux allemand apparaît sur des dizaines, parfois des centaines de pages.
+
+Sur WordPress, on gérait ça avec des shortcodes. Sur le papier, c'est propre. En vrai, c'est fragile, et le jour où un taux change, tu n'es jamais certain d'avoir tout couvert. Ce qu'on voulait tient en une phrase : **un chiffre défini à un seul endroit, mis à jour une fois, propagé partout automatiquement.** Ça a l'air d'un détail. C'est en réalité l'une des raisons qui a le plus pesé, et elle méritera son propre passage plus loin dans la série.
+
+{% Conseil titre="Le vrai coût d'un site, c'est sa maintenance" %}
+Quand tu choisis ou refais un site, ne regarde pas seulement à quoi il ressemble le jour de la mise en ligne. Regarde ce qu'il va te coûter à maintenir : les mises à jour, la gestion des accès, la mise à jour des contenus qui changent. C'est là que se joue la facture réelle, pas dans le design d'ouverture.
+{% /Conseil %}
+
+## Reconstruire, pas rustiner
+
+Arrivés là, deux options. Continuer à colmater WordPress, ou tout reprendre à zéro.
+
+On a choisi de reconstruire. À trois : Kévin sur la direction design, Max au développement, moi sur l'architecture SEO, les contenus et le pilotage. Reconstruire fait peur, c'est vrai. Mais rustiner un site qu'on n'ose plus mettre à jour, c'est juste repousser le problème en le laissant grossir.
+
+## Et Astro, dans tout ça ?
+
+Pour le framework, on est partis sur Astro. Je ne vais pas te refaire le topo sur ce qu'est Astro ni pourquoi Cloudflare pour l'héberger, je l'ai déjà écrit [en détail sur le site d'Eva](/astro-cloudflare-cms-client/). La seule question qui comptait ici était différente : est-ce que ça tient à 2700 pages et 7 langues ?
+
+Oui. Astro génère du HTML statique au build, donc des pages rapides quel que soit leur nombre. Il gère le multilingue nativement, avec le français à la racine et les autres langues déclinées proprement. Et il ne charge du JavaScript que là où il en faut vraiment, sur les quelques outils interactifs. À l'échelle, c'est exactement ce qu'on cherchait.
+
+## La suite
+
+Le framework, au fond, n'était pas le plus dur à choisir. Le vrai casse-tête, c'était le CMS : l'outil avec lequel toute l'équipe allait écrire, traduire et publier au quotidien. Et sur ce coup, on s'est trompés une première fois avant de trouver le bon.
+
+C'est l'objet du prochain article : [Sanity, puis Payload, le CMS qu'on a choisi deux fois](/sanity-puis-payload-cms-choisi-deux-fois/).

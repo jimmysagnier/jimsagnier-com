@@ -1,0 +1,121 @@
+---
+title: 'Déménager 2700 pages en 7 langues sans perdre Google'
+territory: comprendre
+publishedAt: 2026-09-07
+scheduledPublishAt: 2026-09-07T06:00:00Z
+summary: >-
+  2700 pages déplacées en 7 langues, 1,4 million de visites en jeu. La méthode
+  pour migrer sans perdre Google : résultat, 100% d'indexation et un gain moyen
+  de 0,3 position.
+readingTime: 8
+tags:
+  - making-of
+  - Eurofiscalis
+  - migration
+  - SEO
+  - redirections
+  - IA
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 8 min en entier
+  items:
+    - >-
+      **Le vrai risque** : ce ne sont ni le code ni le design, ce sont les URLs
+      et les redirections.
+    - >-
+      **La méthode** : cartographier les 2700 pages, poser une redirection 301
+      par adresse, gérer le multilingue (hreflang).
+    - >-
+      **L'IA** : un pipeline piloté par l'IA pour déplacer et reformater le
+      contenu, avec relecture humaine sur chaque page sensible.
+    - >-
+      **Le résultat** : 100% des pages indexées et un gain moyen de 0,3
+      position.
+    - >-
+      **Le signal faible** : 0,9% du trafic vient déjà des IA, et ça ne fera
+      qu'augmenter.
+coverImage:
+  src: /images/articles/migrer-2700-pages-7-langues-sans-perdre-google/coverImage/src.avif
+  alt: La migration de 2700 pages en 7 langues du site Eurofiscalis sans perte de trafic SEO
+  caption: Une migration réussie, c'est quand personne ne remarque que le site a déménagé.
+seo:
+  title: 'Migrer 2700 pages en 7 langues sans perdre Google'
+  description: >-
+    Migration SEO d'un site de 2700 pages en 7 langues : cartographie,
+    redirections 301, pipeline IA et monitoring. Résultat : 100% d'indexation et
+    +0,3 position en moyenne.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+2700 pages à déplacer. 1,4 million de visites annuelles en jeu, dont plus de 800 000 venues de Google. Une migration ratée, et c'est une partie de ce trafic qui s'évapore, parfois pour des mois. Résultat final, une fois la poussière retombée : 100% des pages indexées, et un gain moyen de 0,3 position. Voilà comment on s'y est pris.
+
+Je suis Jimmy. Dernier article de la série sur la refonte du site Eurofiscalis. On a vu [pourquoi quitter WordPress](/quitter-wordpress-site-2700-pages/), puis [comment on a choisi Payload après s'être trompé avec Sanity](/sanity-puis-payload-cms-choisi-deux-fois/). Reste l'étape qui fait peur à tout le monde : le déménagement. Parce qu'un site refait, c'est bien. Un site refait qui garde tout son référencement, c'est le vrai objectif.
+
+## Le vrai risque, ce n'est pas la techno
+
+Quand on parle de migration, tout le monde pense au code, au design, à la bascule. Ce n'est pas là que ça casse.
+
+Ce qui casse un référencement, c'est les URLs. Chaque page qui reçoit du trafic depuis Google a une adresse. Google la connaît, la classe, et des sites externes pointent vers elle. Si cette adresse change ou disparaît sans qu'on prévienne Google proprement, tout le crédit accumulé sur cette page part à la poubelle. Sur 2700 pages, en 7 langues, ça fait beaucoup d'adresses à ne pas perdre.
+
+Donc la vraie migration, ce n'est pas "refaire le site". C'est "faire correspondre chaque ancienne adresse à sa nouvelle, sans en oublier une seule".
+
+## Étape 1 : cartographier les 2700 pages
+
+Tu ne peux pas rediriger ce que tu n'as pas listé. Première étape, donc : recenser l'existant, exhaustivement.
+
+Pour ça, on a utilisé un crawler, un outil qui parcourt le site comme le ferait Google et note toutes les pages accessibles, leurs adresses, leurs titres, leur statut. On en a même construit un sur mesure pour coller à nos besoins. À la sortie, on a la carte complète de l'ancien site : les 2700 adresses, langue par langue.
+
+C'est fastidieux, ce n'est pas glamour, mais c'est la fondation de tout le reste. Une page oubliée à cette étape, c'est une page perdue le jour de la bascule.
+
+## Étape 2 : les redirections 301, en 7 langues
+
+Une fois la carte en main, on relie chaque ancienne adresse à sa nouvelle avec une redirection 301. Le 301, c'est le panneau officiel qu'on montre à Google : cette page a déménagé, définitivement, elle est là maintenant. Bien faite, la redirection transfère à la nouvelle adresse le crédit accumulé par l'ancienne.
+
+{% Conseil titre="Une URL qui a du trafic doit avoir sa 301" %}
+La règle est simple et sans exception : toute adresse qui recevait ne serait-ce qu'un peu de trafic ou un lien entrant doit pointer vers son équivalent sur le nouveau site. Pas vers la page d'accueil par facilité, vers la vraie page équivalente. C'est le travail le moins visible d'une migration, et c'est celui qui décide si tu gardes ton référencement ou si tu le jettes.
+{% /Conseil %}
+
+En multilingue, il y a une couche en plus. Chaque page existe en plusieurs langues, et il faut dire à Google quelle version correspond à quelle langue et quel pays (ce sont les balises hreflang). Une version française qui renvoie vers l'anglais, et c'est le mauvais public qui atterrit sur la mauvaise page. Multiplié par 7 langues, ça demande de la rigueur.
+
+## Étape 3 : déplacer le contenu, avec l'IA
+
+Reste à faire entrer les 2700 pages dans le nouveau CMS. Fait à la main, c'est un travail de titan. C'est là que l'IA a changé l'échelle du possible.
+
+On a construit un pipeline : une suite d'outils, pilotés par l'IA, qui récupèrent le contenu existant, le remettent en forme pour Payload, repèrent les taux et les seuils pour les transformer en tokens dynamiques, et préparent même les versions traduites. Jérémy m'a épaulé sur toute cette partie migration, et les traducteurs de chaque pays sont repassés derrière pour valider leur langue.
+
+Je suis clair sur un point : l'IA n'a pas fait le travail toute seule, et je ne l'aurais pas laissée faire. Sur un sujet aussi sensible que la fiscalité, chaque page importante repasse devant un humain. L'IA fait le gros du déplacement et du reformatage, l'humain garde la main sur l'exactitude. C'est ce partage qui rend le volume tenable sans sacrifier la qualité.
+
+## Étape 4 : surveiller après la bascule
+
+Le jour de la bascule n'est pas la fin, c'est le début de la période à surveiller de près.
+
+Dans les jours et les semaines qui suivent, on garde un oeil sur Google Search Console : est-ce que Google explore bien les nouvelles pages, est-ce qu'il remonte des erreurs, est-ce que les positions bougent ? Une redirection oubliée se voit là, en quelques jours, sous forme d'une page en erreur. On corrige au fil de l'eau, avant que ça ne coûte du trafic.
+
+## Les résultats
+
+Alors, ça a donné quoi ?
+
+**100% de taux d'indexation.** Toutes les pages qui devaient être dans l'index de Google y sont. Aucune n'est passée à la trappe dans le déménagement. Sur 2700 pages, c'est le résultat que je voulais voir.
+
+**Un gain moyen de 0,3 position.** Non seulement on n'a pas perdu de terrain, mais on en a gagné un peu. Un site plus rapide et mieux structuré, Google le récompense. Sur des milliers de mots-clés, trois dixièmes de position en moyenne, ça fait beaucoup de visibilité en plus.
+
+{% MonAvis sentiment="positif" %}
+Le vrai succès d'une migration, c'est quand il ne se passe rien de visible pour le visiteur. Personne ne remarque le déménagement, le trafic ne bouge pas dans le mauvais sens, et quelques semaines plus tard, on est un peu plus haut qu'avant. Pas de crash, pas de chute. C'est exactement ce qu'on voulait, et c'est le plus dur à obtenir.
+{% /MonAvis %}
+
+## Le signal faible que je surveille : les IA
+
+Un dernier chiffre, plus discret, mais que je ne quitte pas des yeux : **0,9% de notre trafic vient déjà des IA**, ces assistants comme ChatGPT ou Perplexity qui répondent directement aux gens et citent des sources.
+
+0,9%, c'est petit. Mais il y a deux ans, c'était zéro. La façon dont les gens cherchent de l'information est en train de changer, et une partie des réponses ne passe plus par une page de résultats classique. Un site propre, rapide, bien structuré, avec des réponses claires, c'est justement ce que ces IA aiment citer. La refonte ne nous a pas seulement remis d'aplomb sur Google. Elle nous a préparés pour ce qui vient après.
+
+## Ce que je retiens de toute la série
+
+Voilà, la boucle est bouclée. On a quitté WordPress pour de vraies raisons, on a choisi Astro et Payload (en se trompant une fois en chemin), et on a déménagé 2700 pages sans rien perdre.
+
+S'il faut retenir une chose : une refonte réussie ne se juge pas au design du premier jour. Elle se juge des mois plus tard, quand l'équipe travaille plus sereinement, quand le site tient tout seul, et quand le trafic est toujours là, un peu plus haut même. Le reste, c'est de la déco.
+
+{% FAQ items=[{question: "Perd-on forcément du trafic en migrant un site ?", reponse: "Non, pas si les redirections sont faites correctement. Le trafic chute quand des adresses disparaissent sans redirection 301. Avec une cartographie complète et une 301 par ancienne adresse, on migre sans perte, voire on gagne un peu, comme ici."}, {question: "Combien de temps Google met-il à réindexer un site migré ?", reponse: "Quelques jours pour commencer, quelques semaines pour se stabiliser. C'est pour ça qu'on surveille Google Search Console de près pendant le premier mois."}, {question: "Faut-il vraiment rediriger toutes les pages ?", reponse: "Toutes celles qui avaient du trafic ou des liens entrants, oui. Une page sans aucune visite ni lien peut être laissée de côté, mais dans le doute, on redirige."}, {question: "L'IA peut-elle gérer une migration toute seule ?", reponse: "Non. Elle accélère énormément le déplacement et le reformatage, mais sur un sujet sensible comme la fiscalité, chaque page importante repasse devant un humain qui valide l'exactitude."}] /%}
