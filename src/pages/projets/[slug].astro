@@ -112,6 +112,12 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
             </div>
           </div>
         )}
+        {project.timeSpent && (
+          <div class="aside-block">
+            <span class="aside-label">// temps passé</span>
+            <div class="time-spent">{project.timeSpent}</div>
+          </div>
+        )}
         <div class="aside-block">
           <a href="/projets" class="back">← Retour aux projets</a>
         </div>
@@ -264,6 +270,10 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
     color: var(--fg-mute); margin-top: 8px;
   }
   .bar-meta b { color: var(--fg); font-weight: 500; }
+  .time-spent {
+    font-family: var(--mono); font-size: 15px;
+    color: var(--fg); letter-spacing: .02em;
+  }
   .back {
     color: var(--fg-dim); font-size: 14px;
     transition: color .2s;
