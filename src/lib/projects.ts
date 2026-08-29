@@ -97,6 +97,37 @@ export const FALLBACK_PROJECTS: UniverseProject[] = [
   },
 ];
 
+/**
+ * Tags qui rattachent un article à un projet. Un article est considéré comme
+ * relié dès qu'il porte l'un des tags listés (matching insensible à la casse).
+ * Quand la collection Keystatic `projets` sera peuplée, on basculera sur le
+ * champ `relatedProject` du schéma.
+ */
+export const PROJECT_TAG_MAP: Record<string, string[]> = {
+  'la-puissance-de-leveil': ["La Puissance de l'Éveil"],
+  'eurofiscalis-refonte': ['Eurofiscalis'],
+  'crm-eurofiscalis': ['CRM Eurofiscalis'],
+  'jimsagnier-com': ['jimsagnier.com'],
+  'second-cerveau-mcp': ['Second Cerveau', 'MCP'],
+};
+
+export async function getArticlesForProject(slug: string) {
+  const tags = PROJECT_TAG_MAP[slug] ?? [];
+  const wanted = new Set(tags.map((t) => t.toLowerCase()));
+  const now = new Date();
+  const isDev = import.meta.env.DEV;
+  const articles = await getCollection('articles', ({ data }) => {
+    if (!isDev) {
+      if (data.draft) return false;
+      if (data.scheduledPublishAt && data.scheduledPublishAt > now) return false;
+    }
+    if (data.relatedProject?.id === slug) return true;
+    return (data.tags ?? []).some((t) => wanted.has(t.toLowerCase()));
+  });
+  articles.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+  return articles;
+}
+
 export async function getProjects(): Promise<UniverseProject[]> {
   const collectionProjects = await getCollection('projets', ({ data }) => !data.archived);
   if (collectionProjects.length === 0) return FALLBACK_PROJECTS;

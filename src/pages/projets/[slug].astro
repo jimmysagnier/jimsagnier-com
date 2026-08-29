@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getSiteSettings } from '../../lib/site';
-import { getProjects } from '../../lib/projects';
+import { getProjects, getArticlesForProject } from '../../lib/projects';
 import { creativeWorkNode } from '../../lib/schema';
 import type { UniverseProject } from '../../components/UniverseCard.astro';
 
@@ -34,6 +34,18 @@ const breadcrumbs = [
   { name: 'Projets', url: `${settings.baseUrl}/projets` },
   { name: project.title, url },
 ];
+
+const relatedArticles = await getArticlesForProject(project.slug);
+const territoryLabels = {
+  construire: 'Construire',
+  comprendre: 'Comprendre',
+  reflechir: 'Réfléchir',
+} as const;
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
 ---
 <BaseLayout
   title={project.title}
@@ -106,6 +118,41 @@ const breadcrumbs = [
       </aside>
     </div>
   </section>
+
+  {relatedArticles.length > 0 && (
+    <section class={`related-articles color-${project.color}`}>
+      <div class="inner">
+        <header class="section-head">
+          <span class="kicker">// articles reliés</span>
+          <h2>
+            {relatedArticles.length > 1
+              ? `${relatedArticles.length} articles autour de ce projet`
+              : 'Un article autour de ce projet'}
+          </h2>
+        </header>
+        <div class="grid">
+          {relatedArticles.map((article) => (
+            <a
+              class={`article-card ${article.data.territory}`}
+              data-project={project.slug === 'la-puissance-de-leveil' ? 'eveil' : undefined}
+              href={`/${article.id}`}
+            >
+              <div class="cover"></div>
+              <div class="body">
+                <span class={`terr-tag ${article.data.territory}`}>{territoryLabels[article.data.territory]}</span>
+                <h3>{article.data.title}</h3>
+                <p>{article.data.summary}</p>
+                <div class="meta">
+                  <span>{dateFormatter.format(article.data.publishedAt).toUpperCase()}</span>
+                  <span class="read">Lire <span>→</span></span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
@@ -223,10 +270,41 @@ const breadcrumbs = [
   }
   .back:hover { color: var(--fg); }
 
+  .related-articles {
+    --c: var(--accent);
+    border-top: 1px solid var(--line);
+    padding: 72px 48px 96px;
+    background: var(--bg-2);
+  }
+  .related-articles.color-warm   { --c: #FB923C; }
+  .related-articles.color-purple { --c: #A78BFA; }
+  .related-articles.color-green  { --c: #10B981; }
+  .related-articles.color-pink   { --c: #EC4899; }
+  .related-articles .inner {
+    max-width: var(--max); margin: 0 auto;
+  }
+  .related-articles .section-head { margin-bottom: 32px; }
+  .related-articles .kicker {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--c); letter-spacing: .08em;
+    text-transform: lowercase;
+  }
+  .related-articles .section-head h2 {
+    font-size: clamp(24px, 2.6vw, 32px);
+    letter-spacing: -.02em; font-weight: 600;
+    margin-top: 8px;
+  }
+  .related-articles .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
   @media (max-width: 980px) {
     .detail-hero { padding: 48px 24px; }
     .detail-body { padding: 32px 24px 64px; }
     .detail-body .grid { grid-template-columns: 1fr; gap: 32px; }
     .col-aside { position: static; }
+    .related-articles { padding: 56px 24px 72px; }
+    .related-articles .grid { grid-template-columns: 1fr; }
   }
 </style>
