@@ -1,0 +1,109 @@
+---
+title: 'Les outils interactifs d''un blog, sans casser le SEO'
+territory: construire
+publishedAt: 2026-10-04
+scheduledPublishAt: 2026-10-04T06:00:00Z
+summary: >-
+  Un site de contenu peut être plus qu'une pile de pages. Les outils
+  interactifs du blog (calculateur, simulateur, vérificateur VIES), comment les
+  coder dans un site statique, et pourquoi ils battent l'IA.
+readingTime: 8
+tags:
+  - making-of
+  - Eurofiscalis
+  - web
+  - outils
+  - React
+  - SEO
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 8 min en entier
+  items:
+    - >-
+      **L'astuce** : des outils interactifs dans un site 100% statique, grâce aux
+      islands (React ne se charge que sur l'outil).
+    - >-
+      **Le plus rentable** : le calculateur HT/TTC, calcul local zéro API, n°1 du
+      site en clics.
+    - >-
+      **Le local d'abord** : le simulateur de numéro de TVA se calcule côté
+      navigateur, une simple clé mathématique.
+    - >-
+      **La seule vraie complexité** : le vérificateur VIES, qui passe par un
+      proxy parce que l'API de la Commission est capricieuse.
+    - >-
+      **La stratégie** : un outil "Do" par article "Know", pour retenir le clic
+      que l'IA voudrait absorber.
+coverImage:
+  src: /images/articles/outils-interactifs-blog/coverImage/src.avif
+  alt: Les outils interactifs du blog Eurofiscalis, codés en React islands
+  caption: Le plus simple des outils est souvent le plus utile. Et le plus visité.
+seo:
+  title: 'Les outils interactifs d''un blog, sans casser le SEO'
+  description: >-
+    Coder des outils interactifs (calculateur TVA, simulateur, vérificateur
+    VIES) dans un site statique grâce aux islands React, et pourquoi ils
+    retiennent le clic face à l'IA.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Un site de contenu n'est pas condamné à n'être qu'une pile de pages. Quelques outils interactifs bien placés rendent service au visiteur, le retiennent, et même, retiennent le clic que l'IA voudrait lui piquer. Voilà les outils que j'ai codés pour le blog, et comment les glisser dans un site 100% statique sans casser le référencement.
+
+Je suis Jimmy. Oui, j'avais dit que la saga Eurofiscalis était bouclée. Il me restait un dernier aparté, sur les outils interactifs du blog. Après [le crawler](/crawler-seo-maison/) et [Search Console](/search-console-claude-indexation/), qui sont mes outils à moi, place à ceux que voit le visiteur.
+
+## Des outils dans un site statique : l'astuce des islands
+
+Petit rappel du décor. Tout le site est en HTML statique, généré une fois au build. C'est ce qui le rend rapide et facile à indexer. Sauf qu'un calculateur, lui, doit réagir aux clics. Comment avoir les deux, la page statique légère et l'outil vivant ?
+
+La réponse tient en un mot : les islands. La page est servie en HTML pur, et seul l'outil embarque un peu de React, chargé uniquement quand le visiteur arrive dessus ou interagit avec. Le reste de la page ne télécharge aucun JavaScript. Tu as donc de l'interactivité exactement là où il en faut, une petite île dans un océan de statique, et zéro poids ailleurs. Le meilleur des deux mondes.
+
+## Le plus bête est le plus rentable
+
+Commençons par le plus simple, et c'est une leçon. Le calculateur HT/TTC : tu saisis un montant et un taux de TVA, il te sort le HT, la TVA et le TTC. Trivial. Zéro API, aucun serveur, juste une multiplication faite dans le navigateur.
+
+Et c'est, de loin, l'outil le plus visité de tout le site. Près de 8 700 clics sur trois mois, numéro un devant tout le reste. L'outil le plus bête que j'aie codé écrase les plus malins.
+
+{% MonAvis sentiment="positif" %}
+La leçon que je retiens : l'utilité bat l'intelligence. Un outil qui répond à une toute petite question, mais qu'énormément de gens se posent, fera toujours plus de trafic qu'un outil sophistiqué dont personne n'a besoin. Avant de coder un truc complexe, demande-toi ce que ton visiteur cherche vraiment. Souvent, c'est bête. Et c'est tant mieux.
+{% /MonAvis %}
+
+## Le simulateur de numéro de TVA
+
+Deuxième outil, à peine plus compliqué. À partir du SIREN d'une entreprise française (ses 9 chiffres), il calcule son numéro de TVA intracommunautaire. Là encore, tout se passe dans le navigateur, zéro API : le numéro de TVA français se déduit du SIREN par une simple clé de contrôle, un petit calcul modulo. Pas besoin d'aller demander à qui que ce soit.
+
+Un point d'honnêteté que l'outil affiche clairement : le numéro obtenu est théorique. Le calcul est juste, mais il ne prouve pas que l'entreprise est réellement immatriculée à la TVA. Pour ça, il faut aller vérifier dans la base officielle. Ce qui nous amène au seul outil qui, lui, n'est pas si simple.
+
+{% Conseil titre="Le local d'abord, le serveur seulement si tu n'as pas le choix" %}
+La plupart des "outils" ne sont que du calcul ou de la logique. Fais-les tourner côté navigateur : zéro serveur, zéro coût, réponse instantanée, et rien à maintenir. Ne sors l'artillerie d'un serveur que quand tu ne peux vraiment pas faire autrement, typiquement quand il faut interroger une source externe que toi seul peux joindre.
+{% /Conseil %}
+
+## VIES, le seul qui a besoin d'un serveur
+
+Le vérificateur VIES. Tu entres un numéro de TVA européen, il te dit s'il est valide, avec le nom et l'adresse de l'entreprise, d'après la base VIES de la Commission européenne. Ici, pas de calcul local possible : il faut aller poser la question à la Commission. Et c'est là que ça devient intéressant.
+
+Deux problèmes. D'abord, tu ne veux pas que le navigateur appelle directement l'API de la Commission : ça expose l'appel et tu ne contrôles rien du débit. Ensuite, VIES est réputé capricieux. Chaque État membre répond via son propre système, donc selon le pays interrogé, tu récoltes des lenteurs et des erreurs.
+
+La solution, c'est un proxy. Un petit Cloudflare Worker se place entre le navigateur et VIES. C'est lui qui fait l'appel, encaisse les erreurs, lisse le débit, et renvoie une réponse propre. Détail amusant : cet outil n'est pas né avec la refonte, il a été porté depuis la version en HTML/JavaScript de l'ancien site.
+
+Un peu de métier, parce que c'est le genre de piège qu'un bon vérificateur gère : tout le monde n'est pas dans VIES. La Norvège et la Suisse, par exemple, n'y sont pas, elles ne sont pas dans l'Union. Sans oublier les cas particuliers, comme l'Irlande du Nord depuis le Brexit. Un outil qui ignore ça renvoie des faux négatifs.
+
+## Pourquoi ces outils, vraiment
+
+Reste la vraie raison, celle qui dépasse le "c'est sympa d'en avoir". Ces outils ne sont pas des gadgets, ce sont une stratégie. La règle qu'on s'est fixée : tout article de fond s'accompagne d'au moins un outil. Pour deux raisons.
+
+La première, l'outil retient le visiteur. Quelqu'un venu comprendre quelque chose reste pour le faire, sur ta page, au lieu de repartir chercher un outil ailleurs.
+
+La seconde, de plus en plus décisive : l'outil retient le clic que l'IA veut absorber. Quand une réponse d'IA résume ton article, elle peut remplacer la lecture. Elle ne peut pas remplacer l'action. Un calculateur, un vérificateur, un simulateur, c'est quelque chose pour lequel le visiteur doit venir chez toi. Et une page qui propose de "faire", et pas seulement de "lire", l'IA elle-même a tendance à la citer comme source.
+
+{% EnPratique titre="La règle Know / Do" %}
+Pour chaque contenu qui explique (Know), embarque un outil qui permet d'agir (Do). L'explication seule est facile à résumer, donc facile à remplacer. L'outil, non. C'est ce qui fait qu'on vient sur ta page, et qu'on y reste, à l'ère où l'IA répond avant même que tu aies cliqué.
+{% /EnPratique %}
+
+## La fin, pour de vrai
+
+Deux leçons de ces outils. Fais le plus possible en local, tu seras surpris de voir jusqu'où ça te mène sans serveur ni coût. Et mets un "faire" à côté de chaque "expliquer", parce que c'est précisément ce qu'aucun concurrent, aucune IA, ne pourra te prendre.
+
+Et cette fois, la saga est vraiment terminée. Douze articles pour raconter un an à reconstruire un site de A à Z, de la stack à la fabrique de contenu jusqu'aux petits outils qui font la différence. Le reste, maintenant, ce sont des visiteurs qui cliquent.
