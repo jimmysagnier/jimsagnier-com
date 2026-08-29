@@ -1,0 +1,121 @@
+---
+title: 'Construire une usine de skills Claude et MCP'
+territory: construire
+publishedAt: 2026-09-25
+scheduledPublishAt: 2026-09-25T06:00:00Z
+summary: >-
+  La fabrique de contenu n'est pas un prompt magique, c'est une architecture :
+  des skills Claude, des agents, du MCP, et une règle simple pour que ça reste
+  maintenable à l'échelle.
+readingTime: 9
+tags:
+  - making-of
+  - Eurofiscalis
+  - IA
+  - skills
+  - MCP
+  - Claude
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 9 min en entier
+  items:
+    - >-
+      **L'idée** : la fabrique de contenu n'est pas un gros prompt malin, c'est
+      une architecture logicielle.
+    - >-
+      **Le principe clé** : une règle de méthode vit à un seul endroit, jamais
+      recopiée dans le code.
+    - >-
+      **Les 3 couches** : le second cerveau (la vérité), les skills
+      (l'application), les agents (l'exécution). Une seule direction.
+    - >-
+      **Les contrats** : chaque échange a un format imposé (JSON, Markdown ou
+      YAML) selon qui le lit.
+    - >-
+      **MCP** : le pont qui laisse Claude écrire dans le CMS et lire Search
+      Console.
+coverImage:
+  src: /images/articles/usine-skills-claude-mcp/coverImage/src.avif
+  alt: L'architecture de skills Claude, d'agents et de MCP derrière la fabrique de contenu
+  caption: Une fabrique de contenu, ce n'est pas un prompt magique. C'est du logiciel, rangé proprement.
+seo:
+  title: 'Construire une usine de skills Claude et MCP'
+  description: >-
+    L'architecture derrière notre fabrique de contenu : skills Claude, agents,
+    MCP vers le CMS, et le principe de source unique pour rester maintenable à
+    l'échelle.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+J'ai fini l'article précédent en disant que le reste, c'était des détails d'outillage. Pour ceux que l'outillage intéresse, en voici les coulisses. Notre fabrique de contenu n'est pas un gros prompt malin. C'est une architecture logicielle, avec une règle simple qui fait que tout tient à l'échelle.
+
+Je suis Jimmy. Cet article est le bonus technique de la série sur notre fabrique de contenu Eurofiscalis. Après [la chaîne éditoriale](/chaine-editoriale-contenu-echelle/) et [le maillage](/cocon-semantique-maillage-echelle/), on descend d'un étage, sous le capot : comment tout ça est construit avec des skills Claude, des agents et du MCP. C'est le plus technique de la série, et le plus utile si tu construis tes propres systèmes avec l'IA.
+
+## D'abord, deux mots : skill et MCP
+
+Un **skill**, c'est une compétence packagée. Un mode d'emploi que Claude charge quand une tâche précise se présente : rédiger un article, le publier, le traduire. Plutôt que réexpliquer la méthode à chaque fois dans un prompt, on l'écrit une fois, proprement, et Claude s'en sert quand il faut.
+
+Le **MCP**, c'est un standard qui permet à Claude de parler à des outils externes. Chez nous, il ouvre deux portes : écrire dans le CMS (créer, modifier, publier une page) et lire les données de Search Console.
+
+Deux briques simples. Toute la subtilité est dans la façon de les organiser.
+
+## Le piège qu'on a fui : la règle recopiée partout
+
+Au début, une même règle de méthode (un seuil, une contrainte de longueur, une convention de nommage) se retrouvait recopiée dans plusieurs skills et plusieurs agents. Confortable sur le moment. Cauchemar dès qu'il fallait la changer.
+
+Un jour, modifier un seul seuil m'a demandé **onze modifications, à onze endroits différents**, parce que la règle avait été dupliquée partout. Onze occasions de me tromper, d'en oublier une, de laisser deux versions contradictoires vivre côte à côte. C'est le moment où j'ai compris qu'il fallait une règle d'architecture, pas juste des prompts bien écrits.
+
+{% Conseil titre="Une règle vit à un seul endroit" %}
+Dès qu'une information est vraie "en général" (une convention, un seuil, une méthode), elle doit exister à un seul endroit, et tout le reste doit y faire référence, jamais la recopier. Le jour où elle change, tu la changes une fois. C'est le principe de source unique, et c'est ce qui sépare un système maintenable d'un château de cartes.
+{% /Conseil %}
+
+## Trois couches, une seule direction
+
+De ce constat est née la règle qui structure tout le système. Trois couches, et une dépendance qui ne va que dans un sens.
+
+**Le second cerveau : la vérité.** C'est là que vit la méthode, les règles, les conventions. Des fiches, indépendantes de tout outil. Si une règle change, elle change ici.
+
+**Les skills : l'application.** Ils prennent la méthode et l'appliquent au cas Eurofiscalis : le CMS, les tokens, les gates, le maillage. Ils ne réécrivent pas la méthode, ils la lisent.
+
+**Les agents : l'exécution.** Chacun fait une tâche précise (analyser la concurrence, écrire les métadonnées), en suivant une procédure et en rendant un résultat dans un format défini.
+
+{% EnPratique titre="La règle de dépendance" %}
+Le second cerveau ne sait rien des skills. Les skills lisent le second cerveau. Les agents sont dispatchés par les skills. Jamais l'inverse. Chaque couche reste simple, testable, et remplaçable sans casser les autres.
+{% /EnPratique %}
+
+## Les agents et leurs contrats
+
+Entre les skills et les agents, des données circulent. Et le format de ces données n'est pas uniforme : il est choisi par celui qui va les **lire**.
+
+Une sortie que je relis à la main lors d'une validation reste en Markdown, lisible. Une sortie injectée telle quelle dans un autre outil part en JSON strict, pour qu'aucune erreur ne se glisse. Une donnée traitée par un autre agent prend le format qui l'arrange.
+
+La tentation, c'est de tout uniformiser "pour faire propre". Mauvaise idée. Un rapport que je dois relire doit rester lisible par un humain, pas devenir un pavé de JSON. Le bon format dépend de qui lit.
+
+Et un détail qui a son importance : les sections de ces sorties sont fixes et nommées. Renommer une section, et toute la chaîne qui la consomme casse, souvent en silence. Comme dans n'importe quel logiciel, l'interface entre deux briques est un contrat qu'on ne modifie pas à la légère.
+
+## MCP : le pont vers le CMS
+
+C'est là que Claude arrête d'être un chatbot et devient un système qui agit.
+
+Sans MCP, Claude écrit du texte, et s'arrête là. Avec MCP, il ouvre une page dans le CMS, la modifie, la met en brouillon. Il interroge Search Console pour savoir sur quelles requêtes une page ressort. Ce pont transforme un assistant qui rédige en un système qui opère vraiment sur le site.
+
+Une précision, parce que le sujet est sensible : les accès sont cadrés, et rien d'irréversible ne se fait sans passer par les deux validations humaines de la chaîne. Le pont sert à travailler plus vite, pas à laisser la machine publier dans ton dos.
+
+## Deux voies pour un même livrable divergent toujours
+
+Une dernière leçon, apprise à la dure. À un moment, deux outils différents produisaient le même document, chacun de son côté. Sur le papier, une redondance rassurante. En pratique, une divergence annoncée : au premier changement, les deux versions ont pris des chemins légèrement différents, et on s'est retrouvés avec deux "vérités" qui ne disaient pas tout à fait la même chose.
+
+La règle qu'on en a tirée est transposable partout : s'il n'y a qu'un livrable, il ne doit y avoir qu'une seule façon de le produire. Deux chemins vers le même résultat finissent toujours par se contredire.
+
+{% MonAvis sentiment="positif" %}
+Le vrai déclic, pour moi, ça a été d'arrêter de voir les prompts comme des messages malins, et de les voir comme du logiciel. Une fois que tu traites tes skills et tes agents comme du code (une source de vérité, des contrats clairs, une seule voie par livrable), tu appliques cinquante ans de bonnes pratiques logicielles à l'IA. Ça devient maintenable, testable, et transmissible à quelqu'un d'autre. C'est là que ça passe du bricolage au système.
+{% /MonAvis %}
+
+## Ce que je retiens
+
+Construire un système avec l'IA, ce n'est pas empiler des prompts astucieux. C'est de l'architecture logicielle, avec les mêmes principes que d'habitude : une source de vérité, des dépendances à sens unique, des contrats entre les briques, une seule façon de faire chaque chose. Les modèles changeront, les prompts vieilliront. L'architecture, elle, tient.
+
+Et c'est exactement ça qui permet à une petite équipe de faire tourner une fabrique de 2700 pages en 7 langues sans se noyer. Pas un tour de magie. De la méthode, rangée proprement.
