@@ -97,6 +97,7 @@ const hasProgress = project.progress != null;
 <style>
   .universe {
     --c: var(--accent);
+    --c-text: var(--accent-text);
     --c-tint: rgba(6,182,212,0.04);
     --c-strong: rgba(6,182,212,0.15);
     position: relative;
@@ -115,11 +116,11 @@ const hasProgress = project.progress != null;
     transform: translateY(-4px);
     box-shadow: 0 30px 60px -25px rgba(0,0,0,.12);
   }
-  .universe.cyan   { --c: #06B6D4; --c-tint: rgba(6,182,212,0.04);  --c-strong: rgba(6,182,212,0.16); }
-  .universe.warm   { --c: #FB923C; --c-tint: rgba(251,146,60,0.05); --c-strong: rgba(251,146,60,0.18); }
-  .universe.purple { --c: #A78BFA; --c-tint: rgba(167,139,250,0.05);--c-strong: rgba(167,139,250,0.18); }
-  .universe.green  { --c: #10B981; --c-tint: rgba(16,185,129,0.04); --c-strong: rgba(16,185,129,0.16); }
-  .universe.pink   { --c: #EC4899; --c-tint: rgba(236,72,153,0.04); --c-strong: rgba(236,72,153,0.16); }
+  .universe.cyan   { --c: #06B6D4; --c-text: var(--accent-text); --c-tint: rgba(6,182,212,0.04);  --c-strong: rgba(6,182,212,0.16); }
+  .universe.warm   { --c: #FB923C; --c-text: var(--warm-text);   --c-tint: rgba(251,146,60,0.05); --c-strong: rgba(251,146,60,0.18); }
+  .universe.purple { --c: #A78BFA; --c-text: var(--purple-text); --c-tint: rgba(167,139,250,0.05);--c-strong: rgba(167,139,250,0.18); }
+  .universe.green  { --c: #10B981; --c-text: var(--green-text);  --c-tint: rgba(16,185,129,0.04); --c-strong: rgba(16,185,129,0.16); }
+  .universe.pink   { --c: #EC4899; --c-text: var(--pink-text);   --c-tint: rgba(236,72,153,0.04); --c-strong: rgba(236,72,153,0.16); }
 
   .universe .layout {
     display: grid; grid-template-columns: 1.05fr 1fr;
@@ -207,7 +208,7 @@ const hasProgress = project.progress != null;
   .universe .window .canvas .pills span {
     font-family: var(--mono); font-size: 10px;
     padding: 4px 10px; border-radius: 999px;
-    background: var(--c-tint); color: var(--c);
+    background: var(--c-tint); color: var(--c-text);
     border: 1px solid var(--c-strong);
   }
 
@@ -228,7 +229,7 @@ const hasProgress = project.progress != null;
     display: flex; align-items: center; gap: 6px;
   }
   .universe .body .badge.status {
-    background: var(--c); color: #fff; border: 1px solid var(--c);
+    background: var(--c); color: var(--on-accent); border: 1px solid var(--c);
   }
   .universe .body .badge.status::before {
     content: ''; width: 5px; height: 5px; border-radius: 50%;
@@ -252,7 +253,7 @@ const hasProgress = project.progress != null;
   .universe .body .role-line {
     margin-top: 8px;
     font-family: var(--mono); font-size: 13px;
-    color: var(--c); letter-spacing: .04em;
+    color: var(--c-text); letter-spacing: .04em;
   }
   .universe .body .story {
     font-size: 16px; line-height: 1.65; color: var(--fg);
@@ -270,7 +271,7 @@ const hasProgress = project.progress != null;
   }
   .universe .body .sub-projects .sub-label {
     font-family: var(--mono); font-size: 10px;
-    color: var(--c); letter-spacing: .1em;
+    color: var(--c-text); letter-spacing: .1em;
     margin-bottom: 8px;
   }
   .universe .body .sub-projects .sub-pills {
@@ -280,7 +281,7 @@ const hasProgress = project.progress != null;
     font-family: var(--mono); font-size: 11px;
     padding: 4px 10px; border-radius: 999px;
     background: color-mix(in srgb, var(--c) 8%, transparent);
-    color: var(--c);
+    color: var(--c-text);
     border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
   }
 
@@ -323,7 +324,7 @@ const hasProgress = project.progress != null;
   .universe .body .progress .label b { color: var(--fg); font-weight: 500; }
   .universe .body .cta {
     padding: 12px 20px; border-radius: 999px;
-    background: var(--c); color: #fff;
+    background: var(--c); color: var(--on-accent);
     font-size: 13px; font-weight: 500;
     transition: transform .2s, box-shadow .2s;
     display: inline-flex; align-items: center; gap: 8px;

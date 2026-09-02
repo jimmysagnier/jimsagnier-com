@@ -12,6 +12,11 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 export default defineConfig({
   site: 'https://jimsagnier.com',
+  build: {
+    // Inline le CSS dans le <head> : supprime les requêtes bloquantes pour le
+    // rendu (le CSS du site est petit, ~quelques Ko brotli une fois inline).
+    inlineStylesheets: 'always',
+  },
   integrations: [
     react(),
     markdoc(),

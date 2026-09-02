@@ -1,0 +1,19 @@
+# Politique de cache Cloudflare Pages
+# Corrige l'audit Lighthouse "Diffusez des ressources statiques avec une
+# politique de cache efficace" et accélère les visites répétées.
+
+# Assets buildés par Astro : nom hashé par le contenu, donc immuables 1 an.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Polices self-hosted : stables, mises en cache 1 an.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images : nom de fichier fixe (non hashé), donc cache long mais révalidable
+# au cas où on remplace une image sous le même nom.
+/images/*
+  Cache-Control: public, max-age=2592000
+
+/favicons/*
+  Cache-Control: public, max-age=2592000

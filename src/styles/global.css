@@ -10,7 +10,7 @@
   --bg-3: #EEEEF0;
   --fg: #09090B;
   --fg-dim: #52525B;
-  --fg-mute: #A1A1AA;
+  --fg-mute: #6E6E77; /* assombri (WCAG AA : 4.8:1 sur --bg) — ex #A1A1AA */
   --line: #E4E4E7;
   --line-strong: #D4D4D8;
   --accent: #06B6D4;
@@ -19,6 +19,15 @@
   --purple: #A78BFA;
   --green: #10B981;
   --pink: #EC4899;
+  /* Variantes "texte" : mêmes teintes, assombries pour passer WCAG AA (≥4.5:1)
+     quand la couleur est utilisée sur du TEXTE. Le vif (--accent, --warm…) reste
+     réservé aux fonds, barres, bordures et dégradés. */
+  --accent-text: #0E7490; /* cyan-700  · 5.1:1 sur --bg */
+  --warm-text: #C2410C;   /* orange-700 · 5.0:1 */
+  --purple-text: #7C3AED; /* violet-600 · 5.5:1 */
+  --green-text: #047857;  /* emerald-700 · 5.2:1 */
+  --pink-text: #BE185D;   /* pink-700 · 5.0:1 */
+  --on-accent: #0F172A;   /* texte sombre sur fond --accent (6.9:1) */
   --sans: 'Inter', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   --max: 1280px;
@@ -178,11 +187,11 @@ nav.site .cta:hover { transform: translateY(-1px); }
 .terr-tag {
   font-size: 11px; letter-spacing: .1em;
   text-transform: uppercase; font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-text);
 }
-.terr-tag.construire { color: var(--accent); }
-.terr-tag.comprendre { color: var(--warm); }
-.terr-tag.reflechir  { color: var(--purple); }
+.terr-tag.construire { color: var(--accent-text); }
+.terr-tag.comprendre { color: var(--warm-text); }
+.terr-tag.reflechir  { color: var(--purple-text); }
 
 /* ============== ARTICLE CARD ============== */
 .article-card {
@@ -235,7 +244,7 @@ nav.site .cta:hover { transform: translateY(-1px); }
   display: inline-flex; gap: 6px; align-items: center;
   font-family: var(--sans);
 }
-.article-card:hover .meta .read { color: var(--accent); gap: 10px; }
+.article-card:hover .meta .read { color: var(--accent-text); gap: 10px; }
 .article-card .terr-tag { font-size: 11px; }
 
 .article-card.construire .cover { --c1: #18181B; --c2: #06B6D4; }

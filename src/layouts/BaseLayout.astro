@@ -73,8 +73,10 @@ const jsonLd = serializeGraph(graphNodes);
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#06B6D4" />
 
-  {/* Fonts self-hosted : zéro RTT externe, zéro CSS bloquant */}
-  <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+  {/* Fonts self-hosted : zéro RTT externe, zéro CSS bloquant.
+      Pas de preload : avec font-display: swap le texte peint immédiatement en
+      fallback, et précharger une police de plusieurs centaines de Ko affamerait
+      le CSS bloquant et l'image LCP sur mobile bridé. */}
   <style is:inline>
     @font-face {
       font-family: 'Inter';

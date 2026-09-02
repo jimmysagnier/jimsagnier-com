@@ -340,7 +340,7 @@ const projectsPreview: ProjectPreview[] = [
     transition: background .35s ease, color .35s ease, border-color .35s ease;
   }
   .hero .roles span.primary {
-    background: var(--accent); color: white; border-color: var(--accent);
+    background: var(--accent); color: var(--on-accent); border-color: var(--accent);
   }
   .hero p {
     font-size: 18px; line-height: 1.55; color: var(--fg-dim);
@@ -357,7 +357,7 @@ const projectsPreview: ProjectPreview[] = [
   }
   .hero .actions a:hover { background: var(--bg); border-color: var(--fg-mute); transform: translateY(-1px); }
   .hero .actions a.primary {
-    background: var(--accent); color: white; border-color: var(--accent);
+    background: var(--accent); color: var(--on-accent); border-color: var(--accent);
   }
   .hero .actions a.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
 
@@ -447,7 +447,7 @@ const projectsPreview: ProjectPreview[] = [
     margin-top: 12px; color: var(--fg-dim); font-size: 16px;
   }
   .empty-articles a {
-    color: var(--accent);
+    color: var(--accent-text);
     border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   }
 
@@ -539,14 +539,14 @@ const projectsPreview: ProjectPreview[] = [
     margin-bottom: 28px;
   }
   .proj .badge {
-    font-family: var(--mono); font-size: 11px; color: var(--green);
+    font-family: var(--mono); font-size: 11px; color: var(--green-text);
     padding: 4px 10px; border-radius: 6px;
     background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25);
     display: flex; align-items: center; gap: 6px;
     font-weight: 500;
   }
   .proj .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-  .proj .badge.help { color: var(--purple); background: rgba(167,139,250,.08); border-color: rgba(167,139,250,.25); }
+  .proj .badge.help { color: var(--purple-text); background: rgba(167,139,250,.08); border-color: rgba(167,139,250,.25); }
   .proj .badge.help::before { background: var(--purple); }
   .proj .badge.shipped { color: var(--fg-dim); background: var(--bg-2); border-color: var(--line); }
   .proj .badge.shipped::before { background: var(--fg-mute); }
@@ -618,7 +618,7 @@ const projectsPreview: ProjectPreview[] = [
     display: flex; gap: 24px; flex-wrap: wrap;
   }
   .about-text .signature b { color: var(--fg); font-weight: 500; }
-  .about-text .signature a { color: var(--accent); }
+  .about-text .signature a { color: var(--accent-text); }
 
   section.cta { padding: 96px 48px; }
   .cta-card {

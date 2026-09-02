@@ -317,7 +317,7 @@ const inlineMd = (s: string) =>
   .meta-pill .author b { color: var(--fg); font-weight: 500; }
   .meta-pill .sep { color: var(--fg-mute); }
   .draft-tag {
-    background: var(--warm); color: white;
+    background: var(--warm); color: var(--on-accent);
     padding: 2px 8px; border-radius: 4px;
     font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
     font-family: var(--mono);
@@ -373,7 +373,7 @@ const inlineMd = (s: string) =>
   .toc h4 .progress-pct {
     margin-left: auto;
     font-family: var(--mono); font-size: 10px;
-    color: var(--accent); font-weight: 600;
+    color: var(--accent-text); font-weight: 600;
     letter-spacing: 0;
     padding: 2px 7px; border-radius: 4px;
     background: rgba(6,182,212,.1);
@@ -422,7 +422,7 @@ const inlineMd = (s: string) =>
     transform: scale(1.2);
   }
   .toc li:hover a { color: var(--fg); }
-  .toc li:hover a .num { color: var(--accent); }
+  .toc li:hover a .num { color: var(--accent-text); }
   .toc li.read::before {
     background: var(--fg-mute);
     border-color: var(--fg-mute);
@@ -439,7 +439,7 @@ const inlineMd = (s: string) =>
     50% { box-shadow: 0 0 0 7px rgba(6,182,212,.08); }
   }
   .toc li.current a { color: var(--fg); font-weight: 600; }
-  .toc li.current a .num { color: var(--accent); }
+  .toc li.current a .num { color: var(--accent-text); }
   .toc li.current { padding-left: 4px; }
 
   .toc-actions {
@@ -473,7 +473,7 @@ const inlineMd = (s: string) =>
   }
   .toc-actions a:hover .ico {
     background: var(--bg);
-    color: var(--accent);
+    color: var(--accent-text);
     border-color: rgba(6,182,212,.3);
   }
 
@@ -532,7 +532,7 @@ const inlineMd = (s: string) =>
     padding-left: 28px;
   }
   .prose :global(li) { margin-top: .6em; }
-  .prose :global(ul li::marker) { color: var(--accent); }
+  .prose :global(ul li::marker) { color: var(--accent-text); }
 
   .prose :global(blockquote) {
     margin: 2em 0;
@@ -629,7 +629,7 @@ const inlineMd = (s: string) =>
     margin: 0;
   }
   .author-card .role {
-    font-size: 13px; color: var(--accent); font-family: var(--mono);
+    font-size: 13px; color: var(--accent-text); font-family: var(--mono);
     letter-spacing: .04em; margin-top: 2px;
   }
   .author-card p {
