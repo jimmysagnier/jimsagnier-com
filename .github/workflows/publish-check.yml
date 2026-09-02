@@ -1,16 +1,24 @@
-name: Scheduled Publish
+name: Publish Check
 
+# Déclenché À LA DEMANDE (par le Cloudflare Cron Worker "publish-heartbeat",
+# ou manuellement via l'onglet Actions).
+#
+# ⚠️ PAS de trigger `schedule` ici, et c'est VOLONTAIRE. GitHub désactive
+# automatiquement tout workflow qui a un trigger `schedule` après 60 jours
+# d'inactivité du dépôt, et ne le réactive PAS sur un simple push. C'est très
+# exactement ce qui a fait rater la publication de l'article du 1er sept. 2026
+# (l'ancien scheduled-publish.yml était en état `disabled_inactivity`).
+# Le rythme vient désormais d'un Cloudflare Cron Trigger, qui ne se désactive
+# jamais pour inactivité. Un workflow `workflow_dispatch` (comme celui-ci) ou
+# `push` n'est jamais auto-désactivé.
 on:
-  schedule:
-    # Deux fois par jour : 8h et 14h (UTC)
-    - cron: '0 8,14 * * *'
   workflow_dispatch:
 
 jobs:
   check-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
