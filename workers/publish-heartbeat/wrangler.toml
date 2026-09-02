@@ -2,26 +2,30 @@ name = "jimsagnier-publish-heartbeat"
 main = "src/index.js"
 compatibility_date = "2026-01-01"
 
-# Battement de cœur de la publication programmée de jimsagnier.com.
+# Battement de cœur de la publication programmée de jimsagnier.com + monitoring.
 #
 # Ce Worker remplace l'ancien cron GitHub Actions (qui se faisait désactiver
 # automatiquement après 60 jours d'inactivité). Un Cloudflare Cron Trigger, lui,
 # ne se désactive JAMAIS pour inactivité : il tourne tant que le Worker est
-# déployé. À chaque déclenchement, il appelle le workflow GitHub `publish-check`
-# (workflow_dispatch), qui rebuild+redeploie le site si un article programmé est
-# arrivé à échéance.
+# déployé.
 #
-# Les articles sont programmés à 06:00 UTC (scheduledPublishAt: ...T06:00:00Z).
-# On passe donc juste après (06:15 UTC), plus un rattrapage à 14:15 UTC.
+# Trois horaires :
+#   - 06:15 et 14:15 UTC : PUBLICATION. Déclenche le workflow GitHub
+#     `publish-check` (rebuild+redeploie si un article programmé est dû).
+#     Les articles sont programmés à 06:00 UTC, on passe juste après.
+#   - 10:00 UTC : MONITORING. Vérifie que chaque article censé être en ligne
+#     l'est vraiment ; sinon, ouvre une alerte (issue GitHub).
 [triggers]
-crons = ["15 6 * * *", "15 14 * * *"]
+crons = ["15 6 * * *", "15 14 * * *", "0 10 * * *"]
 
 [vars]
 GITHUB_OWNER = "jimmysagnier"
 GITHUB_REPO = "jimsagnier-com"
 GITHUB_WORKFLOW = "publish-check.yml"
 GITHUB_REF = "main"
+SITE_BASE_URL = "https://jimsagnier.com"
+MONITOR_CRON = "0 10 * * *"
 
-# Secret requis (NON versionné) : un GitHub fine-grained PAT avec la permission
-# "Actions: Read and write" sur le dépôt jimsagnier-com. À poser avec :
-#   cd workers/publish-heartbeat && npx wrangler secret put GITHUB_TOKEN
+# Secret requis (NON versionné) : un GitHub token avec le droit de déclencher les
+# workflows (Actions: write) ET d'ouvrir des issues (Issues: write / scope repo).
+# À poser avec :  npx wrangler secret put GITHUB_TOKEN
