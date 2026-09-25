@@ -1,0 +1,131 @@
+---
+title: 'Nos chiffres se mettent à jour tout seuls. Sauf quand ils mentent.'
+territory: construire
+publishedAt: 2026-10-19
+scheduledPublishAt: 2026-10-19T06:00:00Z
+summary: >-
+  Sur nos 2700 pages, chaque taux vient d'une source unique et se met à jour
+  tout seul. Un système génial, avec un angle mort : la valeur de secours qui
+  vieillit en silence. Ce qu'on a appris en production.
+readingTime: 8
+tags:
+  - making-of
+  - Eurofiscalis
+  - CMS
+  - YMYL
+  - données
+essentiel:
+  sousTitre: Les points essentiels.
+  readingTime: 2 min · ou 8 min en entier
+  items:
+    - >-
+      **Le principe** : aucun taux n'est écrit dans un article. Il est branché
+      sur une fiche par pays. On modifie un chiffre, et le site entier est à
+      jour en quelques minutes.
+    - >-
+      **L'angle mort** : chaque chiffre garde une valeur de secours, figée le
+      jour de la rédaction. Invisible tant que tout marche, fausse le jour où
+      ça casse.
+    - >-
+      **La règle** : pour corriger un chiffre affiché, on corrige la fiche
+      pays, jamais l'article.
+    - >-
+      **Le web ment aussi** : des tableaux en ligne servent des chiffres de
+      l'an dernier sous une adresse "cette année". La donnée vérifiée par un
+      humain passe devant.
+    - >-
+      **Le test** : "si je modifie ce champ, cet article doit-il changer ?"
+      Oui, on branche. Non, on écrit en dur.
+coverImage:
+  src: /images/articles/tokens-dynamiques-fallback-derive/coverImage/src.avif
+  alt: Des données dynamiques branchées sur une source unique dans les articles du site Eurofiscalis
+  caption: Un système qui ne se trompe jamais doit quand même savoir comment il échoue.
+seo:
+  title: 'Contenus dynamiques : quand la donnée de secours ment (YMYL)'
+  description: >-
+    Ce qu'on a appris en production avec des chiffres dynamiques sur 2700
+    pages : la valeur de secours qui vieillit, corriger la source et pas
+    l'article, et pourquoi la donnée vérifiée prime sur le web.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Sur les 2700 pages du site, aucun taux n'est écrit à la main. Pas un seul. Chaque chiffre est branché sur une source unique, et quand un taux change, on le modifie à un seul endroit. Quelques minutes plus tard, tout le site est à jour. C'est probablement la partie de la refonte dont je suis le plus fier. Et c'est justement pour ça qu'il fallait que je te raconte comment elle peut mentir.
+
+Je suis Jimmy. Dernier épisode de l'après-migration Eurofiscalis. Le principe de ces chiffres dynamiques, je l'ai déjà expliqué dans l'article [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/) : c'était même la raison principale de notre changement de CMS. Je ne le refais pas. Ici, je raconte ce qui se passe des mois plus tard, quand le système tourne en production et qu'on découvre ce qu'il ne dit pas.
+
+## Le rappel en trente secondes
+
+Chaque pays a sa fiche : son taux normal, ses taux réduits, ses seuils de déclaration, ses délais, ses pénalités. Dans un article, le rédacteur n'écrit pas « 19 % ». Il insère une petite pastille qui dit « taux normal de l'Allemagne ». Au moment de générer le site, chaque pastille est remplacée par la vraie valeur.
+
+On en a plusieurs centaines en ligne. Le jour où un taux change, je modifie la fiche du pays, le site se reconstruit tout seul, et entre une et trois minutes plus tard, chaque article qui cite ce taux affiche la nouvelle valeur. Zéro intervention, zéro article oublié.
+
+Sur un sujet où une erreur de chiffre peut coûter cher au lecteur, c'est une vraie garantie de fiabilité. Enfin, presque.
+
+## La valeur de secours qui vieillit en silence
+
+Chaque pastille garde, en plus de son lien vers la fiche pays, une **valeur de secours**. Si pour une raison ou une autre la fiche ne répond pas au moment de générer la page, c'est cette valeur qui s'affiche, plutôt qu'un trou dans la phrase. Excellente idée.
+
+Sauf que cette valeur de secours est figée le jour où l'article est rédigé. Elle ne suit pas la fiche pays. Tant que tout fonctionne, tu ne la vois jamais, puisque c'est la vraie valeur qui s'affiche. Mais pendant ce temps-là, elle vieillit.
+
+On l'a découvert en rafraîchissant la page sur les seuils de déclaration des échanges entre pays européens. Les fiches pays étaient parfaitement à jour. Mais en regardant les pastilles une par une, une dizaine de valeurs de secours affichaient encore d'anciens seuils : l'Autriche, le Danemark, l'Italie, et même la Bulgarie avec une valeur dans son ancienne monnaie, alors qu'elle est passée à l'euro.
+
+Rien de tout ça ne s'affichait. Mais le jour où une fiche aurait eu un souci, le lecteur aurait lu un seuil faux, sur un sujet où un seuil faux, ça se paie.
+
+{% MonAvis sentiment="negatif" %}
+C'est le même genre de piège que le faux positif silencieux dont je parlais pour le crawler. Un système de secours qui n'est jamais testé finit toujours par devenir faux. Et il le devient précisément pour le jour où tu en auras besoin. Un filet de sécurité, ça s'entretient, sinon c'est juste un filet troué que tu crois solide.
+{% /MonAvis %}
+
+## Corriger la source, jamais l'article
+
+Ce refresh a aussi clarifié une règle qui paraît évidente, mais qu'on oublie vite. Quand un chiffre est faux à l'écran, le réflexe, c'est d'aller corriger l'article. Mauvaise idée. Le chiffre affiché ne vient pas de l'article, il vient de la fiche pays.
+
+Donc pour corriger une valeur fausse, on corrige la fiche. Et la correction se propage à tous les articles qui l'utilisent. Modifier la valeur de secours dans l'article, en revanche, ne change rien à ce qui s'affiche.
+
+Le diagnostic tient en une comparaison : ce qui s'affiche en ligne, contre la valeur de secours de la pastille. Si les deux diffèrent, l'article est sain, c'est la fiche qui fait foi. On réaligne alors les valeurs de secours, pour que le filet de sécurité redevienne juste.
+
+Petit détail qui compte : ce réalignement est invisible pour le lecteur, donc on ne change pas la date « mis à jour le » de l'article. Afficher une nouvelle date pour une correction que personne ne voit, ce serait mentir sur la fraîcheur du contenu.
+
+{% Conseil titre="Réaligne tes valeurs de secours à chaque changement d'année" %}
+Si tu utilises des données dynamiques avec une valeur par défaut, planifie une passe à chaque mise à jour annuelle des chiffres. Le système principal se met à jour tout seul. Le système de secours, jamais. C'est précisément celui-là que tu dois aller vérifier.
+{% /Conseil %}
+
+## Le web ment aussi
+
+Pendant ce même refresh, un de nos agents IA de recherche a proposé de « corriger » le seuil d'un pays, sur la foi d'un tableau publié par un prestataire. Le tableau avait l'air sérieux, et son adresse contenait l'année en cours.
+
+Vérification faite, il resservait les chiffres de l'année précédente. Et ce n'était pas un cas isolé : on a retrouvé le même problème sur plusieurs pays, chez plusieurs sources. Des pages mises à jour dans leur titre, pas dans leur contenu.
+
+La correction a été refusée. Notre règle, c'est la consigne qui court sur toute cette saga : l'IA est un excellent outil de recherche, mais sur un sujet où l'erreur coûte cher, **la donnée vérifiée par un humain passe devant**. Un agent peut signaler un écart. Il ne tranche pas.
+
+## Ce qu'on ne laisse pas brancher à une IA
+
+Quand nos outils IA préparent un article pour le publier, ils branchent automatiquement les chiffres sur les fiches pays. Automatiquement, mais pas aveuglément. Il y a des cas où ils ont interdiction de le faire :
+
+- quand le chiffre n'est pas une donnée fiscale : « l'article 21 », « le 21 janvier » ;
+- quand le chiffre correspond à plusieurs champs possibles, donc que c'est ambigu ;
+- quand l'article parle de plusieurs pays, et qu'on ne sait pas à quelle fiche le rattacher ;
+- dans les titres et les questions de FAQ, qui doivent rester du texte simple.
+
+Dans tous ces cas, le chiffre reste écrit en dur, et l'outil signale le cas pour qu'un humain regarde.
+
+{% EnPratique titre="Le test de décision d'un chiffre dynamique" %}
+Pose-toi une seule question : « si je modifie ce champ dans la fiche du pays, est-ce que cet article devrait changer ? »
+
+- **Oui** : on branche le chiffre sur la fiche.
+- **Non** : on l'écrit en dur.
+
+Un taux de TVA qui peut évoluer, on branche. Une date historique, un numéro d'article de loi, un exemple chiffré qui illustre un calcul, on écrit en dur.
+{% /EnPratique %}
+
+## Ce que je retiens de cette série
+
+Cinq épisodes sur l'après-migration, et un fil rouge. Supprimer tous les liens, auditer les redirections, traquer les fuites françaises, éviter de dépublier ses meilleures pages, surveiller des chiffres qui se mettent à jour tout seuls : une fois le site en ligne, le vrai travail, c'est de la maintenance de confiance. Rien de spectaculaire. Des vérifications, des règles écrites, et le réflexe de toujours se demander comment un système qui marche peut quand même se tromper.
+
+## La suite
+
+Il reste un sujet qu'on a touché du doigt tout au long de cette série sans jamais le traiter en face : les moteurs de réponse IA. Ce qu'ils regardent, qui ils citent, et ce qu'on a changé sur le site pour eux, y compris une règle qu'on avait posée et qu'on a fini par abandonner.
+
+Ce sera l'objet de la prochaine série.
