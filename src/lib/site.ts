@@ -29,7 +29,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   title: "L'Atelier de Jim Sagnier",
   tagline: "L'atelier d'un Lead acquisition qui écrit et qui vibecode.",
   description:
-    "Acquisition B2B, IA, SEO et expérimentation web. Le journal d'un responsable acquisition qui code à côté.",
+    "Acquisition B2B, IA, SEO et expérimentation web. Le journal d'un Lead acquisition qui code à côté.",
   baseUrl: 'https://jimsagnier.com',
   defaultOgImage: undefined,
   sameAs: [],
@@ -84,10 +84,10 @@ export function getJimPerson(): PersonInfo {
     name: 'Jim Sagnier',
     givenName: 'Jim',
     familyName: 'Sagnier',
-    jobTitle: 'Responsable acquisition',
+    jobTitle: 'Lead acquisition',
     worksFor: 'Eurofiscalis',
     description:
-      "Responsable acquisition chez Eurofiscalis, vibecodeur, et coup de main aux projets indépendants.",
+      "Lead acquisition chez Eurofiscalis, vibecodeur, et coup de main aux projets indépendants.",
     image: `${settings.baseUrl}/images/jim-avatar.webp`,
     url: settings.baseUrl,
     sameAs: settings.sameAs.map((s) => s.url),

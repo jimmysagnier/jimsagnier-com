@@ -2,6 +2,7 @@
 title: 'Pourquoi j''ai codé mon propre crawler SEO'
 territory: construire
 publishedAt: 2026-09-28
+updatedAt: 2026-10-08
 scheduledPublishAt: 2026-09-28T06:00:00Z
 summary: >-
   Pour la migration, j'ai codé mon propre crawler SEO. Pas parce que les autres
@@ -9,8 +10,6 @@ summary: >-
   d'un outil maison, deux bugs compris.
 readingTime: 8
 tags:
-  - making-of
-  - Eurofiscalis
   - SEO
   - crawler
   - Python
@@ -34,9 +33,9 @@ essentiel:
       **Le pire bug** : un mot de passe faux faisait enregistrer une page "Accès
       restreint" partout, en silence.
 coverImage:
-  src: /images/articles/crawler-seo-maison/coverImage/src.avif
-  alt: Un crawler SEO maison codé en Python pour la migration du site Eurofiscalis
-  caption: Le meilleur outil n'est pas toujours celui qu'on achète.
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
 seo:
   title: 'Pourquoi j''ai codé mon propre crawler SEO'
   description: >-
@@ -48,10 +47,16 @@ seo:
 faq: []
 draft: false
 featured: false
+topics: ["web-outils"]
+projectIds: ["eurofiscalis-refonte"]
+format: article
+seriesId: saga-eurofiscalis-s3
+seriesOrder: 1
+seriesKind: episode
 ---
 Le meilleur outil, ce n'est pas toujours celui qu'on achète. Pour cartographier les 2700 pages du site avant de le déménager, j'ai fini par coder mon propre crawler. Pas parce que les outils du marché étaient mauvais. Parce que leur résultat était inexploitable.
 
-Je suis Jimmy. Petit aparté dans la saga de la refonte Eurofiscalis, sur un outil que je me suis fabriqué en chemin. Quand tu migres un site de 2700 pages en 7 langues, la première chose qu'il te faut, c'est un inventaire propre de l'existant : chaque page, son adresse, son titre, son statut. Voilà comment j'ai obtenu cet inventaire, et les deux bugs qui m'ont appris deux bonnes leçons.
+Je suis Jim. Petit aparté dans la saga de la refonte Eurofiscalis, sur un outil que je me suis fabriqué en chemin. Quand tu migres un site de 2700 pages en 7 langues, la première chose qu'il te faut, c'est un inventaire propre de l'existant : chaque page, son adresse, son titre, son statut. Voilà comment j'ai obtenu cet inventaire, et les deux bugs qui m'ont appris deux bonnes leçons.
 
 ## Pourquoi pas un outil du commerce
 

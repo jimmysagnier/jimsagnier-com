@@ -14,6 +14,7 @@ const { titre = 'Questions fréquentes', items = [] } = Astro.props;
     ))}
   </div>
 </section>
+{items.length > 0 && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'FAQPage', mainEntity:items.map(item => ({'@type':'Question',name:item.question,acceptedAnswer:{'@type':'Answer',text:item.reponse}})) }).replace(/</g,'\\u003c')} />}
 
 <style>
   .block-faq { margin: 48px 0; }

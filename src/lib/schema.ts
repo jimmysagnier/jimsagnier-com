@@ -72,9 +72,9 @@ export function blogPostingNode({ article, url }: ArticleArgs): SchemaNode {
   const s = getSiteSettings();
   const data = article.data;
   const ogImage =
-    data.seo?.ogImage ??
-    data.coverImage.src ??
-    s.defaultOgImage ??
+    data.seo?.ogImage ||
+    data.coverImage.src ||
+    s.defaultOgImage ||
     `${s.baseUrl}/images/jim-avatar.webp`;
 
   return {
@@ -82,14 +82,14 @@ export function blogPostingNode({ article, url }: ArticleArgs): SchemaNode {
     '@id': `${url}#article`,
     isPartOf: { '@id': `${s.baseUrl}#website` },
     headline: data.title,
-    description: data.seo?.description ?? data.summary,
+    description: data.seo?.description || data.summary,
     image: ogImage.startsWith('http') ? ogImage : `${s.baseUrl}${ogImage}`,
     datePublished: data.publishedAt.toISOString(),
     dateModified: (data.updatedAt ?? data.publishedAt).toISOString(),
     author: { '@id': `${s.baseUrl}#person` },
     publisher: { '@id': `${s.baseUrl}#person` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    keywords: [data.territory],
+    keywords: [data.territory, ...(data.topics ?? []), ...data.tags],
     inLanguage: 'fr-FR',
     url,
   };
@@ -124,7 +124,7 @@ export function faqPageNode({ article }: ArticleArgs): SchemaNode {
 }
 
 interface ProjetArgs {
-  projet: CollectionEntry<'projets'>;
+  projet: { data: Pick<CollectionEntry<'projets'>['data'], 'title' | 'summary' | 'status' | 'stack'> };
   url: string;
 }
 
@@ -155,5 +155,5 @@ export function serializeGraph(nodes: SchemaNode[]): string {
     '@context': 'https://schema.org',
     '@graph': nodes,
   };
-  return JSON.stringify(graph);
+  return JSON.stringify(graph).replace(/</g, '\\u003c');
 }

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+Astro.response.status = 404;
+---
+<BaseLayout title="Page introuvable" description="Cette page ne fait pas partie de l'atelier." noindex>
+  <section class="missing">
+    <span class="kicker">404</span>
+    <h1>Cette page est introuvable.</h1>
+    <p>Le lien a peut-être changé, ou le texte n'est pas encore publié.</p>
+    <a href="/journal/">Retrouver un article dans la bibliothèque →</a>
+    <a href="/">Retour à l'atelier</a>
+  </section>
+</BaseLayout>
+<style>
+.missing { max-width: 760px; margin: auto; padding: 80px 24px; }
+h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.15; margin: 16px 0; }
+p { color: var(--fg-dim); margin-bottom: 24px; }
+a { display: block; margin: 16px 0; color: var(--accent-text); text-decoration: underline; }
+</style>

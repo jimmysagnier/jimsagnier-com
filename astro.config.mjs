@@ -4,6 +4,17 @@ import react from '@astrojs/react';
 import markdoc from '@astrojs/markdoc';
 import keystatic from '@keystatic/astro';
 import sitemap from '@astrojs/sitemap';
+import { readdirSync, readFileSync } from 'node:fs';
+import yaml from 'js-yaml';
+
+// Dates éditoriales réelles : les pages fixes sans date connue n'ont pas de lastmod.
+const articleDates = new Map(readdirSync('src/content/articles').filter((file) => file.endsWith('.mdoc')).map((file) => {
+  const content = readFileSync(`src/content/articles/${file}`, 'utf8');
+  const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const data = frontmatter ? yaml.load(frontmatter[1]) : {};
+  const date = new Date(data.updatedAt ?? data.publishedAt);
+  return [file.replace(/\.mdoc$/, ''), Number.isNaN(date.getTime()) ? undefined : date];
+}));
 
 // Keystatic admin uniquement en dev local (pas en build production statique).
 // Pour activer Keystatic en prod, basculer en mode GitHub et installer
@@ -24,14 +35,18 @@ export default defineConfig({
     sitemap({
       // Exclure les routes admin Keystatic et API
       filter: (page) =>
-        !page.includes('/keystatic') && !page.includes('/api/'),
+        !page.includes('/keystatic') && !page.includes('/api/') && !/\/(?:404|rss\.xml|llms\.txt)\/?$/.test(page),
       i18n: {
         defaultLocale: 'fr',
         locales: { fr: 'fr-FR' },
       },
       changefreq: 'weekly',
       priority: 0.7,
-      lastmod: new Date(),
+      serialize: (item) => {
+        const slug = new URL(item.url).pathname.replace(/^\/|\/$/g, '');
+        const date = articleDates.get(slug);
+        return date ? { ...item, lastmod: date.toISOString() } : item;
+      },
     }),
   ],
 });

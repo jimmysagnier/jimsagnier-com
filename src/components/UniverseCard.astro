@@ -35,22 +35,15 @@ const hasProgress = project.progress != null;
 ---
 <article class={`universe ${project.color}${position === 'right' ? ' right' : ''}`}>
   <div class="layout">
-    <div class="visual" aria-hidden="true">
-      <div class="grain"></div>
-      <div class="window">
-        <div class="titlebar">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <span class="url">{project.windowUrl ?? `${project.slug} · preview`}</span>
-        </div>
-        <div class="canvas">
-          <div class="label">{project.windowLabel ?? `// ${project.type}`}</div>
-          <h3>{project.title}</h3>
-          <div class="lines"><div></div><div></div><div></div></div>
-          <div class="pills">
-            {stackPills.slice(0, 4).map((s) => <span>{s}</span>)}
-          </div>
-        </div>
-      </div>
+    <div class="visual project-record">
+      <span class="record-label">Fiche de projet</span>
+      <h3>{project.title}</h3>
+      <dl>
+        <div><dt>État</dt><dd>{project.status}</dd></div>
+        {project.role && <div><dt>Ma contribution</dt><dd>{project.role}</dd></div>}
+        {stackPills.length > 0 && <div><dt>Outils utilisés</dt><dd>{stackPills.join(' · ')}</dd></div>}
+      </dl>
+      <p>Les choix, les essais et les leçons sont documentés dans les articles du projet.</p>
     </div>
     <div class="body">
       <div>
@@ -95,6 +88,14 @@ const hasProgress = project.progress != null;
 </article>
 
 <style>
+  .universe .project-record { padding: 40px; display: flex; flex-direction: column; gap: 24px; justify-content: center; }
+  .record-label, dt { font-family: var(--mono); font-size: 11px; color: var(--c-text); }
+  .project-record h3 { font-size: 26px; line-height: 1.2; }
+  .project-record dl { display: grid; gap: 16px; }
+  .project-record dd { font-size: 14px; margin-top: 4px; }
+  .project-record p { font-size: 13px; color: var(--fg-dim); }
+  .universe .body { min-width: 0; }
+
   .universe {
     --c: var(--accent);
     --c-text: var(--accent-text);
@@ -131,7 +132,7 @@ const hasProgress = project.progress != null;
 
   .universe .visual {
     position: relative;
-    min-height: 460px;
+    min-height: 320px;
     overflow: hidden;
     background:
       radial-gradient(circle at 25% 30%, var(--c-strong), transparent 55%),

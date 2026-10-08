@@ -5,12 +5,10 @@ publishedAt: 2026-09-07
 scheduledPublishAt: 2026-09-07T06:00:00Z
 summary: >-
   2700 pages déplacées en 7 langues, 1,4 million de visites en jeu. La méthode
-  pour migrer sans perdre Google : résultat, 100% d'indexation et un gain moyen
-  de 0,3 position.
+  de migration : cartographie, redirections et contrôles après bascule, avec
+  les limites des chiffres de suivi.
 readingTime: 8
 tags:
-  - making-of
-  - Eurofiscalis
   - migration
   - SEO
   - redirections
@@ -29,30 +27,37 @@ essentiel:
       **L'IA** : un pipeline piloté par l'IA pour déplacer et reformater le
       contenu, avec relecture humaine sur chaque page sensible.
     - >-
-      **Le résultat** : 100% des pages indexées et un gain moyen de 0,3
-      position.
+      **Le suivi** : comparer l'indexation et les positions sur un périmètre
+      stable, sans attribuer toute variation à la refonte.
     - >-
-      **Le signal faible** : 0,9% du trafic vient déjà des IA, et ça ne fera
-      qu'augmenter.
+      **Le signal faible** : suivre les visites attribuées aux assistants IA,
+      avec les limites de l'attribution analytics.
 coverImage:
-  src: /images/articles/migrer-2700-pages-7-langues-sans-perdre-google/coverImage/src.avif
-  alt: La migration de 2700 pages en 7 langues du site Eurofiscalis sans perte de trafic SEO
-  caption: Une migration réussie, c'est quand personne ne remarque que le site a déménagé.
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
 seo:
   title: 'Migrer 2700 pages en 7 langues sans perdre Google'
   description: >-
     Migration SEO d'un site de 2700 pages en 7 langues : cartographie,
-    redirections 301, pipeline IA et monitoring. Résultat : 100% d'indexation et
-    +0,3 position en moyenne.
+    redirections 301, pipeline IA et monitoring. Retour de terrain et limites
+    des mesures après migration.
   schemaType: BlogPosting
   noindex: false
 faq: []
 draft: false
+updatedAt: 2026-10-08
 featured: false
+topics: ["seo"]
+projectIds: ["eurofiscalis-refonte"]
+format: article
+seriesId: saga-eurofiscalis-s1
+seriesOrder: 3
+seriesKind: episode
 ---
-2700 pages à déplacer. 1,4 million de visites annuelles en jeu, dont plus de 800 000 venues de Google. Une migration ratée, et c'est une partie de ce trafic qui s'évapore, parfois pour des mois. Résultat final, une fois la poussière retombée : 100% des pages indexées, et un gain moyen de 0,3 position. Voilà comment on s'y est pris.
+2700 pages à déplacer. 1,4 million de visites annuelles en jeu, dont plus de 800 000 venues de Google. Une migration ratée, et c'est une partie de ce trafic qui s'évapore, parfois pour des mois. L'objectif était de préserver la visibilité pendant la bascule. Voilà comment on s'y est pris, et ce que les chiffres de suivi permettent réellement de dire.
 
-Je suis Jimmy. Dernier article de la série sur la refonte du site Eurofiscalis. On a vu [pourquoi quitter WordPress](/quitter-wordpress-site-2700-pages/), puis [comment on a choisi Payload après s'être trompé avec Sanity](/sanity-puis-payload-cms-choisi-deux-fois/). Reste l'étape qui fait peur à tout le monde : le déménagement. Parce qu'un site refait, c'est bien. Un site refait qui garde tout son référencement, c'est le vrai objectif.
+Je suis Jim. Dernier article de la série sur la refonte du site Eurofiscalis. On a vu [pourquoi quitter WordPress](/quitter-wordpress-site-2700-pages/), puis [comment on a choisi Payload après s'être trompé avec Sanity](/sanity-puis-payload-cms-choisi-deux-fois/). Reste l'étape qui fait peur à tout le monde : le déménagement. Parce qu'un site refait, c'est bien. Un site refait qui garde tout son référencement, c'est le vrai objectif.
 
 ## Le vrai risque, ce n'est pas la techno
 
@@ -96,26 +101,20 @@ Dans les jours et les semaines qui suivent, on garde un oeil sur Google Search C
 
 ## Les résultats
 
-Alors, ça a donné quoi ?
+Le suivi initial mentionnait 100 % d'indexation et un gain moyen de 0,3 position. **Je ne les présente plus comme des résultats vérifiables ici** : la période, la liste des URL attendues, l'export Search Console et la méthode de comparaison ne sont pas documentés dans cet article.
 
-**100% de taux d'indexation.** Toutes les pages qui devaient être dans l'index de Google y sont. Aucune n'est passée à la trappe dans le déménagement. Sur 2700 pages, c'est le résultat que je voulais voir.
+Pour publier une comparaison solide, il faut conserver le même périmètre avant et après, préciser les dates, les pays, les types de recherche et les pages exclues. Une position moyenne peut bouger parce que les requêtes changent. Elle ne prouve pas, à elle seule, que la vitesse ou la migration a causé un gain.
 
-**Un gain moyen de 0,3 position.** Non seulement on n'a pas perdu de terrain, mais on en a gagné un peu. Un site plus rapide et mieux structuré, Google le récompense. Sur des milliers de mots-clés, trois dixièmes de position en moyenne, ça fait beaucoup de visibilité en plus.
-
-{% MonAvis sentiment="positif" %}
-Le vrai succès d'une migration, c'est quand il ne se passe rien de visible pour le visiteur. Personne ne remarque le déménagement, le trafic ne bouge pas dans le mauvais sens, et quelques semaines plus tard, on est un peu plus haut qu'avant. Pas de crash, pas de chute. C'est exactement ce qu'on voulait, et c'est le plus dur à obtenir.
-{% /MonAvis %}
+Ce retour décrit donc la méthode de migration. Il ne promet ni indexation complète ni absence de variation de trafic. [Google décrit les fluctuations possibles et le suivi à prévoir lors d'un changement d'URL](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
 
 ## Le signal faible que je surveille : les IA
 
-Un dernier chiffre, plus discret, mais que je ne quitte pas des yeux : **0,9% de notre trafic vient déjà des IA**, ces assistants comme ChatGPT ou Perplexity qui répondent directement aux gens et citent des sources.
-
-0,9%, c'est petit. Mais il y a deux ans, c'était zéro. La façon dont les gens cherchent de l'information est en train de changer, et une partie des réponses ne passe plus par une page de résultats classique. Un site propre, rapide, bien structuré, avec des réponses claires, c'est justement ce que ces IA aiment citer. La refonte ne nous a pas seulement remis d'aplomb sur Google. Elle nous a préparés pour ce qui vient après.
+Je regarde aussi les visites attribuées à des assistants comme ChatGPT ou Perplexity. Le chiffre initial de 0,9 % n'est pas exploitable sans période, outil et règle d'attribution. Certains passages depuis une IA peuvent ne pas transmettre de référent. Je garde donc cette piste comme une question à mesurer, pas comme un résultat acquis ni une prévision de croissance.
 
 ## Ce que je retiens de toute la série
 
-Voilà, la boucle est bouclée. On a quitté WordPress pour de vraies raisons, on a choisi Astro et Payload (en se trompant une fois en chemin), et on a déménagé 2700 pages sans rien perdre.
+Voilà, la boucle est bouclée. On a quitté WordPress pour de vraies raisons, on a choisi Astro et Payload (en se trompant une fois en chemin), et on a préparé et suivi le déménagement de 2700 pages.
 
 S'il faut retenir une chose : une refonte réussie ne se juge pas au design du premier jour. Elle se juge des mois plus tard, quand l'équipe travaille plus sereinement, quand le site tient tout seul, et quand le trafic est toujours là, un peu plus haut même. Le reste, c'est de la déco.
 
-{% FAQ items=[{question: "Perd-on forcément du trafic en migrant un site ?", reponse: "Non, pas si les redirections sont faites correctement. Le trafic chute quand des adresses disparaissent sans redirection 301. Avec une cartographie complète et une 301 par ancienne adresse, on migre sans perte, voire on gagne un peu, comme ici."}, {question: "Combien de temps Google met-il à réindexer un site migré ?", reponse: "Quelques jours pour commencer, quelques semaines pour se stabiliser. C'est pour ça qu'on surveille Google Search Console de près pendant le premier mois."}, {question: "Faut-il vraiment rediriger toutes les pages ?", reponse: "Toutes celles qui avaient du trafic ou des liens entrants, oui. Une page sans aucune visite ni lien peut être laissée de côté, mais dans le doute, on redirige."}, {question: "L'IA peut-elle gérer une migration toute seule ?", reponse: "Non. Elle accélère énormément le déplacement et le reformatage, mais sur un sujet sensible comme la fiscalité, chaque page importante repasse devant un humain qui valide l'exactitude."}] /%}
+{% FAQ items=[{question: "Perd-on forcément du trafic en migrant un site ?", reponse: "Non, une perte durable n’est pas inévitable. Mais des fluctuations restent possibles, même avec une migration préparée. Cartographie, redirections et suivi réduisent les risques sans garantir un résultat."}, {question: "Combien de temps Google met-il à réindexer un site migré ?", reponse: "Le délai varie selon le site et son exploration. On suit les URL et les rapports Search Console dans la durée, sans promettre une stabilisation au bout de quelques semaines."}, {question: "Faut-il vraiment rediriger toutes les pages ?", reponse: "Toutes celles qui avaient du trafic ou des liens entrants, oui. Une page sans aucune visite ni lien peut être laissée de côté, mais dans le doute, on redirige."}, {question: "L'IA peut-elle gérer une migration toute seule ?", reponse: "Non. Elle accélère énormément le déplacement et le reformatage, mais sur un sujet sensible comme la fiscalité, chaque page importante repasse devant un humain qui valide l'exactitude."}] /%}

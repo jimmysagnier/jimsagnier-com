@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import { SERIES } from '../../lib/taxonomy';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+ const articles = await getCollection('articles',({data}) => !data.draft && data.publishedAt <= new Date() && (!data.scheduledPublishAt || data.scheduledPublishAt <= new Date()));
+ return SERIES.filter(series => articles.some(a => a.data.seriesId === series.id)).map(series => ({params:{slug:series.id},props:{series,articles:articles.filter(a => a.data.seriesId === series.id).sort((a,b) => (a.data.seriesOrder ?? 0)-(b.data.seriesOrder ?? 0))}}));
+}
+const {series,articles} = Astro.props;
+---
+<BaseLayout title={series.label} description={`Lire les épisodes publiés de ${series.label}, dans l'ordre.`} active="journal">
+<section><a href="/journal/">Bibliothèque →</a><h1>{series.label}</h1><p>Un fil de lecture pour suivre les décisions et ce qu'elles m'ont appris.</p><ol>{articles.map(article => <li><span>{article.data.seriesKind === 'bonus' ? 'Bonus' : `Épisode ${article.data.seriesOrder}`}</span><h2><a href={`/${article.id}/`}>{article.data.title}</a></h2><p>{article.data.summary}</p></li>)}</ol></section>
+</BaseLayout>
+<style>section{max-width:850px;margin:auto;padding:64px 24px}h1{font-size:clamp(32px,5vw,56px);line-height:1.15;margin:24px 0}p{color:var(--fg-dim);line-height:1.65}ol{list-style:none;padding:0;margin:40px 0}li{border-top:1px solid var(--line);padding:24px 0}li span{font-family:var(--mono);font-size:12px;color:var(--accent-text)}h2{font-size:25px;line-height:1.3;margin:12px 0}</style>

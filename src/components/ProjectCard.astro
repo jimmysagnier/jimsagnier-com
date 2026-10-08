@@ -1,0 +1,8 @@
+---
+import type { SiteProject } from '../lib/projects';
+interface Props { project: SiteProject; compact?: boolean }
+const { project:p, compact=false } = Astro.props;
+const summary = (p.cardSummary ?? p.summary).replace(/<[^>]*>/g,'');
+---
+{compact ? <a class="map-project" href={`/projets/${p.slug}/`}><span class="project-monogram" aria-hidden="true">{p.initial ?? p.title.slice(0,2)}</span><span><b>{p.title}</b><small>{p.kind ?? p.type}</small></span><span class="project-arrow" aria-hidden="true">↗</span></a> :
+<a class="focus-project" href={`/projets/${p.slug}/`}><div class="focus-top"><span class="project-monogram" aria-hidden="true">{p.initial ?? p.title.slice(0,2)}</span><span class="project-kind">{p.kind ?? p.type}</span></div><h3>{p.title} <span aria-hidden="true">↗</span></h3><p>{summary}</p><span class="project-bottom">Le contexte du projet →</span></a>}

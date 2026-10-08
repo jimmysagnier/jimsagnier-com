@@ -1,26 +1,24 @@
 ---
-title: 'La performance comme stratégie SEO : un site léger se classe mieux'
-territory: construire
+title: 'La performance comme choix de conception et enjeu SEO'
+territory: comprendre
 publishedAt: 2026-08-20
 scheduledPublishAt: 2026-08-20T06:00:00Z
 summary: >-
   Sixième volet du making-of du site de La Puissance de l'Éveil : comment des
   choix techniques (HTML statique, images AVIF, hébergement edge) deviennent
-  directement des points de référencement.
+  une meilleure expérience de lecture, sans promettre un classement.
 readingTime: 5
 tags:
-  - making-of
   - SEO
   - performance
   - Astro
-  - La Puissance de l'Éveil
 essentiel:
   sousTitre: Les points essentiels.
   readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **Le poids d'une page est un signal** : Google mesure la vitesse, une
-      page lourde part avec un handicap.
+      **L'expérience compte** : les Core Web Vitals interviennent dans les
+      systèmes de classement, sans garantir une bonne position.
     - >-
       **Astro sert du HTML statique** : le contenu s'affiche sans attendre que
       du JavaScript se réveille, rapide par défaut.
@@ -41,7 +39,7 @@ coverImage:
   alt: La performance technique du site de La Puissance de l'Éveil au service du référencement
   caption: Un site léger n'est pas un détail de dev, c'est un argument SEO.
 seo:
-  title: 'La performance comme stratégie SEO : un site léger se classe mieux'
+  title: 'La performance comme choix de conception et enjeu SEO'
   description: >-
     Making-of du site de La Puissance de l'Éveil : comment HTML statique, images
     AVIF et hébergement edge Cloudflare servent directement le référencement.
@@ -49,22 +47,29 @@ seo:
   noindex: false
 faq: []
 draft: false
+updatedAt: 2026-10-08
 featured: false
+topics: ["seo"]
+projectIds: ["la-puissance-de-leveil"]
+format: article
+seriesId: serie-eva
+seriesOrder: 6
+seriesKind: episode
 ---
-Un site rapide ne se classe pas mieux par hasard : **la vitesse est devenue un signal de référencement à part entière**. Google mesure le temps que met une page à s'afficher, et une page lourde arrive dans la course avec un handicap. Pour La Puissance de l'Éveil, je n'ai pas traité la performance comme une finition de dernière minute. Je l'ai traitée comme une décision SEO, prise dès le premier fichier.
+**La performance sert d'abord la lectrice.** [Google indique que les Core Web Vitals interviennent dans ses systèmes de classement, mais qu'un bon score ne garantit pas une bonne position](https://developers.google.com/search/docs/appearance/core-web-vitals). Le poids en octets n'est pas, à lui seul, un score SEO. Pour La Puissance de l'Éveil, je n'ai pas traité la performance comme une finition de dernière minute. Je l'ai traitée comme une décision SEO, prise dès le premier fichier.
 
-Je suis Jimmy. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après [avoir choisi la stack technique et le CMS](/astro-cloudflare-cms-client/), voici comment ces choix se transforment en points de référencement, sans une ligne d'optimisation « SEO » ajoutée par-dessus.
+Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après [avoir choisi la stack technique et le CMS](/astro-cloudflare-cms-client/), voici pourquoi ces choix soutiennent la lecture et l'exploration, sans une ligne d'optimisation « SEO » ajoutée par-dessus.
 
-## Le poids d'une page est un signal
+## Une page légère facilite la lecture
 
-**Google ne se contente pas de lire une page, il la chronomètre.** La logique est simple : un moteur de recherche veut envoyer ses utilisateurs vers des sites agréables, et un site lent ne l'est pas. Le poids et la vitesse de chargement sont donc devenus des critères de classement, pas juste un confort.
+**Google ne se contente pas de lire une page, il la chronomètre.** La logique est simple : un moteur de recherche veut envoyer ses utilisateurs vers des sites agréables, et un site lent ne l'est pas. Les mesures d'expérience couvrent chargement, stabilité et réactivité. Elles ne se réduisent pas au poids de la page et ne remplacent pas la pertinence du contenu.
 
 Pour Eva, l'enjeu est double. Une visiteuse qui arrive depuis Instagram sur son téléphone, en 4G, dans le métro, n'attendra pas. Si le hero met trois secondes à apparaître, elle est déjà repartie. Cette impatience, Google la connaît, et il l'intègre à son évaluation.
 
 **La bonne nouvelle, c'est que la performance ne se gagne pas après coup.** Elle se gagne au moment des choix techniques. Un site bien construit est rapide par défaut. Un site mal construit passe le reste de sa vie à essayer de rattraper son poids de départ.
 
 {% MonAvis sentiment="positif" %}
-Longtemps, on a présenté la vitesse comme un truc de développeur, séparé du contenu et du SEO. C'est faux. Sur un site comme celui d'Eva, chaque milliseconde gagnée est un point marqué à la fois pour la visiteuse et pour Google. Les deux veulent exactement la même chose.
+Longtemps, on a présenté la vitesse comme un truc de développeur, séparé du contenu et du SEO. C'est faux. Sur un site comme celui d'Eva, gagner du temps de chargement rend la visite plus confortable. Je ne peux pas convertir chaque milliseconde gagnée en positions Google supplémentaires.
 {% /MonAvis %}
 
 ## Astro sert du HTML statique, donc rapide par défaut
@@ -116,7 +121,7 @@ Trois : **est-ce que la page répond vite quand on interagit ?** Un clic, un dé
 Je ne vais pas te sortir un score Lighthouse précis, ce serait malhonnête de figer un chiffre qui bouge à chaque mesure. Ce que je peux dire, c'est que ces trois exigences ont été des critères de conception, pas un audit fait à la fin. **HTML statique, images légères, hébergement proche : les trois questions trouvent leur réponse dans les choix, pas dans un rattrapage.**
 
 {% Conseil titre="La vitesse est un billet d'entrée, pas un trophée" %}
-Un bon score de performance ne fait pas classer une page seul. Il enlève un obstacle. Google n'envoie pas ses utilisateurs vers un site rapide et vide plutôt que vers un site un peu plus lent mais utile. La vitesse te qualifie pour la course. C'est le contenu qui la gagne.
+Un bon score de performance ne fait pas classer une page seul. Il enlève un obstacle. Google n'envoie pas ses utilisateurs vers un site rapide et vide plutôt que vers un site un peu plus lent mais utile. La performance soutient la lecture. Elle ne remplace ni un contenu utile, ni les autres signaux évalués par le moteur.
 {% /Conseil %}
 
 ## La suite

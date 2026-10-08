@@ -1,6 +1,12 @@
 import { defineMarkdocConfig, component } from '@astrojs/markdoc/config';
 
 export default defineMarkdocConfig({
+  nodes: {
+    link: {
+      render: component('./src/components/content/ArticleLink.astro'),
+      attributes: { href: { type: String, required: true }, title: { type: String } },
+    },
+  },
   tags: {
     Conseil: {
       render: component('./src/components/content/Conseil.astro'),

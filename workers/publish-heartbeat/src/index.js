@@ -90,10 +90,12 @@ async function runMonitor(env) {
     if (isNaN(sched.getTime())) continue;
     if (sched.getTime() > now - GRACE_MS) continue; // pas encore dû (avec la marge)
 
-    // L'article est dû : sa page doit répondre 200.
+    // Le statut seul ne détecte pas un fallback d'accueil renvoyé en HTTP 200.
     const pageRes = await fetch(`${SITE_BASE_URL}/${slug}/`, { redirect: 'manual' });
-    if (pageRes.status !== 200) {
-      overdue.push({ slug, scheduled: m[1].trim(), status: pageRes.status });
+    const html = await pageRes.text();
+    const validArticle = pageRes.status === 200 && isArticlePage(html, `${SITE_BASE_URL}/${slug}/`);
+    if (!validArticle) {
+      overdue.push({ slug, scheduled: m[1].trim(), status: pageRes.status, reason: pageRes.status === 200 ? 'contenu article ou canonical absent' : 'statut HTTP inattendu' });
     }
   }
 
@@ -134,7 +136,7 @@ async function findOpenAlertIssue(env) {
 
 function buildAlertBody(overdue) {
   const lines = overdue
-    .map((o) => `- \`${o.slug}\` (programmé ${o.scheduled}, la page répond ${o.status})`)
+    .map((o) => `- \`${o.slug}\` (programmé ${o.scheduled}, HTTP ${o.status}, ${o.reason})`)
     .join('\n');
   return [
     "Le mécanisme de publication automatique n'a pas mis ces articles en ligne alors que leur date est passée :",
@@ -200,4 +202,18 @@ function ghHeaders(env, auth) {
   };
   if (auth) h.Authorization = `Bearer ${env.GITHUB_TOKEN}`;
   return h;
+}
+
+/** Contrôle pur, exporté pour pouvoir vérifier les fallbacks sans accès réseau. */
+export function isArticlePage(html, expectedUrl) {
+  const canonical = html.match(/<link\b(?=[^>]*\brel=["']canonical["'])(?=[^>]*\bhref=["']([^"']+)["'])[^>]*>/i)?.[1];
+  const normalize = (url) => url.replace(/\/$/, '');
+  if (!canonical || normalize(canonical) !== normalize(expectedUrl)) return false;
+  return [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].some((match) => {
+    try {
+      const data = JSON.parse(match[1]);
+      const nodes = Array.isArray(data) ? data : (data['@graph'] ?? [data]);
+      return nodes.some((node) => node['@type'] === 'BlogPosting' && normalize(node.url ?? '') === normalize(expectedUrl));
+    } catch { return false; }
+  });
 }

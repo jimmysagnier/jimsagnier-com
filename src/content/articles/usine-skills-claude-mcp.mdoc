@@ -2,6 +2,7 @@
 title: 'Construire une usine de skills Claude et MCP'
 territory: construire
 publishedAt: 2026-09-25
+updatedAt: 2026-10-08
 scheduledPublishAt: 2026-09-25T06:00:00Z
 summary: >-
   La fabrique de contenu n'est pas un prompt magique, c'est une architecture :
@@ -9,8 +10,6 @@ summary: >-
   maintenable à l'échelle.
 readingTime: 9
 tags:
-  - making-of
-  - Eurofiscalis
   - IA
   - skills
   - MCP
@@ -35,9 +34,9 @@ essentiel:
       **MCP** : le pont qui laisse Claude écrire dans le CMS et lire Search
       Console.
 coverImage:
-  src: /images/articles/usine-skills-claude-mcp/coverImage/src.avif
-  alt: L'architecture de skills Claude, d'agents et de MCP derrière la fabrique de contenu
-  caption: Une fabrique de contenu, ce n'est pas un prompt magique. C'est du logiciel, rangé proprement.
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
 seo:
   title: 'Construire une usine de skills Claude et MCP'
   description: >-
@@ -49,10 +48,19 @@ seo:
 faq: []
 draft: false
 featured: false
+topics: ["ia-appliquee", "ecriture-contenu"]
+projectIds: ["eurofiscalis-refonte"]
+format: article
+seriesId: saga-eurofiscalis-s2
+seriesOrder: 6
+seriesKind: bonus
 ---
 J'ai fini l'article précédent en disant que le reste, c'était des détails d'outillage. Pour ceux que l'outillage intéresse, en voici les coulisses. Notre fabrique de contenu n'est pas un gros prompt malin. C'est une architecture logicielle, avec une règle simple qui fait que tout tient à l'échelle.
 
-Je suis Jimmy. Cet article est le bonus technique de la série sur notre fabrique de contenu Eurofiscalis. Après [la chaîne éditoriale](/chaine-editoriale-contenu-echelle/) et [le maillage](/cocon-semantique-maillage-echelle/), on descend d'un étage, sous le capot : comment tout ça est construit avec des skills Claude, des agents et du MCP. C'est le plus technique de la série, et le plus utile si tu construis tes propres systèmes avec l'IA.
+Je suis Jim. Cet article est le bonus technique de la série sur notre fabrique de contenu Eurofiscalis. Après [la chaîne éditoriale](/chaine-editoriale-contenu-echelle/) et [le maillage](/cocon-semantique-maillage-echelle/), on descend d'un étage, sous le capot : comment tout ça est construit avec des skills Claude, des agents et du MCP. C'est le plus technique de la série, et le plus utile si tu construis tes propres systèmes avec l'IA.
+
+
+Sur [mon site personnel construit avec Claude](/vibecoder-site-claude/), j'avais déjà rencontré la même limite : l'outil accélère l'exécution, mais le cadrage reste à faire.
 
 ## D'abord, deux mots : skill et MCP
 

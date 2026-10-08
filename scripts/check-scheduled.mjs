@@ -22,7 +22,7 @@ try {
     if (!match) continue;
 
     const frontmatter = yaml.load(match[1]);
-    if (!frontmatter) continue;
+    if (!frontmatter || frontmatter.draft) continue;
 
     const scheduledDate = frontmatter.scheduledPublishAt;
     if (!scheduledDate) continue;

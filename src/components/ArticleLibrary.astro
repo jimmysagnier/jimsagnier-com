@@ -1,0 +1,89 @@
+---
+import ArticleCard from './ArticleCard.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getProjects } from '../lib/projects';
+import { TOPICS, SERIES } from '../lib/taxonomy';
+interface Props { articles: CollectionEntry<'articles'>[]; initialTopic?: string; initialSeries?: string }
+const { articles, initialTopic = '', initialSeries = '' } = Astro.props;
+const projects = await getProjects();
+const dates = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'short', year:'numeric' });
+const territories = { construire:'Construire', comprendre:'Comprendre', reflechir:'Réfléchir' };
+const series = [...new Set(articles.map(a => a.data.seriesId).filter(Boolean))];
+const seriesLabel = (id: string) => { const entry = SERIES.find(s => s.id === id); return entry?.label ?? id; };
+---
+<section class="library" data-initial-topic={initialTopic} data-initial-series={initialSeries} data-topic-aliases={JSON.stringify(TOPICS)}>
+  <form class="library-controls" role="search" onsubmit="return false">
+    <label>Rechercher<input type="search" name="q" aria-label="Rechercher" placeholder="Un titre, une idée, un outil…" /></label>
+    <label>Sujet<select name="topic" aria-label="Sujet"><option value="">Tous les sujets</option>{TOPICS.map(t => <option value={t.slug}>{t.label}</option>)}</select></label>
+    <label>Territoire<select name="territory" aria-label="Territoire"><option value="">Tous les territoires</option>{Object.entries(territories).map(([id,label]) => <option value={id}>{label}</option>)}</select></label>
+    <label>Série<select name="series" aria-label="Série"><option value="">Toutes les séries</option>{series.map(id => <option value={id}>{seriesLabel(id!)}</option>)}</select></label>
+    <label>Projet<select name="project" aria-label="Projet"><option value="">Tous les projets</option>{projects.map(p => <option value={p.slug}>{p.title}</option>)}</select></label>
+    <label>Format<select name="format" aria-label="Format"><option value="">Tous les formats</option><option value="article">Articles</option><option value="note">Notes</option></select></label>
+    <label>Ordre<select name="sort" aria-label="Ordre"><option value="recent">Plus récents</option><option value="oldest">Plus anciens</option><option value="title">Titre A à Z</option></select></label>
+    <button type="reset">Tout effacer</button>
+  </form>
+  <p class="result-count" aria-live="polite">{articles.length} articles</p>
+  <div class="library-grid">
+    {articles.map(article => <div class="library-card" data-id={article.id} data-territory={article.data.territory} data-topics={(article.data.topics ?? []).join('|')} data-projects={(article.data.projectIds ?? []).join('|')} data-format={article.data.format ?? 'article'} data-series={article.data.seriesId ?? ''} data-tags={article.data.tags.join('|')} data-date={article.data.publishedAt.getTime()} data-search={`${article.data.title} ${article.data.summary} ${article.data.tags.join(' ')}`}>
+      <ArticleCard article={article} projects={projects} heading="h2"/>
+    </div>)}
+  </div>
+  <p class="no-results" hidden>Aucun article pour ces critères. Essaie un autre sujet ou efface les filtres.</p>
+  <button class="load-more" hidden>Afficher les articles suivants</button>
+</section>
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('.library').forEach(root => {
+      const form = root.querySelector<HTMLFormElement>('form')!;
+      const grid = root.querySelector<HTMLElement>('.library-grid')!;
+      const cards = Array.from(grid.querySelectorAll<HTMLElement>('.library-card'));
+      const more = root.querySelector<HTMLButtonElement>('.load-more')!;
+      const count = root.querySelector<HTMLElement>('.result-count')!;
+      const field = (name:string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+      const normalize = (s:string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+      let limit = 9;
+      let tag = new URLSearchParams(location.search).get('tag') ?? '';
+      const init = () => {
+        const params = new URLSearchParams(location.search);
+        if (!params.has('territory') && params.has('territoire')) params.set('territory',params.get('territoire')!);
+        const legacyProjects:Record<string,string> = { 'eurofiscalis':'eurofiscalis-refonte', "la puissance de l'eveil":'la-puissance-de-leveil', 'jimsagnier.com':'jimsagnier-com' };
+        const aliases = JSON.parse(root.dataset.topicAliases ?? '[]') as {slug:string;label:string;aliases:string[]}[];
+        if (tag) {
+          const project = legacyProjects[normalize(tag)];
+          const topic = aliases.find(t => [t.slug,t.label,...t.aliases].some(alias => normalize(alias) === normalize(tag)));
+          if (project) {params.set('project',project);tag='';}
+          else if (topic) {params.set('topic',topic.slug);tag='';}
+        }
+        for (const name of ['q','topic','territory','series','project','format','sort']) field(name).value = params.get(name) ?? (name === 'topic' ? root.dataset.initialTopic ?? '' : name === 'series' ? root.dataset.initialSeries ?? '' : name === 'sort' ? 'recent' : '');
+        if (!field('territory').value && ['construire','comprendre','reflechir'].includes(location.hash.slice(1))) field('territory').value = location.hash.slice(1);
+      };
+      const update = (write = true) => {
+        const values = Object.fromEntries(['q','topic','territory','series','project','format','sort'].map(n => [n,field(n).value]));
+        const matches = cards.filter(c => (!values.q || normalize(c.dataset.search ?? '').includes(normalize(values.q))) && (!values.topic || c.dataset.topics?.split('|').includes(values.topic)) && (!values.territory || c.dataset.territory === values.territory) && (!values.series || c.dataset.series === values.series) && (!values.project || c.dataset.projects?.split('|').includes(values.project)) && (!values.format || c.dataset.format === values.format) && (!tag || c.dataset.tags?.split('|').some(t => normalize(t) === normalize(tag))));
+        matches.sort((a,b) => values.sort === 'title' ? a.querySelector('h2')!.textContent!.localeCompare(b.querySelector('h2')!.textContent!,'fr') : (Number(b.dataset.date)-Number(a.dataset.date)) * (values.sort === 'oldest' ? -1 : 1));
+        cards.forEach(c => c.hidden = true);
+        matches.forEach((c,i) => { grid.append(c); c.hidden = i >= limit; });
+        const shown = Math.min(limit,matches.length);
+        count.textContent = `${shown} sur ${matches.length} article${matches.length > 1 ? 's' : ''}${tag ? ` · tag : ${tag}` : ''}`;
+        more.hidden = shown >= matches.length;
+        root.querySelector<HTMLElement>('.no-results')!.hidden = matches.length > 0;
+        if (write) {
+          const url = new URL(location.href); url.search = ''; url.hash = '';
+          for (const [key,value] of Object.entries(values)) if (value && !(key === 'sort' && value === 'recent')) url.searchParams.set(key,value);
+          if (tag) url.searchParams.set('tag',tag);
+          history.replaceState(null,'',url);
+        }
+      };
+      form.addEventListener('input', () => {limit=9;update();});
+      form.addEventListener('reset', () => {tag='';limit=9;requestAnimationFrame(() => update());});
+      more.addEventListener('click', () => { const before=limit;limit+=9;update(false); const first=Array.from(grid.children).filter(c => !(c as HTMLElement).hidden)[before]; (first?.querySelector('a') as HTMLElement)?.focus({preventScroll:true}); });
+      const restore = () => {init();limit=9;update(false);};
+      window.addEventListener('popstate',restore); window.addEventListener('hashchange',restore);
+      document.addEventListener('astro:before-swap', () => {window.removeEventListener('popstate',restore);window.removeEventListener('hashchange',restore);},{once:true});
+      restore();
+    });
+  });
+</script>
+<style>
+.library{max-width:var(--max);margin:auto;padding:24px 5vw 72px}.library-controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end;padding:24px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}.library-controls label{display:grid;gap:8px;font-size:13px;flex:1 1 150px;min-width:0}.library-controls label:first-child{flex-basis:280px}input,select{width:100%;min-width:0;min-height:48px;padding:12px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}button{min-height:48px;padding:12px 18px;background:var(--bg);color:var(--fg);border:1px solid var(--line-strong);border-radius:6px;cursor:pointer;font:inherit}.result-count{margin:24px 0;color:var(--fg-dim);font-size:13px}.library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.library-card{min-width:0;display:grid}.library-card[hidden],button[hidden]{display:none}.load-more{display:block;margin:32px auto 0;border-color:var(--accent-text);color:var(--accent-text)}@media(max-width:1000px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.library{padding:16px 20px 48px}.library-controls{padding:16px;gap:12px}.library-grid{grid-template-columns:1fr}}
+</style>

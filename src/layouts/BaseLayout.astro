@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/network.css';
 import { ClientRouter } from 'astro:transitions';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -17,6 +18,10 @@ interface Props {
   description?: string;
   ogImage?: string;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
   canonical?: string;
   active?: 'atelier' | 'journal' | 'projets' | 'a-propos';
   /** Page-specific JSON-LD nodes (e.g. BlogPosting, CreativeWork). */
@@ -34,6 +39,10 @@ const {
   description,
   ogImage,
   noindex = false,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  author = 'Jim Sagnier',
   canonical,
   active,
   schemaNodes = [],
@@ -71,27 +80,18 @@ const jsonLd = serializeGraph(graphNodes);
   <link rel="icon" href="/favicons/favicon-16.png" type="image/png" sizes="16x16" />
   <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#06B6D4" />
+  <meta name="theme-color" content="#0b151b" />
 
   {/* Fonts self-hosted : zéro RTT externe, zéro CSS bloquant.
       Pas de preload : avec font-display: swap le texte peint immédiatement en
       fallback, et précharger une police de plusieurs centaines de Ko affamerait
       le CSS bloquant et l'image LCP sur mobile bridé. */}
   <style is:inline>
-    @font-face {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 100 900;
-      font-display: swap;
-      src: url('/fonts/InterVariable.woff2') format('woff2');
-    }
-    @font-face {
-      font-family: 'Inter';
-      font-style: italic;
-      font-weight: 100 900;
-      font-display: swap;
-      src: url('/fonts/InterVariable-Italic.woff2') format('woff2');
-    }
+@font-face{font-family:'Outfit';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/Outfit.woff2') format('woff2')}
+@font-face{font-family:'Work Sans';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/Work-Sans.woff2') format('woff2')}
+
+
+
     @font-face {
       font-family: 'JetBrains Mono';
       font-style: normal;
@@ -121,6 +121,7 @@ const jsonLd = serializeGraph(graphNodes);
   )}
 
   {/* Sitemap + llms.txt */}
+  <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="La bibliothèque de Jim Sagnier" />
   <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
   <link rel="alternate" type="text/plain" href="/llms.txt" title="Pour les agents IA" />
 
@@ -128,7 +129,11 @@ const jsonLd = serializeGraph(graphNodes);
   <ClientRouter />
 
   {/* Open Graph */}
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={ogType} />
+  <meta name="author" content={author} />
+  {ogType === 'article' && <meta property="article:author" content={`${settings.baseUrl}/a-propos/`} />}
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
   <meta property="og:locale" content="fr_FR" />
   <meta property="og:site_name" content={settings.title} />
   <meta property="og:title" content={pageTitle} />
@@ -148,8 +153,9 @@ const jsonLd = serializeGraph(graphNodes);
   <slot name="head" />
 </head>
 <body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
   <Nav active={active} />
-  <main id="contenu">
+  <main id="contenu" tabindex="-1">
     <slot />
   </main>
   <Footer />

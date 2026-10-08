@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+interface Props { href: string; title?: string }
+const { href, title } = Astro.props;
+const articles = await getCollection('articles');
+let pending = false;
+try {
+  const target = new URL(href, 'https://jimsagnier.com');
+  if (target.origin === 'https://jimsagnier.com') {
+    const slug = decodeURIComponent(target.pathname).replace(/^\/+|\/+$/g,'');
+    const article = articles.find(a => a.id === slug);
+    pending = !!article && (article.data.draft || article.data.publishedAt > new Date() || !!article.data.scheduledPublishAt && article.data.scheduledPublishAt > new Date());
+  }
+} catch { /* Markdoc also accepts fragment links. */ }
+---
+{pending ? <span class="pending-link"><slot /><small> (à paraître)</small></span> : <a href={href} title={title}><slot /></a>}
+<style>.pending-link small{font-size:.8em;color:var(--fg-dim)}</style>

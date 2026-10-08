@@ -2,19 +2,19 @@
 type NavKey = 'atelier' | 'journal' | 'projets' | 'a-propos';
 interface Props { active?: NavKey }
 const { active } = Astro.props;
+const links = [
+  { href: '/', label: 'L’atelier', key: 'atelier' },
+  { href: '/journal/', label: 'Bibliothèque', key: 'journal' },
+  { href: '/projets/', label: 'Projets', key: 'projets' },
+  { href: '/a-propos/', label: 'À propos', key: 'a-propos' },
+];
 ---
 <nav class="site" aria-label="Navigation principale">
   <a href="/" class="brand">
     <span class="avatar" aria-hidden="true"></span>
     Jim Sagnier
   </a>
-  <ul>
-    <li><a href="/" aria-current={active === 'atelier' ? 'page' : undefined}>Atelier</a></li>
-    <li><a href="/journal" aria-current={active === 'journal' ? 'page' : undefined}>Journal</a></li>
-    <li><a href="/projets" aria-current={active === 'projets' ? 'page' : undefined}>Projets</a></li>
-    <li><a href="/a-propos" aria-current={active === 'a-propos' ? 'page' : undefined}>À propos</a></li>
+  <ul class="desktop-links">
+    {links.map((link) => <li><a href={link.href} aria-current={active === link.key ? 'page' : undefined}>{link.label}</a></li>)}
   </ul>
-  <a href="https://jsagnier.substack.com" target="_blank" rel="noopener" class="cta">
-    Newsletter →
-  </a>
 </nav>

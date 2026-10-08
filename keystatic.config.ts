@@ -1,5 +1,6 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 import { block, wrapper } from '@keystatic/core/content-components';
+import { TOPICS, PROJECT_IDS, SERIES } from './src/lib/taxonomy';
 
 export default config({
   storage: { kind: 'local' },
@@ -71,6 +72,21 @@ export default config({
           description: 'Mots-clés affichés en pied d\'article et utilisés pour filtrer le Journal.',
         }),
 
+        topics: fields.multiselect({
+          label: 'Sujets', options: TOPICS.map(({ slug, label }) => ({ value: slug, label })), defaultValue: [],
+          description: 'Indépendants de Construire, Comprendre et Réfléchir.',
+        }),
+        projectIds: fields.multiselect({
+          label: 'Projets liés', options: PROJECT_IDS.map((id) => ({ value: id, label: id })), defaultValue: [],
+          description: 'Les cinq projets du registre, même si leur fiche est gérée dans le code.',
+        }),
+        seriesId: fields.select({
+          label: 'Série', options: [{ value: '', label: 'Hors série' }, ...SERIES.map(({ id, label }) => ({ value: id, label }))], defaultValue: '',
+        }),
+        seriesOrder: fields.integer({ label: 'Position dans la série', validation: { min: 1 } }),
+        seriesKind: fields.select({ label: 'Type de volet', options: [{ value: 'episode', label: 'Épisode' }, { value: 'bonus', label: 'Bonus' }], defaultValue: 'episode' }),
+        format: fields.select({ label: 'Format', options: [{ value: 'article', label: 'Article' }, { value: 'note', label: 'Note courte' }], defaultValue: 'article' }),
+
         essentiel: fields.object(
           {
             sousTitre: fields.text({
@@ -115,7 +131,7 @@ export default config({
 
         relatedProject: fields.relationship({
           label: 'Projet lié',
-          description: 'Optionnel — rattache l\'article à un projet existant.',
+          description: 'Ancien champ de compatibilité. Utiliser Projets liés pour le classement.',
           collection: 'projets',
         }),
 

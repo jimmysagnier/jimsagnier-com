@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import { TOPICS } from '../../lib/taxonomy';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleLibrary from '../../components/ArticleLibrary.astro';
+export async function getStaticPaths() {
+ const publicArticles = await getCollection('articles',({data}) => !data.draft && data.publishedAt <= new Date() && (!data.scheduledPublishAt || data.scheduledPublishAt <= new Date()));
+ return TOPICS.filter(topic => publicArticles.some(a => a.data.topics?.includes(topic.slug))).map(topic => ({params:{slug:topic.slug},props:{topic}}));
+}
+const { topic } = Astro.props;
+const articles = (await getCollection('articles',({data}) => !data.draft && data.publishedAt <= new Date() && (!data.scheduledPublishAt || data.scheduledPublishAt <= new Date()))).filter(a => a.data.topics?.includes(topic.slug)).sort((a,b) => b.data.publishedAt.getTime()-a.data.publishedAt.getTime());
+---
+<BaseLayout title={`${topic.label} : articles et notes`} description={`Les articles de Jim Sagnier sur ${topic.label}, réunis dans sa bibliothèque personnelle.`} active="journal">
+<header><a href="/journal/">Bibliothèque →</a><h1>{topic.label}</h1><p>Les méthodes, essais et retours de terrain de l'atelier.</p></header>
+<ArticleLibrary articles={articles} initialTopic={topic.slug} />
+</BaseLayout>
+<style>header{max-width:var(--max);margin:auto;padding:48px 48px 12px}h1{font-size:clamp(32px,5vw,56px);margin:16px 0}p{color:var(--fg-dim)}@media(max-width:650px){header{padding:36px 20px 12px}}</style>

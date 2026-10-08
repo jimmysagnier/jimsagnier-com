@@ -1,5 +1,6 @@
 import { defineCollection, z, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { PROJECT_IDS } from './lib/taxonomy';
 
 const territoireSchema = z.enum(['construire', 'comprendre', 'reflechir']);
 const schemaTypeSchema = z.enum(['BlogPosting', 'HowTo', 'FAQPage']);
@@ -34,6 +35,12 @@ const articles = defineCollection({
       })
       .optional(),
     tags: z.array(z.string()).default([]),
+    topics: z.array(z.enum(['acquisition-b2b', 'seo', 'ia-appliquee', 'web-outils', 'ecriture-contenu'])).default([]),
+    projectIds: z.array(z.enum(PROJECT_IDS)).default([]),
+    seriesId: z.preprocess((value) => value === '' ? undefined : value, z.enum(['serie-eva', 'saga-eurofiscalis-s1', 'saga-eurofiscalis-s2', 'saga-eurofiscalis-s3', 'saga-eurofiscalis-s4']).optional()),
+    seriesOrder: z.number().int().positive().optional(),
+    seriesKind: z.enum(['episode', 'bonus']).default('episode'),
+    format: z.enum(['article', 'note']).default('article'),
     coverImage: z.object({
       src: z.string(),
       alt: z.string().min(1),

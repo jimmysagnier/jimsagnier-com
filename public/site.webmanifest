@@ -4,8 +4,8 @@
   "description": "L'atelier de Jim Sagnier",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAFAFA",
-  "theme_color": "#06B6D4",
+  "background_color": "#0b151b",
+  "theme_color": "#0b151b",
   "icons": [
     {
       "src": "/favicons/icon-192.png",

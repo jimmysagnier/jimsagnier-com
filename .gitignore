@@ -28,3 +28,4 @@ _planning/
 
 # Claude Code session
 .claude/
+.mcp.json

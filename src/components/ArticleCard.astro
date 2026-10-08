@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getTopicLabel } from '../lib/taxonomy';
+interface Props { article: CollectionEntry<'articles'>; projects?: {slug:string;title:string}[]; heading?: "h2" | "h3" }
+const {article:a,projects=[],heading="h3"} = Astro.props;
+const Heading=heading;
+const territories = {construire:'Construire',comprendre:'Comprendre',reflechir:'Réfléchir'};
+const date = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+---
+<article class="entry">
+<div class="entry-meta"><span>{a.data.topics.map(getTopicLabel).join(' · ')}</span><span><time datetime={a.data.publishedAt.toISOString()}>{date.format(a.data.publishedAt)}</time>{a.data.readingTime && ` · ${a.data.readingTime} min`}</span></div>
+<Heading><a href={`/${a.id}/`} data-astro-reload>{a.data.title}</a></Heading><p>{a.data.summary}</p>
+<div class="relations"><a href={`/journal/?territory=${a.data.territory}`}>{territories[a.data.territory]}</a>{projects.filter(p=>a.data.projectIds.includes(p.slug as typeof a.data.projectIds[number])).map(p=><a href={`/projets/${p.slug}/`}>{p.title}</a>)}</div>
+</article>

@@ -9,8 +9,6 @@ summary: >-
   vieillit en silence. Ce qu'on a appris en production.
 readingTime: 8
 tags:
-  - making-of
-  - Eurofiscalis
   - CMS
   - YMYL
   - données
@@ -37,9 +35,9 @@ essentiel:
       **Le test** : "si je modifie ce champ, cet article doit-il changer ?"
       Oui, on branche. Non, on écrit en dur.
 coverImage:
-  src: /images/articles/tokens-dynamiques-fallback-derive/coverImage/src.avif
-  alt: Des données dynamiques branchées sur une source unique dans les articles du site Eurofiscalis
-  caption: Un système qui ne se trompe jamais doit quand même savoir comment il échoue.
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
 seo:
   title: 'Contenus dynamiques : quand la donnée de secours ment (YMYL)'
   description: >-
@@ -51,10 +49,16 @@ seo:
 faq: []
 draft: false
 featured: false
+topics: ["web-outils"]
+projectIds: ["eurofiscalis-refonte"]
+format: article
+seriesId: saga-eurofiscalis-s4
+seriesOrder: 5
+seriesKind: episode
 ---
 Sur les 2700 pages du site, aucun taux n'est écrit à la main. Pas un seul. Chaque chiffre est branché sur une source unique, et quand un taux change, on le modifie à un seul endroit. Quelques minutes plus tard, tout le site est à jour. C'est probablement la partie de la refonte dont je suis le plus fier. Et c'est justement pour ça qu'il fallait que je te raconte comment elle peut mentir.
 
-Je suis Jimmy. Dernier épisode de l'après-migration Eurofiscalis. Le principe de ces chiffres dynamiques, je l'ai déjà expliqué dans l'article [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/) : c'était même la raison principale de notre changement de CMS. Je ne le refais pas. Ici, je raconte ce qui se passe des mois plus tard, quand le système tourne en production et qu'on découvre ce qu'il ne dit pas.
+Je suis Jim. Dernier épisode de l'après-migration Eurofiscalis. Le principe de ces chiffres dynamiques, je l'ai déjà expliqué dans l'article [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/) : c'était même la raison principale de notre changement de CMS. Je ne le refais pas. Ici, je raconte ce qui se passe des mois plus tard, quand le système tourne en production et qu'on découvre ce qu'il ne dit pas.
 
 ## Le rappel en trente secondes
 
