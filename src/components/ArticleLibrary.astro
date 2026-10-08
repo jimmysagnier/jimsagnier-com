@@ -6,23 +6,41 @@ import { TOPICS, SERIES } from '../lib/taxonomy';
 interface Props { articles: CollectionEntry<'articles'>[]; initialTopic?: string; initialSeries?: string }
 const { articles, initialTopic = '', initialSeries = '' } = Astro.props;
 const projects = await getProjects();
-const dates = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'short', year:'numeric' });
 const territories = { construire:'Construire', comprendre:'Comprendre', reflechir:'Réfléchir' };
-const series = [...new Set(articles.map(a => a.data.seriesId).filter(Boolean))];
-const seriesLabel = (id: string) => { const entry = SERIES.find(s => s.id === id); return entry?.label ?? id; };
+const series = SERIES.filter(s => articles.some(a => a.data.seriesId === s.id));
+const topics = TOPICS.filter(t => articles.some(a => a.data.topics.includes(t.slug)));
+const linkedProjects = projects.filter(p => articles.some(a => a.data.projectIds.some(id => id === p.slug)));
+const topicCount = (id: string) => articles.filter(a => a.data.topics.some(t => t === id)).length;
+const seriesCount = (id: string) => articles.filter(a => a.data.seriesId === id).length;
 ---
 <section class="library" data-initial-topic={initialTopic} data-initial-series={initialSeries} data-topic-aliases={JSON.stringify(TOPICS)}>
-  <form class="library-controls" role="search" onsubmit="return false">
-    <label>Rechercher<input type="search" name="q" aria-label="Rechercher" placeholder="Un titre, une idée, un outil…" /></label>
-    <label>Sujet<select name="topic" aria-label="Sujet"><option value="">Tous les sujets</option>{TOPICS.map(t => <option value={t.slug}>{t.label}</option>)}</select></label>
-    <label>Territoire<select name="territory" aria-label="Territoire"><option value="">Tous les territoires</option>{Object.entries(territories).map(([id,label]) => <option value={id}>{label}</option>)}</select></label>
-    <label>Série<select name="series" aria-label="Série"><option value="">Toutes les séries</option>{series.map(id => <option value={id}>{seriesLabel(id!)}</option>)}</select></label>
-    <label>Projet<select name="project" aria-label="Projet"><option value="">Tous les projets</option>{projects.map(p => <option value={p.slug}>{p.title}</option>)}</select></label>
-    <label>Format<select name="format" aria-label="Format"><option value="">Tous les formats</option><option value="article">Articles</option><option value="note">Notes</option></select></label>
-    <label>Ordre<select name="sort" aria-label="Ordre"><option value="recent">Plus récents</option><option value="oldest">Plus anciens</option><option value="title">Titre A à Z</option></select></label>
-    <button type="reset">Tout effacer</button>
+  <form id="library-filters" class="library-controls" role="search" onsubmit="return false">
+    <div class="search-wrap">
+      <label class="sr-only" for="library-search">Rechercher dans la bibliothèque</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+      <input id="library-search" type="search" name="q" aria-label="Rechercher dans la bibliothèque" placeholder="Un titre, une idée, un outil…" />
+      <button class="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button>
+    </div>
+    {['topic','territory','series','project','format'].map(name => <input type="hidden" name={name} value=""/>)}
+    <input type="hidden" name="sort" value="recent"/>
+    <div class="filter-chips topics" role="group" aria-label="Sujets">{topics.map(t => <button type="button" class="chip" data-filter="topic" data-value={t.slug} aria-pressed="false">{t.label}<small>{topicCount(t.slug)}</small></button>)}</div>
+    <details class="series-disclosure"><summary>Explorer les séries <span class="series-state"></span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="filter-chips" role="group" aria-label="Séries">{series.map(s => <button type="button" class="chip" data-filter="series" data-value={s.id} aria-pressed="false">{s.label}<small>{seriesCount(s.id)}</small></button>)}</div></details>
+    <p class="filter-hint">Plusieurs sujets possibles · Une série à la fois</p>
   </form>
-  <p class="result-count" aria-live="polite">{articles.length} articles</p>
+  <div class="library-toolbar">
+    <p class="result-count" aria-live="polite">{articles.length} articles</p>
+    <div class="toolbar-actions">
+      <details class="extra-filters"><summary>Autres filtres <span aria-hidden="true">+</span></summary></details>
+      <button type="reset" form="library-filters" class="reset-filters" hidden>Tout effacer</button>
+      <div class="sort-control"><button type="button" class="sort-toggle" aria-expanded="false" aria-controls="library-sort-options"><span class="sort-label">Plus récents</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button><div id="library-sort-options" class="sort-options" hidden>{[['recent','Plus récents'],['oldest','Plus anciens'],['title','Titre A à Z']].map(([value,label]) => <button type="button" data-sort={value} aria-pressed={value === 'recent' ? 'true' : 'false'}>{label}<span class="sort-check" aria-hidden="true">✓</span></button>)}</div></div>
+    </div>
+  </div>
+  <div class="extra-content" hidden>
+    <div class="filter-row"><span>Territoire</span><div class="filter-chips" role="group" aria-label="Territoires">{Object.entries(territories).map(([id,label]) => <button type="button" class="chip" data-filter="territory" data-value={id} aria-pressed="false">{label}</button>)}</div></div>
+    <div class="filter-row"><span>Projet</span><div class="filter-chips" role="group" aria-label="Projets">{linkedProjects.map(p => <button type="button" class="chip" data-filter="project" data-value={p.slug} aria-pressed="false">{p.title}</button>)}</div></div>
+    <div class="filter-row"><span>Format</span><div class="filter-chips" role="group" aria-label="Formats">{[['article','Articles'],['note','Notes']].map(([id,label]) => <button type="button" class="chip" data-filter="format" data-value={id} aria-pressed="false">{label}</button>)}</div></div>
+  </div>
+  <div class="active-filters"></div>
   <div class="library-grid">
     {articles.map(article => <div class="library-card" data-id={article.id} data-territory={article.data.territory} data-topics={(article.data.topics ?? []).join('|')} data-projects={(article.data.projectIds ?? []).join('|')} data-format={article.data.format ?? 'article'} data-series={article.data.seriesId ?? ''} data-tags={article.data.tags.join('|')} data-date={article.data.publishedAt.getTime()} data-search={`${article.data.title} ${article.data.summary} ${article.data.tags.join(' ')}`}>
       <ArticleCard article={article} projects={projects} heading="h2"/>
@@ -59,7 +77,7 @@ const seriesLabel = (id: string) => { const entry = SERIES.find(s => s.id === id
       };
       const update = (write = true) => {
         const values = Object.fromEntries(['q','topic','territory','series','project','format','sort'].map(n => [n,field(n).value]));
-        const matches = cards.filter(c => (!values.q || normalize(c.dataset.search ?? '').includes(normalize(values.q))) && (!values.topic || c.dataset.topics?.split('|').includes(values.topic)) && (!values.territory || c.dataset.territory === values.territory) && (!values.series || c.dataset.series === values.series) && (!values.project || c.dataset.projects?.split('|').includes(values.project)) && (!values.format || c.dataset.format === values.format) && (!tag || c.dataset.tags?.split('|').some(t => normalize(t) === normalize(tag))));
+        const matches = cards.filter(c => (!values.q || normalize(c.dataset.search ?? '').includes(normalize(values.q))) && (!values.topic || values.topic.split(',').some(topic => c.dataset.topics?.split('|').includes(topic))) && (!values.territory || c.dataset.territory === values.territory) && (!values.series || c.dataset.series === values.series) && (!values.project || c.dataset.projects?.split('|').includes(values.project)) && (!values.format || c.dataset.format === values.format) && (!tag || c.dataset.tags?.split('|').some(t => normalize(t) === normalize(tag))));
         matches.sort((a,b) => values.sort === 'title' ? a.querySelector('h2')!.textContent!.localeCompare(b.querySelector('h2')!.textContent!,'fr') : (Number(b.dataset.date)-Number(a.dataset.date)) * (values.sort === 'oldest' ? -1 : 1));
         cards.forEach(c => c.hidden = true);
         matches.forEach((c,i) => { grid.append(c); c.hidden = i >= limit; });
@@ -67,6 +85,22 @@ const seriesLabel = (id: string) => { const entry = SERIES.find(s => s.id === id
         count.textContent = `${shown} sur ${matches.length} article${matches.length > 1 ? 's' : ''}${tag ? ` · tag : ${tag}` : ''}`;
         more.hidden = shown >= matches.length;
         root.querySelector<HTMLElement>('.no-results')!.hidden = matches.length > 0;
+        const selectedTopics = values.topic.split(',').filter(Boolean);
+        root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === 'topic' ? selectedTopics.includes(button.dataset.value!) : values[button.dataset.filter!] === button.dataset.value)));
+        const sortLabels: Record<string,string> = {recent:'Plus récents',oldest:'Plus anciens',title:'Titre A à Z'};
+        root.querySelector<HTMLElement>('.sort-label')!.textContent = sortLabels[values.sort] ?? sortLabels.recent;
+        root.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.sort === values.sort)));
+        root.querySelector<HTMLElement>('.series-state')!.textContent = values.series ? '· 1 sélectionnée' : '';
+        root.querySelector<HTMLButtonElement>('.clear-search')!.hidden = !values.q;
+        root.querySelector<HTMLButtonElement>('.reset-filters')!.hidden = !tag && !Object.entries(values).some(([key,value]) => value && !(key === 'sort' && value === 'recent'));
+        const active = root.querySelector<HTMLElement>('.active-filters')!;
+        active.replaceChildren();
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-filter][aria-pressed="true"]')) {
+          const chip = document.createElement('button');
+          chip.type = 'button'; chip.dataset.remove = button.dataset.filter; chip.dataset.value = button.dataset.value;
+          const label = button.childNodes[0]?.textContent?.trim() ?? button.textContent ?? '';
+          chip.textContent = `${label} ×`; chip.setAttribute('aria-label',`Retirer ${label}`); active.append(chip);
+        }
         if (write) {
           const url = new URL(location.href); url.search = ''; url.hash = '';
           for (const [key,value] of Object.entries(values)) if (value && !(key === 'sort' && value === 'recent')) url.searchParams.set(key,value);
@@ -74,16 +108,43 @@ const seriesLabel = (id: string) => { const entry = SERIES.find(s => s.id === id
           history.replaceState(null,'',url);
         }
       };
+      const sortPanel = root.querySelector<HTMLElement>('.sort-options')!;
+      const sortToggle = root.querySelector<HTMLButtonElement>('.sort-toggle')!;
+      const closeSort = () => {sortPanel.hidden=true;sortToggle.setAttribute('aria-expanded','false');};
+      root.addEventListener('click', event => {
+        const target = (event.target as HTMLElement).closest<HTMLButtonElement>('button');
+        if (!target) return;
+        const name = target.dataset.filter ?? target.dataset.remove;
+        if (name) {
+          const value = target.dataset.value!;
+          if (name === 'topic') {
+            const selected = new Set(field(name).value.split(',').filter(Boolean));
+            selected.has(value) ? selected.delete(value) : selected.add(value);
+            field(name).value = [...selected].join(',');
+          } else field(name).value = field(name).value === value ? '' : value;
+          const removing = Boolean(target.dataset.remove);
+          limit=9;update();
+          if (removing) root.querySelector<HTMLButtonElement>(`[data-filter="${name}"][data-value="${value}"]`)?.focus();
+        }
+        if (target.dataset.sort) {field('sort').value=target.dataset.sort;limit=9;update();closeSort();sortToggle.focus();}
+        if (target.classList.contains('clear-search')) {field('q').value='';limit=9;update();field('q').focus();}
+      });
+      sortToggle.addEventListener('click', () => {const open=sortPanel.hidden;sortPanel.hidden=!open;sortToggle.setAttribute('aria-expanded',String(open));if(open)sortPanel.querySelector<HTMLButtonElement>('button')?.focus();});
+      const outsideClick = (event:MouseEvent) => {if(!(event.target as HTMLElement).closest('.sort-control'))closeSort();};
+      document.addEventListener('click',outsideClick);
+      root.addEventListener('keydown',event => {if(event.key === 'Escape' && !sortPanel.hidden){closeSort();sortToggle.focus();}});
+      const extras=root.querySelector<HTMLDetailsElement>('.extra-filters')!;
+      extras.addEventListener('toggle',()=>{root.querySelector<HTMLElement>('.extra-content')!.hidden=!extras.open;});
       form.addEventListener('input', () => {limit=9;update();});
-      form.addEventListener('reset', () => {tag='';limit=9;requestAnimationFrame(() => update());});
+      form.addEventListener('reset', event => {event.preventDefault();tag='';limit=9;for(const name of ['q','topic','territory','series','project','format'])field(name).value='';field('sort').value='recent';update();});
       more.addEventListener('click', () => { const before=limit;limit+=9;update(false); const first=Array.from(grid.children).filter(c => !(c as HTMLElement).hidden)[before]; (first?.querySelector('a') as HTMLElement)?.focus({preventScroll:true}); });
-      const restore = () => {init();limit=9;update(false);};
+      const restore = () => {init();limit=9;update(false);if(field('series').value)root.querySelector<HTMLDetailsElement>('.series-disclosure')!.open=true;};
       window.addEventListener('popstate',restore); window.addEventListener('hashchange',restore);
-      document.addEventListener('astro:before-swap', () => {window.removeEventListener('popstate',restore);window.removeEventListener('hashchange',restore);},{once:true});
+      document.addEventListener('astro:before-swap', () => {window.removeEventListener('popstate',restore);window.removeEventListener('hashchange',restore);document.removeEventListener('click',outsideClick);},{once:true});
       restore();
     });
   });
 </script>
 <style>
-.library{max-width:var(--max);margin:auto;padding:24px 5vw 72px}.library-controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end;padding:24px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}.library-controls label{display:grid;gap:8px;font-size:13px;flex:1 1 150px;min-width:0}.library-controls label:first-child{flex-basis:280px}input,select{width:100%;min-width:0;min-height:48px;padding:12px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}button{min-height:48px;padding:12px 18px;background:var(--bg);color:var(--fg);border:1px solid var(--line-strong);border-radius:6px;cursor:pointer;font:inherit}.result-count{margin:24px 0;color:var(--fg-dim);font-size:13px}.library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.library-card{min-width:0;display:grid}.library-card[hidden],button[hidden]{display:none}.load-more{display:block;margin:32px auto 0;border-color:var(--accent-text);color:var(--accent-text)}@media(max-width:1000px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.library{padding:16px 20px 48px}.library-controls{padding:16px;gap:12px}.library-grid{grid-template-columns:1fr}}
+.library{max-width:var(--max);margin:auto;padding:0 5vw 72px}.library-controls{max-width:1100px;margin:0 auto 28px}.search-wrap{max-width:840px;margin:24px auto 28px;position:relative}.search-wrap>svg{position:absolute;left:24px;top:25px;width:21px;height:21px;color:var(--accent)}input[type=search]{width:100%;min-width:0;min-height:72px;padding:22px 58px;border:1px solid var(--line-strong);border-radius:40px;background:var(--bg-2);color:var(--fg);font:17px var(--sans);box-shadow:0 0 0 5px #8de9cc04}input::placeholder{color:var(--fg-dim)}input[type=search]::-webkit-search-cancel-button{display:none}button{min-height:44px;padding:9px 15px;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:8px;cursor:pointer;font:13px var(--sans)}button:hover{border-color:var(--accent)}.clear-search{position:absolute;right:14px;top:14px;border:0;width:44px;font-size:22px;padding:0}.filter-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.chip{display:inline-flex;align-items:center;gap:9px;border-radius:30px;font-size:12px;padding:7px 14px}.chip small{font-size:10px;opacity:.8}.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.chip[aria-pressed=true]::before{content:'✓';font-size:11px}.series-disclosure{margin:18px auto 0}.series-disclosure summary{cursor:pointer;min-height:44px;display:flex;justify-content:center;align-items:center;gap:8px;font-size:13px;color:var(--accent)}.series-disclosure[open] .chevron{transform:rotate(180deg)}.series-disclosure .filter-chips{margin-top:14px}.filter-hint{font-size:11px;color:var(--fg-dim);text-align:center;margin-top:20px}.library-toolbar{border-top:1px solid var(--line);padding-top:20px;margin:28px 0 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}.result-count{font-size:13px;color:var(--fg-dim)}.toolbar-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.extra-filters summary{display:flex;gap:10px;align-items:center;cursor:pointer;min-height:44px;font-size:13px;color:var(--fg-dim)}.reset-filters{color:var(--fg-dim);border:0}.sort-control{position:relative}.sort-toggle{display:flex;align-items:center;gap:16px;border-color:transparent}.sort-toggle:hover,.sort-toggle[aria-expanded=true]{background:var(--bg-2);border-color:var(--line)}.sort-toggle svg{width:14px;height:14px}.sort-options{position:absolute;right:0;top:calc(100% + 8px);width:200px;background:var(--bg-3);border:1px solid var(--line-strong);border-radius:12px;padding:6px;box-shadow:0 12px 32px #0006;z-index:10}.sort-options button{width:100%;display:flex;justify-content:space-between;text-align:left;border:0;border-radius:6px}.sort-options [aria-pressed=true]{background:#8de9cc15;color:var(--accent)}.sort-check{visibility:hidden}.sort-options [aria-pressed=true] .sort-check{visibility:visible}.extra-content{padding:20px;border:1px solid var(--line);border-radius:12px;margin-bottom:20px}.filter-row{display:grid;grid-template-columns:75px 1fr;gap:12px;align-items:center;margin:10px 0}.filter-row>span{font-size:12px;color:var(--fg-dim)}.filter-row .filter-chips{justify-content:flex-start}.active-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.active-filters:empty{display:none}.active-filters button{min-height:36px;color:var(--accent);background:#8de9cc0b;font-size:12px}.library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.library-card{min-width:0;display:grid}.load-more{display:block;margin:32px auto 0;min-height:48px;border-color:var(--accent);color:var(--accent)}.no-results{padding:40px 20px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--fg-dim)}@media(max-width:1000px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.library{padding:0 20px 48px}.search-wrap{margin-top:16px}input[type=search]{font-size:15px;padding-left:52px}.search-wrap>svg{left:20px}.topics{justify-content:flex-start}.library-toolbar{align-items:flex-start;flex-direction:column;gap:12px}.toolbar-actions{width:100%;justify-content:space-between;gap:8px}.filter-row{grid-template-columns:1fr;gap:8px}.library-grid{grid-template-columns:1fr}.sort-options{right:0}.extra-content{padding:16px}}
 </style>

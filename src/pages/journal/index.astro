@@ -6,7 +6,7 @@ const now = new Date();
 const articles = (await getCollection('articles', ({data}) => !data.draft && data.publishedAt <= now && (!data.scheduledPublishAt || data.scheduledPublishAt <= now))).sort((a,b) => b.data.publishedAt.getTime()-a.data.publishedAt.getTime());
 ---
 <BaseLayout title="Bibliothèque" description="La bibliothèque de Jim Sagnier : ce que je construis, apprends et transmets. Articles et notes sur l'IA appliquée, le SEO, le web et l'écriture." active="journal">
-<header class="library-head"><span class="kicker">L'atelier en mots</span><h1>La bibliothèque.</h1><p>Des projets, des méthodes et des idées. Explore par sujet, par série ou par territoire : Construire, Comprendre, Réfléchir.</p></header>
+<header class="library-head"><span class="kicker">L'atelier en mots</span><h1>La bibliothèque.</h1><p>Des projets, des méthodes et des idées.<br/>Un texte à retrouver, un sujet à explorer.</p></header>
 <ArticleLibrary articles={articles} />
 </BaseLayout>
-<style>.library-head{max-width:var(--max);margin:auto;padding:56px 5vw 24px}.library-head h1{font-size:clamp(36px,6vw,64px);line-height:1.1;margin:16px 0}.library-head p{max-width:65ch;color:var(--fg-dim);font-size:18px;line-height:1.6}@media(max-width:650px){.library-head{padding:40px 20px 16px}}</style>
+<style>.library-head{max-width:var(--max);margin:auto;padding:48px 5vw 8px;text-align:center}.library-head h1{font-size:clamp(36px,6vw,64px);line-height:1.1;margin:16px 0}.library-head p{max-width:65ch;margin:auto;color:var(--fg-dim);font-size:18px;line-height:1.6}@media(max-width:650px){.library-head{padding:40px 20px 16px}}</style>
