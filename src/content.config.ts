@@ -37,6 +37,7 @@ const articles = defineCollection({
     tags: z.array(z.string()).default([]),
     topics: z.array(z.enum(['acquisition-b2b', 'seo', 'ia-appliquee', 'web-outils', 'ecriture-contenu'])).default([]),
     projectIds: z.array(z.enum(PROJECT_IDS)).default([]),
+    relatedArticles: z.array(z.string().min(1)).max(3).default([]),
     seriesId: z.preprocess((value) => value === '' ? undefined : value, z.enum(['serie-eva', 'saga-eurofiscalis-s1', 'saga-eurofiscalis-s2', 'saga-eurofiscalis-s3', 'saga-eurofiscalis-s4']).optional()),
     seriesOrder: z.number().int().positive().optional(),
     seriesKind: z.enum(['episode', 'bonus']).default('episode'),

@@ -80,6 +80,14 @@ export default config({
           label: 'Projets liés', options: PROJECT_IDS.map((id) => ({ value: id, label: id })), defaultValue: [],
           description: 'Les cinq projets du registre, même si leur fiche est gérée dans le code.',
         }),
+        relatedArticles: fields.array(fields.relationship({
+          label: 'Article', collection: 'articles', validation: { isRequired: true },
+        }), {
+          label: 'Pour continuer à explorer',
+          description: 'Jusqu’à trois lectures, dans l’ordre souhaité. Les lectures choisies s’affichent dans cet ordre si elles sont publiées. La sélection automatique complète les places restantes.',
+          itemLabel: (props) => props.value ?? 'Choisir un article',
+          validation: { length: { max: 3 } },
+        }),
         seriesId: fields.select({
           label: 'Série', options: [{ value: '', label: 'Hors série' }, ...SERIES.map(({ id, label }) => ({ value: id, label }))], defaultValue: '',
         }),

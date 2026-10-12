@@ -5,6 +5,7 @@ import FAQ from '../components/content/FAQ.astro';
 import Essentiel from '../components/content/Essentiel.astro';
 import AISummary from '../components/content/AISummary.astro';
 import { getProjects } from '../lib/projects';
+import { getRelatedArticles } from '../lib/related-articles';
 import { SERIES, getTopicLabel } from '../lib/taxonomy';
 import { getSiteSettings, getJimPerson } from '../lib/site';
 import { blogPostingNode, howToNode, type SchemaNode } from '../lib/schema';
@@ -64,7 +65,7 @@ const previous = seriesArticles[position - 1];
 const next = seriesArticles[position + 1];
 const seriesLabel = SERIES.find(s => s.id === article.data.seriesId)?.label;
 const projects = (await getProjects()).filter(p => (article.data.projectIds ?? []).includes(p.slug));
-const related = publicArticles.filter(a => a.id !== article.id).map(a => ({article:a,score:(a.data.topics ?? []).filter(t => article.data.topics?.includes(t)).length * 2 + (a.data.projectIds ?? []).filter(p => article.data.projectIds?.includes(p)).length})).filter(a => a.score > 0).sort((a,b) => b.score-a.score || b.article.data.publishedAt.getTime()-a.article.data.publishedAt.getTime()).slice(0,3);
+const related = getRelatedArticles(article, publicArticles);
 const cover = article.data.coverImage;
 const ogImage = article.data.seo?.ogImage || cover.src;
 
@@ -180,7 +181,7 @@ const inlineMd = (s: string) =>
     <footer class="post-footer">
       {seriesLabel && <nav class="reading-links" aria-label="Dans cette série"><h2>{seriesLabel}</h2><a href={`/series/${article.data.seriesId}/`}>Tous les épisodes</a>{previous && <a href={`/${previous.id}/`}>Précédent : {previous.data.title}</a>}{next && <a href={`/${next.id}/`}>Suivant : {next.data.title}</a>}</nav>}
       {projects.length > 0 && <section class="reading-links"><h2>Les projets de cet article</h2>{projects.map(project => <a href={`/projets/${project.slug}/`}>{project.title}</a>)}</section>}
-      {related.length > 0 && <section class="reading-links"><h2>Pour continuer à explorer</h2>{related.map(({article:a}) => <a href={`/${a.id}/`}>{a.data.title}</a>)}</section>}
+      {related.length > 0 && <section class="reading-links"><h2>Pour continuer à explorer</h2>{related.map(a => <a href={`/${a.id}/`}>{a.data.title}</a>)}</section>}
       <details class="optional-tools"><summary>Résumer avec une IA</summary><AISummary articleTitle={article.data.title} /></details>
       {article.data.tags.length > 0 && (
         <div class="tags-row">

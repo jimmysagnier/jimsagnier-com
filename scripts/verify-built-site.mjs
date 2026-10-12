@@ -23,14 +23,30 @@ const articles = readdirSync('src/content/articles').filter(name=>name.endsWith(
 const now=new Date();
 const isPublic=({data})=> !data.draft && (!data.scheduledPublishAt || new Date(data.scheduledPublishAt)<=now) && new Date(data.publishedAt)<=now;
 const published=articles.filter(isPublic);
+const articleIds = new Set(articles.map(article => article.id));
+const publishedIds = new Set(published.map(article => article.id));
 const journal=readFileSync(join(root,'journal/index.html'),'utf8');
 const rss=readFileSync(join(root,'rss.xml'),'utf8');
 const llms=readFileSync(join(root,'llms.txt'),'utf8');
 for (const article of articles) {
+ const manual = article.data.relatedArticles ?? [];
+ assert(manual.length <= 3, `Too many manual recommendations: ${article.id}`);
+ assert.equal(new Set(manual).size, manual.length, `Duplicate manual recommendation: ${article.id}`);
+ for (const id of manual) {
+  assert(articleIds.has(id), `Unknown manual recommendation ${id} in ${article.id}`);
+  assert(id !== article.id, `Self recommendation: ${article.id}`);
+ }
  const output=join(root,article.id,'index.html');
  if (isPublic(article)) {
   assert(existsSync(output), `Published route missing: ${article.id}`);
   const html=readFileSync(output,'utf8');
+  const recommendations = html.match(/<section\b[^>]*class="reading-links"[^>]*>\s*<h2\b[^>]*>Pour continuer à explorer<\/h2>([\s\S]*?)<\/section>/)?.[1] ?? '';
+  const recommendedIds = [...recommendations.matchAll(/href="\/([^/]+)\/"/g)].map(match => match[1]);
+  const expectedManual = manual.filter(id => publishedIds.has(id));
+  assert.deepEqual(recommendedIds.slice(0, expectedManual.length), expectedManual, `Manual recommendation order changed: ${article.id}`);
+  assert(recommendedIds.length <= 3, `Too many rendered recommendations: ${article.id}`);
+  assert.equal(new Set(recommendedIds).size, recommendedIds.length, `Duplicate rendered recommendation: ${article.id}`);
+  for (const id of recommendedIds) assert(id !== article.id && publishedIds.has(id), `Unavailable recommendation ${id} in ${article.id}`);
   assert(isArticlePage(html,`https://jimsagnier.com/${article.id}/`), `Monitoring rejected article ${article.id}`);
   assert(journal.includes(`href="/${article.id}/"`), `Journal HTML missing ${article.id}`);
   assert(rss.includes(`/${article.id}/`), `RSS missing ${article.id}`);

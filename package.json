@@ -12,7 +12,8 @@
     "astro": "astro",
     "keystatic": "open 'http://localhost:4321/keystatic' & astro dev",
     "deploy": "astro build && wrangler pages deploy dist --project-name=jimsagnier-com --branch=main",
-    "verify": "node scripts/verify-built-site.mjs"
+    "verify": "node scripts/verify-built-site.mjs",
+    "test:recommendations": "node --experimental-strip-types --test scripts/related-articles.test.mjs"
   },
   "dependencies": {
     "@astrojs/markdoc": "^1.0.4",
