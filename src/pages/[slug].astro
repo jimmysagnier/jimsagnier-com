@@ -53,7 +53,7 @@ if (schemaType === 'HowTo' && article.data.howTo?.steps?.length) {
 
 const breadcrumbs = [
   { name: 'Atelier', url: settings.baseUrl },
-  { name: 'Bibliothèque', url: `${settings.baseUrl}/journal` },
+  { name: 'Bibliothèque', url: `${settings.baseUrl}/journal/` },
   { name: article.data.title, url },
 ];
 
@@ -186,7 +186,7 @@ const inlineMd = (s: string) =>
         <div class="tags-row">
           <span class="lbl">Tags</span>
           {article.data.tags.map((tag) => (
-            <a href={`/journal?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+            <a href={`/journal/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
           ))}
         </div>
       )}
@@ -198,8 +198,8 @@ const inlineMd = (s: string) =>
           <div class="role">{author.jobTitle} · acquisition · IA · SEO</div>
           <p>{author.description}</p>
           <div class="links">
-            <a href="/a-propos">parcours</a>
-            <a href="/projets">projets</a>
+            <a href="/a-propos/">parcours</a>
+            <a href="/projets/">projets</a>
             <a href="https://jsagnier.substack.com" target="_blank" rel="noopener">newsletter</a>
           </div>
         </div>
