@@ -4,9 +4,7 @@ territory: reflechir
 publishedAt: 2026-08-29
 scheduledPublishAt: 2026-08-29T06:00:00Z
 summary: >-
-  Le dernier volet du making-of du site de La Puissance de l'Éveil : le bilan
-  d'une refonte complète, ce que je referais et ce que j'ai vraiment appris en
-  passant de Wix à un site sur-mesure.
+  Le bilan de la refonte du site d'Eva : prototype HTML, direction artistique, voix et autonomie éditoriale. Les choix que je garderais et le travail demandé pour construire et maintenir le site.
 readingTime: 5
 tags:
   - refonte
@@ -17,23 +15,15 @@ essentiel:
   readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **Le fil rouge de toute la série** : décider *pour qui* on construit avant
-      de choisir *avec quoi*.
+      **Cadrage** : partir des textes, du public et des contraintes d'Eva pour choisir la mise en page et les outils.
     - >-
-      **La page blanche n'a pas coûté plus cher, elle a coûté au bon endroit** :
-      du temps de réflexion au départ, pas du bricolage à la fin.
+      **Prototype HTML** : un support visible dans le navigateur pour travailler les pages ensemble avant le portage.
     - >-
-      **La direction artistique et la voix sont le vrai actif** : la stack peut
-      changer, l'atmosphère et le ton restent.
+      **Identité** : une palette conservée, trois polices et un document de voix tiré de ses textes.
     - >-
-      **La performance n'est pas un sujet technique**, c'est ce qui fait qu'une
-      visiteuse reste assez longtemps pour être touchée.
+      **Autonomie** : prévoir les contenus éditables et la maintenance, en plus de la mise en ligne.
     - >-
-      **Le meilleur outil est celui qu'Eva peut piloter seule** : un CMS qu'elle
-      maîtrise vaut mieux qu'un CMS parfait qu'elle n'ouvrira jamais.
-    - >-
-      **Le site est en ligne** : la série garde la trace des décisions prises
-      avant la bascule depuis Wix.
+      **Bilan** : le site est livré, la série conserve la trace des décisions du chantier.
 coverImage:
   src: /images/articles/de-wix-a-un-site-sur-mesure-lecons/coverImage/src.avif
   alt: Le bilan de la refonte du site de La Puissance de l'Éveil
@@ -41,9 +31,7 @@ coverImage:
 seo:
   title: 'De Wix à un site sur-mesure : ce que j''ai appris'
   description: >-
-    Bilan du making-of de la refonte du site de La Puissance de l'Éveil : de Wix
-    à un site sur-mesure, ce que je referais et ce que j'ai vraiment appris tout
-    au long du projet.
+    Bilan de la refonte du site d'Eva depuis Wix : prototype HTML, stack, voix et CMS. Les choix que je garderais, de la composition des pages à leur édition.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -61,62 +49,56 @@ relatedArticles:
   - vibecoder-site-claude
   - la-voix-d-eva-ecrire-vrai
 ---
-La leçon qui résume toute cette série tient en une phrase : **un bon site ne commence pas par un outil, il commence par une personne**. Passer de Wix à un site sur-mesure pour La Puissance de l'Éveil, ce n'était pas un projet technique. C'était huit décisions enchaînées, prises dans le bon ordre, chacune au service d'Eva avant d'être au service d'un framework ou d'un moteur de recherche.
+La refonte du site d'Eva a demandé du travail sur plusieurs sujets : la mise en page, les textes, le prototype, l'hébergement et la façon de modifier le contenu ensuite. La série les raconte séparément. Ce bilan sert à les remettre ensemble et à préciser ce que je garderais sur un projet comparable.
 
-Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après [avoir codifié sa voix pour que le texte sonne vrai](/la-voix-d-eva-ecrire-vrai/), il est temps de refermer le making-of et de faire le bilan honnête de tout le chemin.
+Je suis Jim. J'ai conçu et développé le nouveau site de La Puissance de l'Éveil. Après [le travail sur la voix d'Eva](/la-voix-d-eva-ecrire-vrai/), je reviens sur les choix du chantier et le travail qui reste après la livraison.
 
-## Le fil rouge : pour qui, avant avec quoi
+## Partir des contraintes du projet
 
-**Si je devais garder une seule idée de ce projet, ce serait celle-là.** Chaque article de cette série est une variation sur le même principe : décider pour qui on construit avant de décider avec quoi.
+Eva avait déjà un site, des textes, des images et une palette. Elle souhaitait aussi une autre manière de présenter son parcours. Pour décider des outils, je devais regarder ces éléments et la manière dont elle allait travailler sur le site après la refonte.
 
-C'est [ce qui m'a fait quitter Wix pour repartir d'une page blanche](/pourquoi-quitter-wix-page-blanche/). Pas la haine de la plateforme, mais le refus d'un compromis imposé à une marque qui ne fait aucun compromis. C'est aussi ce qui a guidé [la direction artistique](/quatre-couleurs-trois-polices-direction-artistique/) : quatre couleurs et trois polices ne deviennent une atmosphère que si on sait ce qu'elles doivent faire ressentir.
+C'est ce qui explique [le choix de quitter Wix](/pourquoi-quitter-wix-page-blanche/). Je voulais contrôler davantage le HTML, les styles et les interactions. Le travail demandé sur la composition justifiait ici que je reprenne la construction.
 
-Et c'est surtout ce qui a tranché le plus grand arbitrage du projet : [concevoir pour une femme en renaissance, pas pour un moteur de recherche](/concevoir-pour-une-femme-pas-pour-google/). Le SEO compte, mais il vient servir la visiteuse, jamais l'inverse.
+La [direction artistique](/quatre-couleurs-trois-polices-direction-artistique/) est partie d'une contrainte bien définie : conserver quatre couleurs. J'ai ensuite choisi leur répartition et les trois polices. Les textes et les photos d'Eva ont donné la matière, plutôt que des visuels ajoutés pour remplir les sections.
 
-{% MonAvis sentiment="positif" %}
-La plupart des refontes ratées commencent par « on part sur quel CMS ? ». La question est prématurée. Tant qu'on ne sait pas qui va lire la page et ce qu'elle doit ressentir, choisir l'outil, c'est choisir sa prison avant de connaître son crime.
-{% /MonAvis %}
+Le [parcours de lecture](/concevoir-pour-une-femme-pas-pour-google/) m'a amené à d'autres choix concrets : remplacer une grille par quatre passages successifs en sticky scroll, puis adapter le hero au mobile avec une photo verticale.
 
-## Ce que je referais sans hésiter
+## Le prototype que je garderais
 
-**Certains choix se sont révélés justes dès qu'on les a mis à l'épreuve.** Trois surtout.
+Je garderais [le travail en HTML avant le portage vers Astro](/html-d-abord-framework-ensuite/). Eva pouvait voir une page dans son navigateur, et nous pouvions ajuster ensemble un titre, une section ou une image. Le support rendait les choix visibles pendant la discussion.
 
-Prototyper [en HTML avant de toucher au framework](/html-d-abord-framework-ensuite/). C'est la décision de méthode qui a tout fluidifié. Eva ouvrait un fichier dans son navigateur et voyait le site réel, sans setup, sans jargon. On itérait à la vraie vitesse d'une conversation, pas à celle d'un serveur de dev. Le portage Astro venait après, une fois la page validée.
+Le portage venait ensuite : extraire les éléments communs, organiser les contenus et préparer les images et les métadonnées. Ce second temps restait du travail, même quand la composition était déjà validée.
 
-Choisir [une stack durable et un CMS qu'Eva peut piloter elle-même](/astro-cloudflare-cms-client/). Astro pour la robustesse, Cloudflare pour la performance et le coût quasi nul, et un CMS pensé pour elle. L'important n'était pas d'avoir l'outil le plus puissant, mais celui qu'elle ouvrira sans peur un dimanche soir pour corriger un mot.
+Sur ce projet, la séparation m'a permis de distinguer la discussion sur la page de son intégration. Avec une équipe habituée aux outils, ou un prototype qui dépend beaucoup de données, commencer directement dans le framework peut être plus pratique.
 
-Faire de [la performance un levier SEO](/performance-strategie-seo/) plutôt qu'une case à cocher. Un site rapide n'est pas un exploit d'ingénieur. C'est ce qui laisse à une phrase le temps d'atteindre quelqu'un avant qu'il ne parte.
-
-{% Conseil titre="Le prototype HTML est le meilleur outil de dialogue" %}
-Avec un client non-technique, rien ne remplace un fichier qu'il peut ouvrir lui-même. Les maquettes figées mentent un peu, les descriptions encore plus. Un HTML qui vit dans le navigateur, cliquable et réel, coupe court à des heures de malentendus. C'est le workflow que je garderai pour tous mes projets.
+{% Conseil titre="Montrer un support sur lequel on peut décider" %}
+Ce que je retiens du prototype, c'est surtout la possibilité de regarder la même chose avec Eva. Un fichier HTML convenait ici. Le bon support dépend de ce qu'il faut vérifier ensemble : composition, parcours ou fonctionnement.
 {% /Conseil %}
 
-## Ce que j'ai appris en chemin
+## Prévoir ce qui se passe après la livraison
 
-**Un bilan honnête, c'est aussi nommer ce que j'ai sous-estimé au départ.**
+[Astro et Cloudflare](/astro-cloudflare-cms-client/) répondaient au besoin d'un site éditorial dont je contrôlais le rendu. Le CMS posait une autre question : comment Eva allait-elle corriger un texte ou remplacer une photo sans intervenir dans les styles ?
 
-J'ai sous-estimé le temps que prend une voix. J'ai longtemps cru que le design portait l'essentiel de l'identité. En réalité, [écrire vrai, avec les mots d'Eva et pas les miens](/la-voix-d-eva-ecrire-vrai/), a demandé autant de soin que la palette. Un site peut être magnifique et sonner faux à la première phrase. Codifier un ton, lister ce qu'on ne dira jamais, c'est un travail à part entière.
+Au moment du récit technique, TinaCMS et Sanity étaient encore les candidats à départager. Pour avancer, il fallait regarder les actions d'Eva dans l'éditeur : trouver le champ, corriger le texte, publier et retrouver le changement sur la bonne page.
 
-J'ai aussi appris qu'une page peut [se classer sur Google et toucher un être humain en même temps](/ecrire-page-seo-et-humaine-human-design/), à condition de ne pas traiter les deux objectifs comme un compromis. La page Human Design en est la preuve : structurée pour la recherche, mais écrite pour une personne qui doute. Les deux ne se disputent pas le texte, ils l'exigent également.
+Le sur-mesure ajoute aussi de la maintenance. Les composants, les dépendances et le déploiement ne sont plus pris en charge de la même façon qu'avec une plateforme intégrée. Il faut prévoir du temps pour suivre ces éléments, en plus des frais d'hébergement.
 
-Et j'ai réappris une chose simple : une contrainte claire vaut mieux qu'une liberté totale. La palette imposée, les photos limitées à celles d'Eva, le refus du jargon wellness. Chaque « non » a rendu le « oui » plus net.
+La [performance](/performance-strategie-seo/) fait partie de ces sujets à suivre. La stack facilite la construction de pages légères. Les médias et le chargement restent ensuite à travailler et à mesurer.
 
-{% MonAvis sentiment="mitige" %}
-Le sur-mesure a un vrai coût : il n'y a pas de bouton magique, pas de template qui fait 80 % du travail. Pour un site vitrine simple sans exigence forte, Wix reste souvent le bon choix. Le sur-mesure ne se justifie que quand la marque refuse d'être moyenne. C'était le cas ici. Ça ne l'est pas partout.
-{% /MonAvis %}
+## Le texte a son propre travail de préparation
 
-## Où en est le site aujourd'hui
+La voix d'Eva a demandé une documentation spécifique. J'ai repris ses textes, ses formulations et les exclusions du brief pour en faire des repères de rédaction. Ce travail s'ajoute à celui de la palette et des polices.
 
-**Le site est en ligne : [lapuissancedeleveil.com](https://lapuissancedeleveil.com).** Les épisodes précédents racontent les décisions au moment où je les prenais, y compris les hésitations sur le CMS et la préparation de la bascule depuis Wix.
+Le [document de voix](/la-voix-d-eva-ecrire-vrai/) aide à relire une page. Garder ses mots demande parfois de résister à une reformulation qui semble plus fluide mais qui change ce qu'elle dit. C'est un point à reprendre avec elle pendant la relecture.
 
-Ce bilan avait été rédigé avant cette bascule. Je distingue maintenant les deux moments : le récit de construction reste celui du chantier, le statut actuel est celui d'un site livré. Je ne transforme pas ce récit en preuve de performance : il faudrait des mesures datées après mise en ligne pour le faire.
+La [page Human Design](/ecrire-page-seo-et-humaine-human-design/) montre un autre aspect de ce travail : organiser des questions et expliquer les termes du sujet, tout en gardant ses formulations. La structure aide à trouver les réponses ; le document de voix donne des repères pour les rédiger. Je relis ces deux aspects séparément.
 
-## Boucler la boucle
+## Où en est le site
 
-**Cette série a commencé par une page blanche, elle se referme sur un site livré.** Entre les deux, huit décisions, une atmosphère, une voix, et un principe tenu du début à la fin : construire pour Eva, pas pour un outil ni pour un algorithme.
+Le site est en ligne : [lapuissancedeleveil.com](https://lapuissancedeleveil.com). Les épisodes précédents racontent les décisions au moment où je les prenais, y compris les hésitations sur le CMS et la préparation de la bascule depuis Wix.
 
-Si vous prenez la série en cours de route, commencez par le commencement : [pourquoi j'ai quitté Wix pour repartir d'une page blanche](/pourquoi-quitter-wix-page-blanche/). Tout le reste en découle.
+Ce bilan avait été rédigé avant cette bascule. Le site a depuis été livré, et la série conserve le chemin qui y a mené. Pour présenter des résultats de performance ou d'acquisition, il faudrait des mesures datées après mise en ligne et un point de comparaison.
 
-Pour retrouver la série entière et le contexte du projet, direction la fiche [La Puissance de l'Éveil](/projets/la-puissance-de-leveil/).
+Ce que je garderais, c'est une manière de travailler : partir de la matière existante, rendre les choix visibles avec Eva et prévoir comment elle modifiera le contenu. Le sur-mesure permet ces arbitrages, mais il demande aussi quelqu'un pour construire et maintenir le site.
 
-Et si vous voulez suivre la suite, tout se passera dans le [journal](/journal/). J'y raconte ce que je construis, au fur et à mesure. Merci d'avoir suivi ce making-of jusqu'ici.
+Pour reprendre la série au début, voici [pourquoi j'ai quitté Wix](/pourquoi-quitter-wix-page-blanche/). La fiche [La Puissance de l'Éveil](/projets/la-puissance-de-leveil/) rassemble le contexte du projet, et le [journal](/journal/) accueille les autres chantiers que je documente.

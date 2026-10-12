@@ -5,16 +5,16 @@ publishedAt: 2026-10-07
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-10-07T06:00:00Z
 summary: >-
-  Un matin de juin, j'ai fait retirer tous les liens internes d'un site de 2700
-  pages. Volontairement. Pourquoi repartir de zéro, comment reconstruire sans
-  lien mort, et les cicatrices que ça laisse.
-readingTime: 8
+  En juin, j'ai fait retirer près de 1500 liens internes des contenus pour
+  reconstruire le maillage. Voici les sauvegardes préparées, le suivi des liens
+  différés et les défauts retrouvés après la purge.
+readingTime: 6
 tags:
   - SEO
   - maillage interne
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 6 min en entier
   items:
     - >-
       **Le geste** : plutôt que de réparer un maillage hérité, on a retiré près
@@ -41,7 +41,7 @@ coverImage:
 seo:
   title: 'J''ai supprimé tous les liens internes du site. Exprès.'
   description: >-
-    Pourquoi on a retiré tous les liens internes d'un site de 2700 pages en 7
+    Pourquoi on a retiré les liens internes des contenus d'un site en 7
     langues, comment reconstruire le maillage sans lien mort, et les pièges
     laissés par une purge.
   schemaType: BlogPosting
@@ -56,45 +56,45 @@ seriesId: saga-eurofiscalis-s4
 seriesOrder: 1
 seriesKind: episode
 ---
-Un matin de juin, j'ai demandé qu'on retire tous les liens internes du site. Pas une partie. Tous. Près de 1 500 liens, sur près de 800 pages, en 7 langues. Et je l'ai fait exprès.
+En juin, j'ai demandé qu'on retire les liens internes des contenus pour reconstruire le maillage. L'opération concernait près de **1500 liens sur 800 pages, en 7 langues**. Les liens de navigation, d'auteur et de catégorie étaient conservés.
 
-Je suis Jim. Oui, j'avais dit que la saga de la refonte Eurofiscalis était bouclée. Deux fois, même. Mais une fois le site en ligne, on découvre tout ce qu'aucun plan ne prévoit, et c'est souvent là que se trouvent les meilleures leçons. Alors voici une nouvelle série, l'après-migration, et on commence par le geste le plus contre-intuitif de toute l'aventure.
+Je suis Jim. Cette série reprend la refonte Eurofiscalis après la mise en ligne. Le premier sujet est le maillage hérité de l'ancien site : pourquoi je l'ai retiré, comment on l'a reconstruit et ce qu'il a fallu corriger ensuite.
 
-## Pourquoi tout casser plutôt que réparer
+## Pourquoi repartir du maillage des contenus
 
-Le maillage interne, c'est l'ensemble des liens qu'une page fait vers les autres pages du même site. C'est ce qui guide le lecteur, et ce qui dit à Google quelles pages comptent. J'en ai parlé en détail dans l'article sur [le cocon sémantique à l'échelle](/cocon-semantique-maillage-echelle/), je ne vais pas refaire la théorie ici.
+Le maillage interne, c'est l'ensemble des liens qu'une page fait vers les autres pages du même site. Il aide le lecteur à poursuivre sa lecture et les moteurs à découvrir les pages et leurs relations. J'en ai parlé en détail dans l'article sur [le cocon sémantique à l'échelle](/cocon-semantique-maillage-echelle/), je ne vais pas refaire la théorie ici.
 
 Le problème, c'est ce qu'on avait récupéré. Des années de liens posés à la main, par plusieurs personnes, sur l'ancien site, puis déménagés tels quels dans le nouveau CMS. Des ancres qui ne suivaient aucune règle commune, des liens vers des pages qui avaient changé d'adresse ou de rôle, et surtout aucune vue d'ensemble fiable sur qui pointait vers qui.
 
 On pouvait passer des semaines à trier, lien par lien. Ou on pouvait tout retirer et reconstruire proprement, avec une doctrine unique, appliquée par le pipeline à chaque publication. J'ai choisi la page blanche.
 
 {% MonAvis sentiment="mitige" %}
-Je vais pas te mentir, sur le moment ça fait un peu peur. Tu regardes un site qui marche, et tu t'apprêtes à lui retirer une partie de ce qui le fait tenir. Mais un maillage que tu ne comprends plus, c'est un maillage que tu ne peux plus piloter. Et un truc que tu ne peux plus piloter, tu finis toujours par le subir.
+J'ai choisi de reconstruire parce que nous n'avions pas de vue fiable des liens hérités. Ce choix demandait une sauvegarde et du travail derrière. Il ne suffit pas de retirer les liens pour obtenir un meilleur maillage.
 {% /MonAvis %}
 
-## Comment on purge sans se tirer une balle dans le pied
+## Retirer les liens en gardant une restauration possible
 
-Supprimer en masse, c'est le genre d'opération où une erreur se propage partout en quelques secondes. Donc on a été très, très scolaires.
+Supprimer en masse, c'est le genre d'opération où une erreur se propage partout en quelques secondes. Nous avons préparé les contrôles avant de lancer le script.
 
-Première chose : **pas d'IA sur les données**. L'IA est géniale pour lire, résumer, proposer. Pour modifier le contenu brut de centaines de documents, je veux un script déterministe, qui fait exactement la même chose à chaque fois, et dont je peux lire chaque ligne.
+Première chose : **pas d'IA sur les données**. L’IA pouvait aider à préparer le travail. Pour modifier le contenu brut de centaines de documents, je veux un script déterministe, qui fait exactement la même chose à chaque fois, et dont je peux lire chaque ligne.
 
 Deuxième chose : **pouvoir revenir en arrière**. Avant de toucher quoi que ce soit, trois filets de sécurité : une sauvegarde précise de chaque lien retiré, un script capable de les remettre à leur place, et une photo complète de la base de données.
 
-Troisième chose : **retirer le lien, garder les mots**. Le texte de l'ancre reste dans la phrase. Seul le lien disparaît. Le lecteur ne voit aucun trou, la phrase se lit toujours.
+Troisième chose : **retirer le lien, garder les mots**. Le texte de l'ancre reste dans la phrase. Seul le lien disparaît. Le texte devait rester lisible. C’était le comportement attendu, à contrôler après l’opération.
 
 Et enfin, on savait précisément ce qu'on ne touchait pas : les liens vers d'autres sites, les liens de prise de rendez-vous, les pages auteur et catégorie, et bien sûr les données dynamiques (les taux et les seuils branchés sur leur source, dont je reparlerai dans le dernier article de la série).
 
 {% Conseil titre="Avant un geste de masse, prépare ta marche arrière" %}
-Sauvegarde ce que tu retires, écris le script qui le remet en place, et prends une photo de la base. Si tu n'as pas ces trois choses, tu ne fais pas une opération, tu fais un pari. Et le jour où tu en auras besoin, tu seras content de ne pas avoir à reconstruire de mémoire.
+Sauvegarde ce que tu retires, écris le script qui le remet en place, et prends une photo de la base. Vérifie aussi que la restauration fonctionne avant de lancer la modification en masse.
 {% /Conseil %}
 
 ## Reconstruire sans jamais poser un lien mort
 
 Repartir de zéro, c'est bien. Mais le nouveau site continue de grandir pendant qu'on remaille. Et là, un problème très concret se pose.
 
-Un article sur le numéro de TVA en Croatie doit, par principe, renvoyer vers la page du représentant fiscal en Croatie. Sauf que cette page n'est pas encore publiée. Deux mauvaises options. Poser le lien quand même, et tu as un lien cassé tant que la cible n'existe pas. Ou ne rien noter, et tu oublies de faire le lien le jour où elle sort.
+Un article sur le numéro de TVA en Croatie peut avoir besoin de renvoyer vers la page du représentant fiscal du même pays. Sauf que cette page n'est pas encore publiée. Deux mauvaises options. Poser le lien quand même, et tu as un lien cassé tant que la cible n'existe pas. Ou ne rien noter, et tu oublies de faire le lien le jour où elle sort.
 
-La bonne option, c'est le **lien différé**. On ne pose pas le lien, on enregistre l'intention, directement dans l'article. Trois informations suffisent : la page visée, le texte exact qui deviendra le lien, et l'endroit où il se trouve dans l'article.
+Nous avons retenu le **lien différé**. On ne pose pas le lien, on enregistre l'intention, directement dans l'article. Trois informations suffisent : la page visée, le texte exact qui deviendra le lien, et l'endroit où il se trouve dans l'article.
 
 Le jour où la page cible est publiée, une « vague de relink » passe sur tous les articles qui l'attendaient, et pose tous les liens d'un coup, au bon endroit, sur le bon texte.
 
@@ -103,14 +103,14 @@ Le jour où la page cible est publiée, une « vague de relink » passe sur tous
 2. **L'ancre** : le texte exact qui deviendra cliquable, choisi dès la rédaction.
 3. **L'emplacement** : le bloc de l'article où se trouve ce texte, pour que l'outil le retrouve sans relire tout l'article à l'aveugle.
 
-Bonus : un lien différé compte déjà dans le quota de liens de l'article. Un lien en attente, c'est une place réservée.
+Dans notre suivi, le lien en attente compte déjà parmi les liens prévus pour l’article. Ce décompte sert à organiser la rédaction ; ce n’est pas une règle des moteurs.
 {% /EnPratique %}
 
-## Les cicatrices, des semaines plus tard
+## Les phrases coupées retrouvées après la purge
 
-Tout ça était propre, sur le papier. Et puis, en août, Max nous remonte un retour utilisateur : trois pages, en polonais, en tchèque et en italien, avec une phrase coupée net. Du genre « consultez également . », avec un point qui flotte tout seul.
+Puis, en août, Max nous remonte un retour utilisateur : trois pages, en polonais, en tchèque et en italien, avec une phrase coupée net. Du genre « consultez également . », avec un point qui flotte tout seul.
 
-La cause était simple, et un peu vexante. Ces pages étaient des traductions reconstruites après la version française. Au moment de la purge, leur lien avait été retiré, mais les petits morceaux de texte autour étaient restés, mal recollés. Personne ne les avait jamais relues depuis.
+Le défaut venait des fragments de texte autour du lien. Ces pages étaient des traductions reconstruites après la version française. Au moment de la purge, leur lien avait été retiré, mais les petits morceaux de texte autour étaient restés, mal recollés. Personne ne les avait jamais relues depuis.
 
 Alors on a cherché une signature. Deux fragments de texte collés, l'un qui finit par une espace, l'autre qui commence par une espace ou un point. Ou un paragraphe complètement vide. Un scan de tout le blog, environ un millier de documents, et une quarantaine de pages touchées. Réparées par lots, jusqu'à ce que le scan ne remonte plus qu'une seule page, laissée de côté volontairement.
 
@@ -118,18 +118,16 @@ Alors on a cherché une signature. Deux fragments de texte collés, l'un qui fin
 
 En septembre, en posant les liens d'un nouveau groupe d'articles, on est tombés sur deux défauts en série. Environ un tiers des liens en attente pointaient vers la version **française** de la page cible, alors qu'ils partaient d'un article en allemand ou en polonais. Et un autre tiers attendait un texte d'ancre qui n'existait tout simplement pas dans l'article.
 
-On a donc audité tout le corpus, plus d'un millier d'articles. On a repointé chaque lien vers la version dans la bonne langue. Et au passage, on a trouvé ma pépite préférée : un article allemand qui faisait un lien vers sa propre version anglaise. Un article qui se recommandait lui-même, dans une autre langue. Lien retiré.
+On a donc audité tout le corpus, plus d'un millier d'articles. On a repointé chaque lien vers la version dans la bonne langue. Le contrôle a aussi trouvé un article allemand qui faisait un lien vers sa propre version anglaise. Nous avons retiré ce lien vers une autre traduction du même article.
 
 {% MonAvis sentiment="negatif" %}
-Les traductions sont toujours les plus exposées. Elles sont construites après la source, souvent par un autre process, et elles héritent de tous les trous qu'on n'a pas bouchés en amont. Si tu gères un site multilingue, pars du principe que chaque problème trouvé en français existe aussi, en pire, dans les autres langues.
+La correction de la source ne suffisait pas à corriger ses traductions. Il fallait vérifier les cibles et les ancres dans chaque langue, car les adresses et les textes différaient.
 {% /MonAvis %}
 
 ## Ce que je retiens
 
-Supprimer tous les liens, c'était la bonne décision. Le maillage d'aujourd'hui suit une seule doctrine, il est posé par le pipeline, et je sais à tout moment qui pointe vers qui. Mais la vraie leçon est ailleurs : **ne jamais faire confiance à une mémoire de maillage sans revérifier ce qui est en ligne**. Du jour au lendemain, la purge a rendu obsolète tout ce qu'on croyait savoir sur les liens du site. Si tu ne revérifies pas, tu pilotes un site qui n'existe plus.
+Le maillage reconstruit suit des règles communes et passe par le pipeline de publication. Mais les défauts trouvés ensuite montrent la limite d'un suivi théorique : **il faut comparer les liens prévus aux liens réellement présents dans les contenus**. La purge avait rendu notre ancien inventaire obsolète, et la reconstruction devait être contrôlée langue par langue.
 
-## La suite
+## Contrôler aussi les redirections
 
-Les liens internes, c'est ce qui relie les pages entre elles. Les redirections, c'est ce qui relie l'ancien site au nouveau. On en avait posé un paquet pour la migration. Et quand on les a auditées après coup, on a trouvé quatre familles de problèmes qu'aucun tableur n'avait vues venir.
-
-C'est l'objet du prochain article : [un millier de redirections, zéro 404](/audit-redirections-zero-404/).
+Nous avons également audité les redirections de l’ancien site vers le nouveau. Quatre familles de défauts sont décrites dans l’article suivant : [un millier de redirections, zéro 404](/audit-redirections-zero-404/).

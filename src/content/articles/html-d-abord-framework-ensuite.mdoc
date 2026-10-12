@@ -5,35 +5,26 @@ publishedAt: 2026-08-14
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-08-14T06:00:00Z
 summary: >-
-  Quatrième volet du making-of du site de La Puissance de l'Éveil : pourquoi j'ai
-  conçu chaque page en HTML pur avec Eva avant de la porter en Astro, sans jamais
-  perdre ma cliente en route.
-readingTime: 5
+  J'ai travaillé les pages du site d'Eva en HTML/CSS avec elle, puis les ai portées vers Astro. Un support visible dans son navigateur pour décider du contenu et de la composition ensemble.
+readingTime: 4
 tags:
   - workflow
   - HTML
   - Astro
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 5 min en entier
+  readingTime: 2 min · ou 4 min en entier
   items:
     - >-
-      **La règle** : concevoir chaque page en **HTML/CSS vanilla** en session
-      avec Eva, porter en Astro seulement après validation.
+      **Méthode sur ce chantier** : travailler le prototype HTML/CSS avec Eva, puis organiser son portage vers Astro.
     - >-
-      **Le gain côté cliente** : Eva ouvre un fichier `.html` dans son
-      navigateur et voit le rendu final, sans setup, sans `npm run dev`.
+      **Support** : un fichier HTML visible dans son navigateur, sans installation de l'environnement de développement.
     - >-
-      **Le gain côté dev** : aucune erreur TypeScript, aucun serveur à relancer
-      pendant qu'on cherche une direction créative.
+      **Portage** : extraire le head, la navigation et le footer, organiser les textes, préparer les images et les métadonnées.
     - >-
-      **Le portage Astro est quasi du copier-coller** : Astro accepte le HTML
-      brut, le vrai travail est de le structurer.
+      **Temps prévu** : 2 à 4 heures de portage soigné par page dans ce workflow, selon les contenus et interactions.
     - >-
-      **Cinq gestes de portage** : extraire le head, isoler nav et footer,
-      variabiliser les textes, passer les images en `<Image>`, ajouter le SEO.
-    - >-
-      **L'ordre de grandeur réel** : 2 à 4 heures de portage soigné par page.
+      **Contrôle après portage** : vérifier les liens, les images, les textes éditables et le rendu mobile.
 coverImage:
   src: /images/articles/html-d-abord-framework-ensuite/coverImage/src.avif
   alt: Un fichier HTML ouvert dans un navigateur, avant portage vers Astro
@@ -41,8 +32,7 @@ coverImage:
 seo:
   title: 'HTML d''abord, framework ensuite : concevoir en live avec sa cliente'
   description: >-
-    Making-of du site de La Puissance de l'Éveil : pourquoi je prototype chaque
-    page en HTML pur avec ma cliente avant de la porter en Astro en 2 à 4 heures.
+    Le workflow du site d'Eva : prototype HTML/CSS visible dans le navigateur, validation des pages et portage Astro avec composants, contenu éditable et images.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -55,71 +45,58 @@ seriesId: serie-eva
 seriesOrder: 4
 seriesKind: episode
 ---
-J'ai conçu chaque page du site d'Eva en **HTML/CSS pur avant de toucher au framework**. Pas par nostalgie, par méthode. Une page HTML, Eva l'ouvre dans son navigateur et voit exactement le rendu final, sans rien installer. On itère ensemble, en direct, jusqu'à ce que ce soit juste. Astro vient après, quand il n'y a plus rien à décider côté design.
+J'ai travaillé les pages du site d'Eva en HTML/CSS avant de les porter vers Astro. Ce support lui permettait de voir la page dans son navigateur sans installer mon environnement de développement. Nous pouvions ajuster le contenu et la composition ensemble, puis je reprenais l'intégration technique.
 
-Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après avoir raconté comment j'ai [conçu pour une femme en renaissance, pas pour un moteur de recherche](/concevoir-pour-une-femme-pas-pour-google/), voici le workflow qui a permis à Eva de rester dans la boucle du début à la fin.
+Je suis Jim. Après [les choix de parcours pour le public d'Eva](/concevoir-pour-une-femme-pas-pour-google/), voici la méthode utilisée pour construire les pages de La Puissance de l'Éveil avec elle.
 
+Cette préparation rejoint celle de [mon propre site construit avec Claude](/vibecoder-site-claude/) : poser les choix de contenu et de design avant de multiplier les demandes de code.
 
-Cette méthode rejoint ce que j'ai essayé pour [construire mon propre site avec Claude](/vibecoder-site-claude/) : préparer les choix avant de générer le code.
+## Un support qu'Eva pouvait regarder
 
-## Le problème : une cliente qui ne code pas
+Eva n'a pas besoin de connaître le terminal, npm ou Claude Code pour décider de ce qu'elle veut sur son site. Il me fallait un support qui lui permette de voir la page et de dire ce qu'elle souhaitait changer.
 
-**Eva n'a aucune notion technique.** Pas de terminal, pas de `npm`, pas de Claude Code. Elle est coach holistique, pas développeuse, et c'est très bien ainsi.
+Un fichier HTML convenait à ce besoin. Elle pouvait l'ouvrir dans le navigateur et regarder les textes, les images et les interactions préparées dans le prototype. Ça ne demande pas de lancer un serveur Astro sur son ordinateur.
 
-Le piège classique, dans ce cas, c'est de concevoir seul dans son coin puis de montrer un résultat déjà figé. La cliente valide ou refuse un bloc, mais elle ne participe pas à la construction. Elle subit des allers-retours par captures d'écran, elle décrit ce qu'elle voudrait avec des mots, et le dev traduit comme il peut.
+## Travailler section par section
 
-Sur un site aussi personnel que le sien, ça ne pouvait pas marcher. **La direction créative se décide à deux, en regardant le même écran, au même moment.** Il me fallait un support que je puisse modifier en direct et qu'elle puisse voir sans effort.
+Les sessions partaient des idées, des textes et des photos d'Eva. Avec le gabarit déjà posé, nous pouvions avancer section par section : ajuster un titre, déplacer un bloc, changer la place d'une image ou essayer un accent or sur un mot.
 
-## La règle : le HTML d'abord
+Le changement était visible pendant la discussion. Eva n'avait donc pas à imaginer la page à partir d'une description. La validation portait sur une composition que nous pouvions regarder ensemble.
 
-Un fichier `.html`, c'est le support le plus simple du monde. On double-clique, ça s'ouvre dans le navigateur, ça montre le rendu final. Zéro installation, zéro dépendance, zéro écran d'erreur.
+Une fois la composition validée, je pouvais passer aux liens, à l'édition du contenu et au déploiement. Ces opérations avaient leur propre temps de travail.
 
-Concrètement, une session de travail avec Eva ressemble à ça. Elle arrive avec ses idées, ses textes, ses photos. On part d'une page vierge basée sur le gabarit déjà posé. On construit ensemble, section par section, et elle voit chaque changement apparaître en direct. On ajuste un titre, on déplace un bloc, on essaie l'or sur un mot plutôt qu'un autre. Quand elle dit « c'est ça », c'est validé.
+## Pourquoi séparer le prototype du portage
 
-{% Conseil titre="Le rendu final, tout de suite" %}
-La force du HTML brut, c'est qu'il n'y a rien entre l'idée et l'écran. Pas de build, pas de compilation, pas de couche à comprendre. Pour une cliente non technique, ce « rien » change tout : elle juge le vrai rendu, pas une maquette approximative qu'il faudra « imaginer une fois en ligne ».
+J'aurais pu démarrer directement dans Astro. Sur ce chantier, j'ai préféré séparer la recherche de composition de l'organisation du site : les fichiers, les composants et les champs éditables venaient ensuite.
+
+En session, ça me permettait de rester sur la page montrée à Eva. Au portage, je pouvais reprendre les éléments communs et traiter les besoins techniques sans les faire entrer dans chaque discussion de design.
+
+Avec un environnement Astro déjà préparé, on peut aussi concevoir directement dans le framework. Ici, j'avais retenu le HTML pour garder le prototype facile à montrer à Eva.
+
+## Porter la page vers Astro
+
+Les [composants Astro acceptent le HTML](https://docs.astro.build/en/basics/astro-components/). Je pouvais donc reprendre une grande partie du prototype sans recommencer sa mise en page. Le travail consistait ensuite à organiser cette matière.
+
+Les principales opérations étaient les suivantes :
+
+- Extraire le `<head>` dans un layout partagé, pour ne pas le répéter sur chaque page.
+- Isoler la navigation et le footer dans des composants réutilisables.
+- Remplacer les textes en dur par du contenu ou des variables pilotées par le CMS.
+- Préparer les images avec les outils d'`astro:assets` et choisir les formats et tailles nécessaires.
+- Ajouter les titres, descriptions et balises Open Graph propres aux pages.
+
+Pour les images, les formats se choisissent dans la configuration. [Le composant `<Picture>`](https://docs.astro.build/en/guides/images/) permet notamment de préparer plusieurs formats, comme AVIF et WebP, en gardant une image de repli.
+
+Après intégration, je contrôle que la composition validée tient toujours : mêmes proportions, images bien cadrées, textes lisibles. C'est particulièrement utile quand les textes deviennent éditables ou que les images changent de traitement.
+
+{% Conseil titre="Prévoir le temps du portage" %}
+Le repère utilisé sur ce workflow était de 2 à 4 heures de portage soigné par page. C'est du temps distinct de la session avec Eva, et qui dépend du contenu, des interactions et des contrôles à faire. Je le compte même lorsque le prototype est déjà validé.
 {% /Conseil %}
 
-## Pourquoi pas Astro tout de suite
+## Ce que je retiens de ce workflow
 
-La question est légitime : le site final tourne sous Astro, pourquoi ne pas commencer directement dedans ?
+Le bénéfice principal était d'avoir un support commun pendant les discussions. Nous pouvions décider à partir de la page affichée, puis je reprenais les opérations d'intégration. Un test mobile ou le travail sur une autre page peut encore amener un ajustement, mais nous avons déjà une composition sur laquelle nous appuyer.
 
-Parce que la phase créative et la phase technique ne demandent pas les mêmes conditions. **Chercher une direction artistique, c'est essayer, rater, recommencer vite.** Un framework ajoute des étapes qui n'aident pas à ce moment-là : lancer `npm run dev`, gérer le hot reload, croiser une erreur TypeScript pendant qu'on hésite entre deux tailles de titre. Autant de micro-frictions qui cassent le rythme d'une session à deux.
+Une fois le prototype repris, il restait à héberger le site et à organiser son édition. J'ai présenté ces choix dans [Astro, Cloudflare et un CMS que la cliente peut piloter](/astro-cloudflare-cms-client/).
 
-Le HTML vanilla supprime tout ça. On reste sur le seul sujet qui compte en session : est-ce que la page dit ce qu'Eva veut dire, est-ce qu'elle la fait ressentir. Le reste, l'optimisation, la structure, le SEO, ce sont mes problèmes, pas les siens, et ils attendent très bien la fin de la session.
-
-{% MonAvis sentiment="positif" %}
-Séparer les deux temps m'a rendu plus rapide, pas moins. En session, je ne pense qu'au design. Au portage, je ne pense qu'à la technique. Mélanger les deux, c'est le meilleur moyen de mal faire les deux en même temps.
-{% /MonAvis %}
-
-## Le portage : quasi du copier-coller
-
-Voici la bonne surprise, et la raison pour laquelle ce workflow tient : **Astro accepte le HTML brut.** Coller le `<body>` d'une page finalisée dans un fichier `.astro`, ça fonctionne presque tel quel. Le portage n'est donc pas une réécriture, c'est une mise en ordre.
-
-Le vrai travail se résume à cinq gestes, toujours les mêmes :
-
-- **Extraire le `<head>`** dans un `Layout.astro`, une fois pour toutes, au lieu de le répéter sur chaque page.
-- **Isoler ce qui se répète** (la nav, le footer) dans des composants `.astro` réutilisables.
-- **Remplacer les textes en dur** par des variables, du frontmatter, ou du contenu piloté par le CMS.
-- **Remplacer les `<img>`** par le composant `<Image>` d'`astro:assets`, qui génère l'AVIF et le WebP à la build.
-- **Ajouter le frontmatter SEO** : title, description, balises Open Graph.
-
-Rien de tout ça ne touche au rendu. Le visuel validé avec Eva reste identique au pixel près, ce qui est exactement le but : elle a validé une page, elle retrouve cette page en ligne, sans surprise.
-
-{% Conseil titre="Compter le portage à sa juste valeur" %}
-Un portage soigné prend 2 à 4 heures par page. Ce n'est ni instantané ni interminable. C'est du temps prévisible, que je fais seul, en dehors des sessions avec Eva. La distinguer du temps créatif évite de promettre un « c'est bientôt fini » qui ne veut rien dire.
-{% /Conseil %}
-
-## Ce que ce workflow protège vraiment
-
-Au-delà de la technique, ce découpage protège la relation avec la cliente. Eva n'a jamais eu à comprendre un outil, à installer quoi que ce soit, ni à faire confiance à une maquette abstraite. Elle a vu son site se construire sous ses yeux, page après page, dans le seul environnement qu'elle maîtrise déjà : son navigateur.
-
-Et de mon côté, la validation arrive plus vite. Une décision prise en direct, devant le vrai rendu, ne se rediscute pas trois jours plus tard par message. **On tranche une fois, ensemble, et on avance.**
-
-## La suite
-
-Le HTML validé, restait à le transformer en un vrai site vivant : hébergé, rapide, et surtout modifiable par Eva sans jamais m'appeler pour changer une virgule.
-
-C'est l'objet du prochain article : **[Astro, Cloudflare et un CMS que la cliente peut piloter](/astro-cloudflare-cms-client/)**.
-
-*Envie de sauter directement à la fin de la série ? [Le bilan complet, ce que j'ai appris en passant de Wix à un site sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/).*
+Le [bilan du passage de Wix au sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/) rassemble ce que je garderais de cette méthode pour un projet comparable.

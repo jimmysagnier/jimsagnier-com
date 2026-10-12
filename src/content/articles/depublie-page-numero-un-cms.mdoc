@@ -7,30 +7,30 @@ summary: >-
   En voulant réécrire une page qui se classait dans les premiers résultats, je
   l'ai sortie du site. Un clic. Les pièges qu'on ne découvre qu'en production
   sur un CMS headless, et les garde-fous installés depuis.
-readingTime: 7
+readingTime: 5
 tags:
   - CMS
   - Payload
   - SEO
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 7 min en entier
+  readingTime: 2 min · ou 5 min en entier
   items:
     - >-
       **L'erreur** : repasser une page en ligne en brouillon pour la
-      retravailler. Sur notre CMS, un brouillon n'est pas une copie de
-      travail, c'est un état. La page sort du site.
+      retravailler. Dans notre flux de publication, changer le statut du document retirait
+      la page du site. Une version de travail est un mécanisme différent.
     - >-
-      **Les 3 options sûres** : éditer en restant publié, préparer hors du CMS
+      **Les 3 façons de travailler retenues** : éditer en restant publié, préparer hors du CMS
       puis appliquer d'un coup, ou travailler sur une copie.
     - >-
       **Les autres pièges** : des adresses traduites qui faussent les
       recherches, des champs ignorés sans prévenir, un bug de base qui
       bloquait toute écriture.
     - >-
-      **Les garde-fous** : "publié" écrit explicitement à chaque mise à jour,
-      les règles gravées dans les outils, et une vérification après chaque
-      écriture.
+      **Les garde-fous** : conserver explicitement le statut publié, écrire
+      les consignes dans les outils et contrôler le résultat après chaque
+      modification.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -53,27 +53,29 @@ seriesId: saga-eurofiscalis-s4
 seriesOrder: 4
 seriesKind: episode
 ---
-Un jour de juillet, j'ai sorti du site une page qui se classait dans le top 10 de Google, parfois en première position. Pas un bug, pas une attaque. Moi. En voulant l'améliorer.
+En juillet, j'ai voulu mettre à jour une page en tchèque qui se classait dans le top 10 de Google, parfois en première position. Je l'ai passée en brouillon avant de la réécrire. Dans notre flux de publication, ce changement de statut l'a retirée du site.
 
-Je suis Jim. Quatrième épisode de l'après-migration Eurofiscalis, et celui-là, je le raconte avec un peu d'autodérision. Dans l'article [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/), j'expliquais pourquoi on avait choisi notre CMS. Ici, c'est la suite moins glorieuse : le quotidien avec, et les pièges qu'on ne découvre qu'en production.
+Je suis Jim. Quatrième épisode de l'après-migration Eurofiscalis, sur une erreur de mise à jour dans le CMS. Dans l'article [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/), j'expliquais pourquoi on avait choisi notre CMS. Ici, je décris les précautions ajoutées pendant son usage en production.
 
 ## L'histoire
 
-On réécrivait une page en tchèque. Une bonne page, bien positionnée, qui méritait simplement d'être mise à jour. Mon réflexe, venu de je ne sais où : la passer en brouillon, le temps de la retravailler tranquillement, puis la republier propre.
+On réécrivait une page en tchèque. Une bonne page, bien positionnée, qui méritait simplement d'être mise à jour. Mon réflexe : la passer en brouillon, le temps de la retravailler tranquillement, puis la republier propre.
 
-Sauf que sur notre CMS, un brouillon n'est pas une copie de travail qui dort à côté de la version en ligne. C'est un **état**. Passer une page publiée en brouillon, c'est lui dire : tu n'es plus publiée. La page a quitté le site. Pour les visiteurs, pour Google, pour tout le monde.
+J'avais changé l'**état du document publié**, au lieu de préparer une version de travail à côté. Notre site ne diffusait que les documents publiés : la page n'était donc plus accessible.
 
-On s'en est rendu compte très vite, et on l'a republiée immédiatement. Pas de dégât durable. Mais j'ai eu le temps de sentir le petit froid dans le dos, celui qui te rappelle qu'une page qui rank, c'est un actif, et qu'un actif, ça se perd en un clic.
+Il faut distinguer cette action de l'enregistrement d'une version brouillon. [Payload prévoit un mécanisme de versions et de drafts](https://payloadcms.com/docs/versions/drafts) qui permet de garder un document publié pendant le travail sur une nouvelle version. Le comportement dépend de la configuration et de l'opération effectuée ; notre erreur ne décrit pas tous les CMS headless.
+
+Nous avons repéré le problème rapidement et republié la page immédiatement. Cette remise en ligne corrigeait l'état de publication. Elle ne suffit pas, à elle seule, à mesurer un éventuel effet sur le classement.
 
 {% MonAvis sentiment="mitige" %}
-En vrai, c'est logique. Le CMS a fait exactement ce que je lui ai demandé. Le problème, c'est l'idée que j'avais en tête : pour moi, « brouillon » voulait dire « version de travail ». Pour lui, ça voulait dire « pas en ligne ». La plupart des erreurs en production viennent de là : pas d'un outil qui se trompe, mais d'un mot qui ne veut pas dire la même chose pour toi et pour la machine.
+Je voulais préparer une nouvelle version, mais j’ai modifié le statut de celle qui était en ligne. Avant d’utiliser une action appelée « brouillon », je dois donc vérifier ce qu’elle change réellement dans notre flux.
 {% /MonAvis %}
 
-## Trois façons sûres de retoucher une page en ligne
+## Trois façons de retoucher utilisées dans notre flux
 
-Depuis, la règle est gravée : **on ne passe jamais une page en ligne en brouillon**. Pour la retoucher, il reste trois options.
+Depuis, la consigne de nos outils est claire : **on ne passe jamais une page en ligne en brouillon**. Pour la retoucher, il reste trois options.
 
-{% EnPratique titre="Retoucher une page qui rank : 3 options sûres" %}
+{% EnPratique titre="Préparer une retouche sans changer le statut publié" %}
 1. **Éditer en restant publié.** Les modifications partent en ligne au moment où on enregistre. Parfait pour les retouches ciblées.
 2. **Préparer hors du CMS, appliquer d'un coup.** On rédige la nouvelle version à côté, on la relit, et on la pousse en une seule fois, au moment choisi. C'est ce qu'on fait pour les réécritures complètes.
 3. **Travailler sur une copie.** On duplique, on retravaille la copie, puis on bascule. Plus lourd, utile quand plusieurs personnes doivent valider.
@@ -83,9 +85,9 @@ Pour un nouvel article, en revanche, le brouillon reste le bon point de départ.
 
 ## Les autres pièges de la même famille
 
-Cette histoire m'a donné une habitude : noter chaque piège le jour où je tombe dedans. Voici ceux qui méritent d'être connus, parce qu'ils ont tous la même forme. Rien ne plante. Tout a l'air normal. Et pourtant, le résultat est faux.
+Nous avons également documenté les problèmes rencontrés dans les recherches et les mises à jour du contenu. Certains enregistrements pouvaient sembler réussis sans produire la modification attendue.
 
-**Les adresses traduites.** Sur notre site, chaque langue a sa propre adresse : la page française sur la Slovaquie ne s'appelle pas du tout pareil en anglais ou en italien. Chercher « slovaquie » dans les adresses ne ramène donc que les pages françaises. Et tu en conclus, à tort, que les traductions n'existent pas. La seule vérification fiable passe par le lien qui relie les versions d'un même contenu entre elles, pas par les adresses.
+**Les adresses traduites.** Sur notre site, chaque langue a sa propre adresse : la page française sur la Slovaquie ne s'appelle pas du tout pareil en anglais ou en italien. Chercher « slovaquie » dans les adresses ne ramène donc que les pages françaises. Et tu en conclus, à tort, que les traductions n'existent pas. Nous vérifions les traductions à partir de la relation entre les versions du même contenu. Chercher un nom français dans leurs adresses ne suffit pas.
 
 **Les champs ignorés en silence.** Le titre et la description SEO doivent être rangés à un endroit bien précis. Si tu les envoies à côté, le CMS ne râle pas : il ignore simplement. L'enregistrement réussit, et ta page n'a pas de description.
 
@@ -94,7 +96,7 @@ Cette histoire m'a donné une habitude : noter chaque piège le jour où je tomb
 **Le bug qui bloquait tout.** Un jour, plus moyen de modifier le moindre article rattaché à un pays. Même changer un titre était refusé. La cause était un décalage dans la structure de la base de données, sur la table des pays. Max l'a réalignée, et on a gardé un test tout simple pour vérifier que ça ne revient pas.
 
 {% Conseil titre="Documente chaque piège le jour où tu tombes dedans" %}
-Pas la semaine d'après, le jour même, tant que tu te souviens du symptôme exact. Un piège documenté, c'est une erreur que personne ne refera, ni toi, ni un collègue, ni l'IA qui travaille avec toi. Un piège pas documenté, c'est une erreur qui attend son prochain tour.
+Pas la semaine d'après, le jour même, tant que tu te souviens du symptôme exact. Note le symptôme, l’action qui l’a provoqué et le contrôle à faire ensuite. Les consignes aident à éviter la répétition ; il reste à vérifier qu’elles sont suivies.
 {% /Conseil %}
 
 ## Les garde-fous installés depuis
@@ -103,18 +105,16 @@ La leçon n'aurait servi à rien si elle était restée dans ma tête. Alors ell
 
 **« Publié » écrit en toutes lettres.** Chaque mise à jour d'une page en ligne précise explicitement qu'elle doit rester publiée. On ne compte plus sur l'état par défaut.
 
-**Les règles gravées dans les skills.** Les outils IA qui publient et mettent à jour nos articles, ceux dont je parlais dans [l'usine de skills](/usine-skills-claude-mcp/), ont ces règles écrites noir sur blanc. L'IA ne peut pas repasser une page en ligne en brouillon, parce que c'est interdit dans ses instructions.
+**Les règles gravées dans les skills.** Les outils IA qui publient et mettent à jour nos articles, ceux dont je parlais dans [l'usine de skills](/usine-skills-claude-mcp/), ont ces règles écrites noir sur blanc. Ces instructions interdisent de repasser une page en ligne en brouillon. Elles cadrent l’action de l’agent, mais ne remplacent pas la vérification du statut enregistré.
 
 **Vérifier après chaque écriture.** Après chaque modification, on relit ce qui a vraiment été enregistré. Pas ce qu'on croit avoir envoyé. Ce qui est dans la base.
 
 ## Ce que je retiens
 
-Un CMS headless te donne énormément de contrôle. Et le contrôle, c'est aussi le pouvoir de te tirer une balle dans le pied, proprement, sans message d'erreur. La parade n'a rien de compliqué : connais le vrai sens des mots de ton outil, écris chaque piège le jour où tu le découvres, et fais-le passer dans tes process pour ne plus dépendre de ta mémoire.
+Cette erreur venait de la différence entre une version de travail et l’état publié du document. La correction a consisté à conserver explicitement cet état dans les mises à jour et à relire ce qui avait été enregistré. Ces contrôles restent nécessaires, même avec les consignes écrites dans les skills.
 
-{% FAQ items=[{question: "Repasser une page publiée en brouillon la retire-t-il du site ?", reponse: "Sur beaucoup de CMS headless, oui. Le brouillon est un état, pas une copie de travail : la page n'est plus publiée, donc elle disparaît pour les visiteurs et pour Google. Vérifie le comportement de ton outil avant de t'en servir sur une page en ligne."}, {question: "Comment modifier une page bien classée sans risque ?", reponse: "Trois options : éditer en la laissant publiée pour les petites retouches, préparer la nouvelle version en dehors du CMS et l'appliquer d'un coup pour une réécriture, ou travailler sur une copie puis basculer."}, {question: "Une page dépubliée quelques minutes perd-elle son classement ?", reponse: "Une dépublication très courte, corrigée tout de suite, a peu de chances de laisser des traces durables. Plus la page reste hors ligne, plus le risque grandit que Google la retire de ses résultats. La vraie règle, c'est de ne pas le faire du tout."}] /%}
+{% FAQ items=[{question: "Repasser une page publiée en brouillon la retire-t-il du site ?", reponse: "Changer le statut du document peut la retirer du site si le site ne diffuse que les contenus publiés. Enregistrer une version brouillon à côté est une autre opération. Vérifie la configuration et l’action avant de l’utiliser."}, {question: "Comment préparer la mise à jour d’une page bien classée ?", reponse: "Trois options : éditer en la laissant publiée pour les petites retouches, préparer la nouvelle version en dehors du CMS et l'appliquer d'un coup pour une réécriture, ou travailler sur une copie puis basculer."}, {question: "Une page dépubliée quelques minutes perd-elle son classement ?", reponse: "La remise en ligne et le classement sont deux contrôles différents. Il faut vérifier que la page est de nouveau accessible, puis suivre son état d’indexation et ses performances. Cet incident ne permet pas de prédire l’effet d’une durée donnée de dépublication."}] /%}
 
 ## La suite
 
-Dernier épisode de la série, et on revient à un sujet dont je suis assez fier : les chiffres qui se mettent à jour tout seuls sur les 2700 pages du site. Un système qui marche très bien. Sauf dans les cas où il ment, sans prévenir personne.
-
-C'est l'objet du prochain article : [nos chiffres se mettent à jour tout seuls, sauf quand ils mentent](/tokens-dynamiques-fallback-derive/).
+Le dernier épisode examine un autre contrôle de publication : les valeurs de secours conservées à côté des données dynamiques. Le système est décrit dans l’article suivant : [nos chiffres se mettent à jour tout seuls, sauf quand ils mentent](/tokens-dynamiques-fallback-derive/).

@@ -5,33 +5,26 @@ publishedAt: 2026-09-22
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-09-22T06:00:00Z
 summary: >-
-  2700 pages qui ne se parlent pas, c'est 2700 impasses. Le maillage interne
-  comme architecture : cocon par pays, budget de liens, ancres variées et
-  maillage différé.
-readingTime: 8
+  Organiser le maillage d'un site de 2700 pages : groupes par pays, liens vers les pages de référence, ancres descriptives et destinations en attente de publication.
+readingTime: 6
 tags:
   - SEO
   - maillage interne
   - cocon-sémantique
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 6 min en entier
   items:
     - >-
-      **Le constat** : un site tout juste migré arrive souvent sans aucun lien
-      interne.
+      **Organisation** : par pays, avec une page de service, des fiches de référence et des articles.
     - >-
-      **Le cocon** : des silos par pays, une page mère, ses filles, ses
-      petites-filles.
+      **Liens utiles** : relier les pages selon la question du lecteur, sans enfermer chaque groupe dans un silo.
     - >-
-      **Les pages de conversion** : elles reçoivent des liens et n'en donnent
-      aucun (logique PageRank).
+      **Repères internes** : une dizaine de liens et des formulations variées, sans quota SEO à atteindre.
     - >-
-      **Le budget** : au plus 10 liens par article, des ancres variées, au moins
-      11 formulations vers les pages clés.
+      **Ancres** : décrire la destination dans une phrase qui justifie le lien.
     - >-
-      **Le maillage différé** : poser un lien vers une page pas encore publiée,
-      et le résoudre plus tard.
+      **Publication différée** : enregistrer une destination attendue, puis vérifier la page avant d'activer le lien.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -39,9 +32,7 @@ coverImage:
 seo:
   title: 'Le cocon sémantique à l''échelle : le maillage interne'
   description: >-
-    Le maillage interne comme architecture, pas comme corvée : cocon par pays,
-    pages de conversion sans lien sortant, budget de liens et ancres variées sur
-    2700 pages.
+    Comment organiser le maillage de 2700 pages : cocon par pays, ancres descriptives, limites des quotas et résolution des liens vers des pages encore non publiées.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -58,56 +49,60 @@ relatedArticles:
   - search-console-claude-indexation
   - recherche-seo-semantique-agents-ia
 ---
-2700 pages qui ne se parlent pas, c'est 2700 impasses. Le maillage interne, ces liens d'une page vers une autre à l'intérieur du site, ce n'est pas une corvée qu'on bâcle en fin de projet. C'est une architecture, et c'est elle qui décide de la circulation du jus SEO dans tout le site.
+Sur un site de **2700 pages**, choisir les liens un article après l'autre finit par poser un problème : on ne sait plus quelles pages ont été reliées, ni lesquelles attendent encore leurs liens. Le maillage interne sert au lecteur qui veut approfondir un point, mais il faut aussi pouvoir le suivre à l'échelle du site.
 
-Je suis Jim. Dernier article de la série sur notre fabrique de contenu. On a vu [la chaîne](/chaine-editoriale-contenu-echelle/), [la recherche](/recherche-seo-semantique-agents-ia/), [la qualité](/qualite-eeat-contenu-echelle/) et [la transcréation](/traduire-nest-pas-transcreer/). Il manque la dernière pièce, celle qui relie tout le reste : le maillage.
+Je suis Jim. Dernier article de la série sur notre fabrique de contenu. Après [la chaîne éditoriale](/chaine-editoriale-contenu-echelle/), [la recherche SEO](/recherche-seo-semantique-agents-ia/), [les contrôles de qualité](/qualite-eeat-contenu-echelle/) et [la transcréation](/traduire-nest-pas-transcreer/), voici comment on organise les liens entre ces pages.
 
-## Le point de départ : un site sans liens
+## Repartir du maillage existant
 
-Commençons par l'état des lieux, parce qu'il était brutal. Un site fraîchement migré arrive souvent avec quasiment aucun lien interne propre. Les pages existent, elles sont bonnes, mais elles vivent chacune dans leur coin, sans se renvoyer les unes vers les autres.
+Une migration ne supprime pas forcément les liens internes. Dans notre cas, le maillage hérité demandait une reprise : certaines relations ne correspondaient plus à la nouvelle organisation. J'ai raconté [pourquoi j'ai supprimé les anciens liens internes](/supprimer-tous-les-liens-internes/) avant de les reconstruire.
 
-Pour Google, un tel site est une collection de pages isolées. Or les liens internes, c'est ce qui dit au moteur quelles pages comptent le plus, et comment les sujets s'articulent. Sans eux, on laisse une énorme partie de sa force sur la table. Tout le maillage était donc à construire, de zéro. J'ai raconté depuis [pourquoi j'ai supprimé le maillage hérité](/supprimer-tous-les-liens-internes/) avant de le reconstruire.
+Ce choix a laissé du travail derrière lui. Une page peut être accessible par le menu ou le sitemap et manquer malgré tout de liens depuis les articles qui traitent du même sujet. Ce sont ces relations qu'il fallait recréer, en regardant le contenu des pages et pas seulement leurs titres.
 
-## Le cocon par pays
+[Google utilise les liens pour découvrir des pages et apprécier leur pertinence](https://developers.google.com/search/docs/crawling-indexing/links-crawlable). Ça ne permet pas de déduire un classement à partir du seul nombre de liens entrants. En revanche, une page importante qui n'est reliée à aucun contenu voisin mérite qu'on vérifie pourquoi.
 
-Le principe qu'on a retenu, c'est le cocon sémantique organisé par pays. Une logique de sujets, pas une hiérarchie d'adresses.
+## Organiser les pages par pays
 
-Pour chaque pays, il y a une page mère (la page de service principale), des pages filles (les fiches de référence), et des petites-filles (les articles de blog). Les liens suivent cette logique : les articles nourrissent les fiches, les fiches renvoient vers la page mère. Chaque groupe de pages forme un cocon cohérent autour d'un pays, et le moteur comprend que tout ça forme un ensemble d'expertise sur ce marché.
+Le principe retenu est un cocon sémantique par pays. Concrètement, on regroupe une page de service principale, des fiches de référence et des articles qui développent des questions plus précises.
 
-## Les pages qui ne lient jamais vers l'extérieur
+Un article peut renvoyer vers une fiche pour donner une définition ou détailler une procédure. La fiche peut mener vers la page de service quand le lecteur a besoin d'un accompagnement. Les mots « page mère », « fille » et « petite-fille » décrivent ces rôles ; ils n'imposent pas une arborescence d'URL particulière.
 
-Voici le point le plus contre-intuitif. Nos pages de conversion, celles vers lesquelles on veut envoyer le maximum de force, ne mettent aucun lien sortant. Aucun.
+Cette organisation aide à choisir les destinations. Elle ne suffit pas à rendre tous les liens pertinents. Un article peut aussi avoir besoin d'une page d'un autre groupe pour expliquer une comparaison ou une exception. Le pays donne un premier cadre, puis on revient à la question traitée dans le passage.
 
-La logique est celle du jus SEO. Une page reçoit de la force par les liens qui pointent vers elle, et en distribue par les liens qu'elle émet. Une page de conversion, on veut qu'elle **reçoive** et qu'elle **garde**. Alors elle ne lie que vers l'action (prendre rendez-vous, contacter) et vers rien d'autre. On lie abondamment vers elle, jamais depuis elle. C'est un choix assumé, et il change tout.
+## Les pages de conversion ont une autre fonction
 
-## Le budget de liens
+Dans l'organisation décrite ici, les pages de conversion privilégient la prise de rendez-vous ou le contact. Le choix initial était de limiter leurs liens vers les autres contenus, pour éviter de multiplier les sorties dans ce parcours.
 
-À l'autre bout, les articles, eux, lient beaucoup. Mais pas n'importe comment. Chaque article a un budget : **au plus une dizaine de liens internes**, la plupart dans le corps, le reste dans la FAQ.
+Ce choix de parcours ne permet pas de déduire qu’une page « garde son jus SEO ». L’absence de liens sortants ne démontre pas qu’elle sera mieux classée. Et les liens du menu, du footer et des autres composants font aussi partie de la page.
 
-Deux règles guident ce budget. D'abord, un lien en introduction, vers la page de service du pays, avec une ancre exacte. Ensuite, on varie les formulations : il faut **au moins une dizaine d'ancres différentes** pointant vers une page stratégique, parce qu'un moteur se méfie d'un lien toujours formulé pareil, et récompense la diversité naturelle.
+Il faut donc distinguer deux décisions : quels contenus doivent envoyer le lecteur vers une page de service, et de quelles informations il peut avoir besoin depuis cette page. Si une fiche aide à comprendre le service avant de prendre contact, la supprimer du parcours au nom du PageRank n'est pas une évidence.
 
-{% Conseil titre="Une ancre exacte en intro vers la page stratégique" %}
-Le lien le plus important d'un article, c'est celui du début, vers la page de service du pays concerné, avec une ancre précise et non un vague "cliquez ici". Placé haut, formulé juste, c'est lui qui envoie le signal le plus fort. Ne le noie pas au milieu du texte, et ne le remplace pas par une formule générique.
-{% /Conseil %}
+## Une dizaine de liens comme repère de travail
 
-## Tisser dans la phrase, jamais "cliquez ici"
+Pour les articles, on avait retenu un budget d'au plus une dizaine de liens internes, répartis entre le corps et, quand elle existe, la FAQ. C'est un repère de production pour éviter d'ajouter des liens sans raison. **Ce n'est pas un nombre idéal défini par Google.**
 
-Un bon lien interne ne s'annonce pas. On ne colle pas un "pour en savoir plus, consultez notre article". On tisse le lien dans la phrase, sur les mots qui décrivent vraiment la page de destination.
+On avait aussi prévu plusieurs formulations vers les pages stratégiques, une dizaine environ, plutôt qu'une ancre identique recopiée partout. Là encore, le nombre n'est pas l'objectif. La formulation doit correspondre à ce que le passage raconte et à ce que la page liée apporte.
 
-Les ancres génériques ("cliquez ici", "en savoir plus", le nom de la marque) ne disent rien au moteur sur la page visée. Une ancre qui décrit la destination, elle, transmet du sens. C'est plus élégant à lire, et infiniment plus efficace.
+Un lien vers la page de service peut trouver sa place en introduction si le sujet la justifie. Il n'a pas besoin d'y être systématiquement, avec une ancre exacte, pour produire un supposé signal plus fort. Dans un article pédagogique, une fiche de référence peut être la première destination utile.
 
-## Le maillage différé
+## Décrire ce qu'on trouvera après le clic
 
-Dernier morceau, le plus malin. À l'échelle, on publie souvent un article qui devrait pointer vers une page pas encore mise en ligne. Que faire ? Mettre un lien mort, ou pas de lien du tout, et oublier d'y revenir ?
+« Cliquez ici » ne dit pas où l'on va. « Le calcul du montant TTC » ou « les étapes de l'immatriculation » donnent déjà une indication, à condition que la page cible traite bien cette question.
 
-Ni l'un ni l'autre. On enregistre le lien en attente : la page A note qu'elle veut pointer vers la page B, avec quelle ancre, à quel endroit exact. Le jour où B est publiée, on rejoue toutes ces attentes d'un coup, et les liens se posent tout seuls. Aucun lien n'est oublié, aucune page ne reste orpheline. Le maillage se construit dans le temps sans jamais laisser de trou.
+Je garde le lien dans la phrase qui en explique l'intérêt. Si le lecteur doit lire tout le paragraphe pour comprendre pourquoi je lui propose cette destination, l'ancre seule n'a pas besoin de tout raconter. Elle doit rester lisible, sans empiler les mots-clés.
 
-{% MonAvis sentiment="positif" %}
-Le maillage, ça se conçoit au moment où on pense le site, pas au moment où on le finit. C'est la différence entre une architecture et du rafistolage. Quand la structure des liens est pensée dès le départ, chaque nouvelle page vient renforcer les autres au lieu de s'ajouter en solitaire. Un site bien maillé, c'est un site qui devient plus fort à chaque publication.
-{% /MonAvis %}
+C'est aussi le conseil de [Google sur les ancres : une formulation descriptive, concise et pertinente](https://developers.google.com/search/docs/crawling-indexing/links-crawlable). Varier les mots peut venir naturellement du contexte ; fabriquer onze variantes uniquement pour atteindre un quota apporte peu au lecteur.
 
-## Ce que je retiens de la série
+## Prévoir les liens vers des pages encore absentes
 
-On a ouvert le capot de la fabrique : [la chaîne éditoriale](/chaine-editoriale-contenu-echelle/) et ses deux gates, [la recherche](/recherche-seo-semantique-agents-ia/) confiée à des agents, [la qualité](/qualite-eeat-contenu-echelle/) tenue par des règles et un expert, [la transcréation](/traduire-nest-pas-transcreer/) qui refait chaque page native, et le maillage qui relie le tout.
+À l'échelle du site, un article peut être prêt alors que la page qui le complète n'est pas encore publiée. Le besoin de lien existe, mais la destination ne peut pas encore recevoir de visiteur.
 
-S'il faut retenir une chose : produire à l'échelle, ce n'est pas produire vite et mal. C'est mettre de la méthode et de la discipline là où il y avait de l'artisanat, pour que l'IA fasse le volume et que l'humain garde le soin. Le reste, ce sont des détails d'outillage.
+On enregistre alors le lien en attente : la page source, la destination prévue, l'ancre et le passage où elle doit être posée. Le texte reste lisible sans URL active. Quand la destination est publiée, on peut retrouver les attentes qui la concernent et les résoudre.
+
+Il reste un contrôle à faire : la page existe-t-elle vraiment à cette adresse, est-elle publique, et répond-elle toujours à la promesse de l'ancre ? Une liste de liens en attente évite de tout garder en tête. Elle ne garantit pas à elle seule qu'aucune page ne sera oubliée.
+
+## Contrôler ce qu'on a construit
+
+Le cocon sert à préparer les relations. Le contrôle du site sert à vérifier ce qui a effectivement été publié : destinations cassées, pages sans lien entrant, ancres trop vagues ou liens devenus inutiles après une modification.
+
+C'est cette différence entre le plan et le site réel qui compte pour la suite. La chaîne éditoriale peut préparer un article et ses destinations ; le maillage doit ensuite être relu quand le contenu et les dates changent. Avec plusieurs milliers de pages, les liens en attente et les contrôles donnent un travail à traiter, plutôt qu'une impression que tout est relié.

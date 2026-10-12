@@ -1,5 +1,5 @@
 ---
-title: 'Déménager 2700 pages en 7 langues sans perdre Google'
+title: 'Migrer 2700 pages en 7 langues : préparer la bascule et contrôler les URL'
 territory: comprendre
 publishedAt: 2026-09-07
 scheduledPublishAt: 2026-09-07T06:00:00Z
@@ -7,7 +7,7 @@ summary: >-
   2700 pages déplacées en 7 langues, 1,4 million de visites en jeu. La méthode
   de migration : cartographie, redirections et contrôles après bascule, avec
   les limites des chiffres de suivi.
-readingTime: 8
+readingTime: 7
 tags:
   - migration
   - SEO
@@ -15,29 +15,24 @@ tags:
   - IA
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 7 min en entier
   items:
     - >-
-      **Le vrai risque** : ce ne sont ni le code ni le design, ce sont les URLs
-      et les redirections.
+      **L'inventaire** : relever les URL et vérifier leur couverture, langue par langue.
     - >-
-      **La méthode** : cartographier les 2700 pages, poser une redirection 301
-      par adresse, gérer le multilingue (hreflang).
+      **Les correspondances** : distinguer les adresses conservées, déplacées et supprimées, avec des destinations pertinentes.
     - >-
-      **L'IA** : un pipeline piloté par l'IA pour déplacer et reformater le
-      contenu, avec relecture humaine sur chaque page sensible.
+      **L'IA** : préparer le déplacement et le reformatage, avec des relectures humaines sur les pages sensibles.
     - >-
-      **Le suivi** : comparer l'indexation et les positions sur un périmètre
-      stable, sans attribuer toute variation à la refonte.
+      **Les contrôles** : tester les URL en production et suivre Search Console, dont les rapports peuvent arriver avec un délai.
     - >-
-      **Le signal faible** : suivre les visites attribuées aux assistants IA,
-      avec les limites de l'attribution analytics.
+      **Le suivi** : comparer les périodes, les pages et les requêtes sur un périmètre stable.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
   caption: Portrait de Jim, visuel commun de remplacement.
 seo:
-  title: 'Migrer 2700 pages en 7 langues sans perdre Google'
+  title: 'Migrer 2700 pages en 7 langues : préparer la bascule et contrôler les URL'
   description: >-
     Migration SEO d'un site de 2700 pages en 7 langues : cartographie,
     redirections 301, pipeline IA et monitoring. Retour de terrain et limites
@@ -59,66 +54,62 @@ relatedArticles:
   - audit-redirections-zero-404
   - search-console-claude-indexation
 ---
-2700 pages à déplacer. 1,4 million de visites annuelles en jeu, dont plus de 800 000 venues de Google. Une migration ratée, et c'est une partie de ce trafic qui s'évapore, parfois pour des mois. L'objectif était de préserver la visibilité pendant la bascule. Voilà comment on s'y est pris, et ce que les chiffres de suivi permettent réellement de dire.
+2700 pages à déplacer. 1,4 million de visites annuelles en jeu, dont plus de 800 000 venues de Google. Une migration peut modifier la visibilité des pages, notamment si des adresses disparaissent ou renvoient vers une mauvaise destination. L'objectif était de préserver la visibilité pendant la bascule. Voilà comment on s'y est pris, et ce que les chiffres de suivi permettent réellement de dire.
 
-Je suis Jim. Dernier article de la série sur la refonte du site Eurofiscalis. On a vu [pourquoi quitter WordPress](/quitter-wordpress-site-2700-pages/), puis [comment on a choisi Payload après s'être trompé avec Sanity](/sanity-puis-payload-cms-choisi-deux-fois/). Reste l'étape qui fait peur à tout le monde : le déménagement. Parce qu'un site refait, c'est bien. Un site refait qui garde tout son référencement, c'est le vrai objectif.
+Je suis Jim. Dernier article de la série sur la refonte du site Eurofiscalis. On a vu [pourquoi quitter WordPress](/quitter-wordpress-site-2700-pages/), puis [pourquoi on est passés de Sanity à Payload](/sanity-puis-payload-cms-choisi-deux-fois/). Reste le transfert des pages. Le nouveau site devait reprendre les contenus et permettre aux visiteurs comme aux moteurs de retrouver les bonnes adresses.
 
-## Le vrai risque, ce n'est pas la techno
+## Suivre les adresses pendant le transfert
 
-Quand on parle de migration, tout le monde pense au code, au design, à la bascule. Ce n'est pas là que ça casse.
+Le code, le rendu et les contenus doivent être vérifiés. Ici, je me concentre sur les URL, les adresses des pages. Chaque page qui reçoit du trafic depuis Google a une adresse. Google la connaît, la classe, et des sites externes pointent vers elle. Si cette adresse change, il faut indiquer la nouvelle destination. Une page qui disparaît ou une redirection incorrecte peut perturber l'accès au contenu et son référencement. Sur 2700 pages, en 7 langues, ça fait beaucoup d'adresses à ne pas perdre.
 
-Ce qui casse un référencement, c'est les URLs. Chaque page qui reçoit du trafic depuis Google a une adresse. Google la connaît, la classe, et des sites externes pointent vers elle. Si cette adresse change ou disparaît sans qu'on prévienne Google proprement, tout le crédit accumulé sur cette page part à la poubelle. Sur 2700 pages, en 7 langues, ça fait beaucoup d'adresses à ne pas perdre.
-
-Donc la vraie migration, ce n'est pas "refaire le site". C'est "faire correspondre chaque ancienne adresse à sa nouvelle, sans en oublier une seule".
+Le plan de migration doit donc préciser le devenir de chaque ancienne adresse : conservée, déplacée ou supprimée.
 
 ## Étape 1 : cartographier les 2700 pages
 
 Tu ne peux pas rediriger ce que tu n'as pas listé. Première étape, donc : recenser l'existant, exhaustivement.
 
-Pour ça, on a utilisé un crawler, un outil qui parcourt le site comme le ferait Google et note toutes les pages accessibles, leurs adresses, leurs titres, leur statut. On a même utilisé [un crawler construit sur mesure](/crawler-seo-maison/) pour coller à nos besoins. À la sortie, on a la carte complète de l'ancien site : les 2700 adresses, langue par langue.
+Pour ça, on a utilisé un crawler, un outil qui suit les liens et relève les adresses qu'il atteint, leurs titres et leur statut. On a même utilisé [un crawler construit sur mesure](/crawler-seo-maison/) pour coller à nos besoins. Cet inventaire sert de base pour répartir les adresses langue par langue. Il faut aussi contrôler sa couverture : un crawler peut manquer des pages qu'il n'atteint pas.
 
-C'est fastidieux, ce n'est pas glamour, mais c'est la fondation de tout le reste. Une page oubliée à cette étape, c'est une page perdue le jour de la bascule.
+Ce relevé permet de repérer les pages à conserver avant de préparer les correspondances. Une page absente de l'inventaire peut aussi être absente du plan de redirection.
 
 ## Étape 2 : les redirections 301, en 7 langues
 
-Une fois la carte en main, on relie chaque ancienne adresse à sa nouvelle avec une redirection 301. Le 301, c'est le panneau officiel qu'on montre à Google : cette page a déménagé, définitivement, elle est là maintenant. Bien faite, la redirection transfère à la nouvelle adresse le crédit accumulé par l'ancienne.
+Quand une page change d'adresse, on prépare une redirection permanente vers son équivalent. Nous avons utilisé des 301. Si l'adresse reste la même, elle n'a pas besoin de se rediriger vers elle-même.
 
-{% Conseil titre="Une URL qui a du trafic doit avoir sa 301" %}
-La règle est simple et sans exception : toute adresse qui recevait ne serait-ce qu'un peu de trafic ou un lien entrant doit pointer vers son équivalent sur le nouveau site. Pas vers la page d'accueil par facilité, vers la vraie page équivalente. C'est le travail le moins visible d'une migration, et c'est celui qui décide si tu gardes ton référencement ou si tu le jettes.
+{% Conseil titre="Vérifier la correspondance, pas seulement la réponse HTTP" %}
+Pour une page déplacée, cherche une destination qui reprend son contenu ou répond au même besoin. Rediriger toutes les anciennes pages vers l'accueil ne règle pas la migration. Si une page est supprimée sans équivalent, une réponse 404 ou 410 peut être adaptée. [Google décrit ces différents cas dans sa méthode de changement d'URL](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
 {% /Conseil %}
 
-En multilingue, il y a une couche en plus. Chaque page existe en plusieurs langues, et il faut dire à Google quelle version correspond à quelle langue et quel pays (ce sont les balises hreflang). Une version française qui renvoie vers l'anglais, et c'est le mauvais public qui atterrit sur la mauvaise page. Multiplié par 7 langues, ça demande de la rigueur.
+En multilingue, il y a une couche en plus. Chaque page existe en plusieurs langues, et il faut dire à Google quelle version correspond à quelle langue et quel pays (ce sont les balises hreflang). On contrôle séparément les destinations des redirections et les correspondances hreflang. Les premières guident l'accès à la page, les secondes indiquent les variantes linguistiques aux moteurs.
 
 ## Étape 3 : déplacer le contenu, avec l'IA
 
-Reste à faire entrer les 2700 pages dans le nouveau CMS. Fait à la main, c'est un travail de titan. C'est là que l'IA a changé l'échelle du possible.
+Reste à faire entrer les 2700 pages dans le nouveau CMS. L'IA nous a aidés sur le déplacement et le reformatage de ce volume.
 
 On a construit un pipeline : une suite d'outils, pilotés par l'IA, qui récupèrent le contenu existant, le remettent en forme pour Payload, repèrent les taux et les seuils pour les transformer en tokens dynamiques, et préparent même les versions traduites. Jérémy m'a épaulé sur toute cette partie migration, et les traducteurs de chaque pays sont repassés derrière pour valider leur langue.
 
-Je suis clair sur un point : l'IA n'a pas fait le travail toute seule, et je ne l'aurais pas laissée faire. Sur un sujet aussi sensible que la fiscalité, chaque page importante repasse devant un humain. L'IA fait le gros du déplacement et du reformatage, l'humain garde la main sur l'exactitude. C'est ce partage qui rend le volume tenable sans sacrifier la qualité.
+L'IA fait le gros du déplacement et du reformatage. Sur un sujet aussi sensible que la fiscalité, chaque page importante repasse devant un humain pour vérifier l'exactitude. On contrôle ensuite le rendu dans le nouveau site.
 
 ## Étape 4 : surveiller après la bascule
 
-Le jour de la bascule n'est pas la fin, c'est le début de la période à surveiller de près.
+Après la bascule, on vérifie les destinations réellement servies et le suivi des pages.
 
-Dans les jours et les semaines qui suivent, on garde un oeil sur Google Search Console : est-ce que Google explore bien les nouvelles pages, est-ce qu'il remonte des erreurs, est-ce que les positions bougent ? Une redirection oubliée se voit là, en quelques jours, sous forme d'une page en erreur. On corrige au fil de l'eau, avant que ça ne coûte du trafic. J'ai détaillé les vérifications à faire pour [contrôler les redirections après la migration](/audit-redirections-zero-404/).
+Dans les jours et les semaines qui suivent, on garde un oeil sur Google Search Console : est-ce que Google explore bien les nouvelles pages, est-ce qu'il remonte des erreurs, est-ce que les positions bougent ? Ces rapports complètent les tests directs des URL. Ils ne remontent pas forcément chaque erreur immédiatement. On corrige les défauts repérés au fil du suivi. J'ai détaillé les vérifications à faire pour [contrôler les redirections après la migration](/audit-redirections-zero-404/).
 
-## Les résultats
+## Comparer avant et après la bascule
 
-Le suivi initial mentionnait 100 % d'indexation et un gain moyen de 0,3 position. **Je ne les présente plus comme des résultats vérifiables ici** : la période, la liste des URL attendues, l'export Search Console et la méthode de comparaison ne sont pas documentés dans cet article.
+Pour comparer les résultats, il faut conserver le même périmètre avant et après, préciser les dates, les pays, les types de recherche et les pages exclues. Une position moyenne peut bouger parce que les requêtes changent. Elle ne prouve pas, à elle seule, que la vitesse ou la migration a causé un gain.
 
-Pour publier une comparaison solide, il faut conserver le même périmètre avant et après, préciser les dates, les pays, les types de recherche et les pages exclues. Une position moyenne peut bouger parce que les requêtes changent. Elle ne prouve pas, à elle seule, que la vitesse ou la migration a causé un gain.
-
-Ce retour décrit donc la méthode de migration. Il ne promet ni indexation complète ni absence de variation de trafic. [Google décrit les fluctuations possibles et le suivi à prévoir lors d'un changement d'URL](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
+[Google décrit les fluctuations possibles et le suivi à prévoir lors d'un changement d'URL](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
 
 ## Le signal faible que je surveille : les IA
 
-Je regarde aussi les visites attribuées à des assistants comme ChatGPT ou Perplexity. Le chiffre initial de 0,9 % n'est pas exploitable sans période, outil et règle d'attribution. Certains passages depuis une IA peuvent ne pas transmettre de référent. Je garde donc cette piste comme une question à mesurer, pas comme un résultat acquis ni une prévision de croissance.
+Je regarde aussi les visites attribuées à des assistants comme ChatGPT ou Perplexity. Pour les suivre, il faut préciser la période, l’outil et la règle d’attribution. Certains passages depuis une IA peuvent ne pas transmettre de référent, ce qui limite ce que l’on peut compter.
 
 ## Ce que je retiens de toute la série
 
-Voilà, la boucle est bouclée. On a quitté WordPress pour de vraies raisons, on a choisi Astro et Payload (en se trompant une fois en chemin), et on a préparé et suivi le déménagement de 2700 pages.
+La série décrit trois décisions liées : quitter notre installation WordPress, choisir Astro et Payload après un premier choix de CMS, puis préparer et suivre le transfert des 2700 pages.
 
-S'il faut retenir une chose : une refonte réussie ne se juge pas au design du premier jour. Elle se juge des mois plus tard, quand l'équipe travaille plus sereinement, quand le site tient tout seul, et quand le trafic est toujours là, un peu plus haut même. Le reste, c'est de la déco.
+Pour juger la migration, je dois regarder les adresses, le contenu repris et l'évolution du trafic sur un périmètre comparable. Une page qui s'affiche correctement le jour de la bascule ne suffit pas à établir le résultat SEO.
 
-{% FAQ items=[{question: "Perd-on forcément du trafic en migrant un site ?", reponse: "Non, une perte durable n’est pas inévitable. Mais des fluctuations restent possibles, même avec une migration préparée. Cartographie, redirections et suivi réduisent les risques sans garantir un résultat."}, {question: "Combien de temps Google met-il à réindexer un site migré ?", reponse: "Le délai varie selon le site et son exploration. On suit les URL et les rapports Search Console dans la durée, sans promettre une stabilisation au bout de quelques semaines."}, {question: "Faut-il vraiment rediriger toutes les pages ?", reponse: "Toutes celles qui avaient du trafic ou des liens entrants, oui. Une page sans aucune visite ni lien peut être laissée de côté, mais dans le doute, on redirige."}, {question: "L'IA peut-elle gérer une migration toute seule ?", reponse: "Non. Elle accélère énormément le déplacement et le reformatage, mais sur un sujet sensible comme la fiscalité, chaque page importante repasse devant un humain qui valide l'exactitude."}] /%}
+{% FAQ items=[{question: "Perd-on forcément du trafic en migrant un site ?", reponse: "Non, une perte durable n’est pas inévitable. Mais des fluctuations restent possibles, même avec une migration préparée. Cartographie, redirections et suivi réduisent les risques sans garantir un résultat."}, {question: "Combien de temps Google met-il à réindexer un site migré ?", reponse: "Le délai varie selon le site et son exploration. On suit les URL et les rapports Search Console dans la durée, sans promettre une stabilisation au bout de quelques semaines."}, {question: "Faut-il vraiment rediriger toutes les pages ?", reponse: "On vérifie le devenir de chaque ancienne URL. Une page déplacée doit renvoyer vers son équivalent ; une page conservée garde son adresse. Pour une suppression sans équivalent pertinent, une réponse 404 ou 410 peut être adaptée."}, {question: "L'IA peut-elle gérer une migration toute seule ?", reponse: "Non. Elle accélère énormément le déplacement et le reformatage, mais sur un sujet sensible comme la fiscalité, chaque page importante repasse devant un humain qui valide l'exactitude."}] /%}

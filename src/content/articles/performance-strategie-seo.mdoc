@@ -4,9 +4,7 @@ territory: comprendre
 publishedAt: 2026-08-20
 scheduledPublishAt: 2026-08-20T06:00:00Z
 summary: >-
-  Sixième volet du making-of du site de La Puissance de l'Éveil : comment des
-  choix techniques (HTML statique, images AVIF, hébergement edge) deviennent
-  une meilleure expérience de lecture, sans promettre un classement.
+  HTML statique, images AVIF et Cloudflare Pages : les choix de chargement du site d'Eva, leur configuration et les contrôles de chargement à faire sur les pages.
 readingTime: 5
 tags:
   - SEO
@@ -17,32 +15,23 @@ essentiel:
   readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **L'expérience compte** : les Core Web Vitals interviennent dans les
-      systèmes de classement, sans garantir une bonne position.
+      **Le chargement** : Astro génère le contenu en HTML, avec du JavaScript pour les éléments qui en ont besoin.
     - >-
-      **Astro sert du HTML statique** : le contenu s'affiche sans attendre que
-      du JavaScript se réveille, rapide par défaut.
+      **Les images** : une sortie AVIF et des tailles adaptées sont configurées avec `astro:assets`.
     - >-
-      **Les images passent en AVIF** à la build via `astro:assets` : le format
-      le plus lourd d'une page devient le plus léger.
+      **L'hébergement** : Cloudflare Pages distribue les ressources via son réseau, sans garantir un délai identique pour chaque visite.
     - >-
-      **L'hébergement edge de Cloudflare** rapproche le site de la visiteuse,
-      via un réseau présent dans 300+ villes.
+      **Les moteurs** : sitemap, robots.txt et JSON-LD `Person` ont chacun un rôle distinct de la performance.
     - >-
-      **Le technique se lit aussi côté robots** : sitemap et robots.txt
-      automatiques, JSON-LD `Person` pour relier Eva à ses preuves.
-    - >-
-      **La vitesse ouvre la porte, le contenu fait entrer** : les Core Web
-      Vitals sont un billet d'entrée, pas une fin en soi.
+      **Les mesures** : LCP, CLS et INP permettent de distinguer chargement, stabilité et réactivité.
 coverImage:
   src: /images/articles/performance-strategie-seo/coverImage/src.avif
   alt: La performance technique du site de La Puissance de l'Éveil au service du référencement
-  caption: Un site léger n'est pas un détail de dev, c'est un argument SEO.
+  caption: Les choix techniques qui servent le chargement et la lecture.
 seo:
   title: 'La performance comme choix de conception et enjeu SEO'
   description: >-
-    Making-of du site de La Puissance de l'Éveil : comment HTML statique, images
-    AVIF et hébergement edge Cloudflare servent directement le référencement.
+    Les choix de performance du site d'Eva : HTML statique, images AVIF, Cloudflare Pages et limites des mesures et de leur effet sur le SEO.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -60,78 +49,58 @@ relatedArticles:
   - outils-interactifs-blog
   - quitter-wordpress-site-2700-pages
 ---
-**La performance sert d'abord la lectrice.** [Google indique que les Core Web Vitals interviennent dans ses systèmes de classement, mais qu'un bon score ne garantit pas une bonne position](https://developers.google.com/search/docs/appearance/core-web-vitals). Le poids en octets n'est pas, à lui seul, un score SEO. Pour La Puissance de l'Éveil, je n'ai pas traité la performance comme une finition de dernière minute. Je l'ai traitée comme une décision SEO, prise dès le premier fichier.
+Pour le site d'Eva, je voulais que le texte et les images s'affichent sans charger une application entière dans le navigateur. C'est pour ça que j'ai traité la performance dès les choix de structure et d'hébergement.
 
-Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après [avoir choisi la stack technique et le CMS](/astro-cloudflare-cms-client/), voici pourquoi ces choix soutiennent la lecture et l'exploration, sans une ligne d'optimisation « SEO » ajoutée par-dessus.
+Je suis Jim. Après [la stack technique et le CMS](/astro-cloudflare-cms-client/), ce sixième article du making-of explique les choix qui servent le chargement et la lecture. Je pars des pages à afficher et du travail demandé au navigateur.
 
-## Une page légère facilite la lecture
+## Ce que je cherche à améliorer
 
-**Google ne se contente pas de lire une page, il la chronomètre.** La logique est simple : un moteur de recherche veut envoyer ses utilisateurs vers des sites agréables, et un site lent ne l'est pas. Les mesures d'expérience couvrent chargement, stabilité et réactivité. Elles ne se réduisent pas au poids de la page et ne remplacent pas la pertinence du contenu.
+Une page peut charger lentement, bouger pendant l'affichage ou répondre avec retard quand on clique. Ce sont des problèmes différents. Réduire le poids d'une image ne corrige pas forcément un bouton qui se décale ou un script qui bloque une interaction.
 
-Pour Eva, l'enjeu est double. Une visiteuse qui arrive depuis Instagram sur son téléphone, en 4G, dans le métro, n'attendra pas. Si le hero met trois secondes à apparaître, elle est déjà repartie. Cette impatience, Google la connaît, et il l'intègre à son évaluation.
+[Google décrit trois Core Web Vitals : le LCP pour le chargement, le CLS pour la stabilité visuelle et l'INP pour la réactivité](https://developers.google.com/search/docs/appearance/core-web-vitals). Ils interviennent dans ses systèmes de classement, sans garantir une bonne position. Je les utilise comme repères pour le confort de visite, pas comme un calcul de trafic futur.
 
-**La bonne nouvelle, c'est que la performance ne se gagne pas après coup.** Elle se gagne au moment des choix techniques. Un site bien construit est rapide par défaut. Un site mal construit passe le reste de sa vie à essayer de rattraper son poids de départ.
+Sur le site d'Eva, les portraits et les textes doivent rester lisibles sur téléphone. Les animations doivent accompagner la page sans retarder son contenu. C'est ce besoin qui guide les choix suivants.
 
-{% MonAvis sentiment="positif" %}
-Longtemps, on a présenté la vitesse comme un truc de développeur, séparé du contenu et du SEO. C'est faux. Sur un site comme celui d'Eva, gagner du temps de chargement rend la visite plus confortable. Je ne peux pas convertir chaque milliseconde gagnée en positions Google supplémentaires.
-{% /MonAvis %}
+## Du HTML pour afficher le contenu
 
-## Astro sert du HTML statique, donc rapide par défaut
+Dans la configuration retenue, Astro génère les pages en HTML au build. Le contenu existe donc dans la réponse envoyée au navigateur. Il n'a pas besoin d'être entièrement reconstruit par une application JavaScript côté visiteuse.
 
-**Le choix d'Astro n'était pas un choix de mode, c'était un choix de vitesse.** Astro génère du HTML statique à la build. Autrement dit, quand une visiteuse arrive, la page est déjà entièrement écrite. Le navigateur n'a pas à attendre qu'un gros paquet de JavaScript se télécharge, se réveille et reconstruise l'écran avant d'afficher le premier mot.
+C'est le principe de [l'architecture en îlots d'Astro](https://docs.astro.build/en/concepts/islands/) : le contenu peut rester statique et les éléments interactifs charger leur propre JavaScript.
 
-C'est la différence avec beaucoup de sites modernes qui envoient une page vide, puis la remplissent en JavaScript. Ça marche, mais ça coûte du temps d'affichage, et ce temps se paie en référencement.
+Le site d'Eva en utilise peu : une lune dorée en fond, des animations au défilement et un formulaire de newsletter. Le reste repose sur le HTML et le CSS. Cela réduit le travail demandé au navigateur. Restent les images et les polices à charger, deux sujets à traiter dans la même conception.
 
-Le site d'Eva n'a quasiment pas de JavaScript. Une lune dorée qui dérive en fond, quelques animations au défilement, un formulaire de newsletter. Le reste est du HTML et du CSS. **Le contenu s'affiche immédiatement parce qu'il est là dès le départ, pas parce qu'un script a fini son travail.**
+## Préparer les photos à la bonne taille
 
-## Les images en AVIF, le poids qui plombait la page
+Les photos font partie du site : le portrait d'Eva, les visuels des accompagnements et l'atmosphère des pages. Je voulais les conserver sans envoyer systématiquement le fichier source au navigateur.
 
-**Sur presque tous les sites, ce qui pèse le plus lourd, ce ne sont pas les textes, ce sont les images.** Et le site d'Eva vit par ses photos : son portrait, les visuels de ses accompagnements, l'atmosphère éditoriale. Impossible de les sacrifier. Il fallait juste qu'elles cessent d'être un boulet.
+Le traitement passe par `astro:assets`, avec des images redimensionnées et une sortie AVIF configurée au build. [La documentation d'Astro décrit les formats et les transformations disponibles](https://docs.astro.build/en/reference/modules/astro-assets/). L'AVIF n'est pas une conversion automatique de toute image par défaut : il faut configurer le rendu et utiliser les images dans le circuit prévu.
 
-La solution passe par le format. Une même photo, exportée en JPEG classique ou en AVIF, ne pèse pas du tout la même chose : l'AVIF descend beaucoup plus bas pour une qualité visuelle équivalente.
+Lorsqu'Eva remplace une photo par l'interface du site, l'objectif est que ce circuit prépare la version à afficher. Elle n'a pas à exporter elle-même chaque variante. Il reste à contrôler la qualité du résultat et la taille choisie pour la page.
 
-C'est là qu'`astro:assets` fait le travail. Je dépose la photo source, et Astro la convertit automatiquement au moment de la build, dans le bon format et à la bonne taille. **Eva remplace une photo dans son interface, la version optimisée est générée toute seule.** Elle ne saura jamais ce qu'est l'AVIF, et c'est très bien comme ça.
-
-{% Conseil titre="Les images d'abord, le reste ensuite" %}
-Si tu ne dois optimiser qu'une seule chose sur un site vitrine, commence par les images. C'est presque toujours là que se cache l'essentiel du poids. Un format moderne et un redimensionnement correct font gagner plus de vitesse que des heures passées à traquer trois lignes de CSS en trop.
+{% Conseil titre="Regarder ce qui pèse avant d'optimiser" %}
+Sur un site vitrine avec beaucoup de photos, commence par regarder leurs dimensions et leur poids. Une image affichée dans une petite carte n'a pas besoin d'être envoyée dans la définition de l'original. Ensuite, vérifie les autres ressources : la bonne priorité dépend de ce que charge réellement la page.
 {% /Conseil %}
 
-## L'hébergement au plus près de la visiteuse
+## L'hébergement et la distribution
 
-**Un site peut être léger et rester lent si son serveur est loin.** La distance physique entre la visiteuse et la machine qui sert la page coûte du temps, à chaque requête. C'est pour ça que le choix de l'hébergement compte autant que le code.
+Le site est hébergé sur Cloudflare Pages. Sa distribution s'appuie sur le réseau de Cloudflare, ce qui permet de servir les ressources depuis plusieurs points plutôt que de dépendre d'un serveur d'origine unique pour chaque visite. [La documentation de Pages présente ce fonctionnement](https://developers.cloudflare.com/pages/).
 
-Le site est hébergé sur Cloudflare Pages, qui s'appuie sur un réseau de diffusion présent dans plus de 300 villes. Concrètement : la page n'est pas servie depuis un serveur unique quelque part, elle est copiée au plus près des visiteuses. Une lectrice à Lyon reçoit le site depuis un point proche de Lyon, pas depuis l'autre bout du monde. Et le HTTPS est fourni d'office, ce qui règle un autre petit signal de confiance que Google regarde.
+Cela ne permet pas de promettre le même délai à tout le monde. Le réseau de la visiteuse, le cache et les ressources demandées comptent aussi. Je préfère vérifier le chargement sur la page que déduire sa vitesse du nom de l'hébergeur.
 
-## Ce que Google voit sans qu'on l'y aide
+## Rendre le site lisible pour les moteurs
 
-**La performance ouvre la porte, mais il faut aussi que les robots trouvent leur chemin.** Là encore, la stack fait le travail sans intervention manuelle.
+En parallèle de la performance, j'ai prévu trois éléments techniques :
 
-- **Le sitemap** est généré automatiquement à chaque build. C'est la carte du site remise à Google : toutes les pages, listées, à jour, sans risque d'en oublier une.
-- **Le robots.txt** indique aux moteurs ce qu'ils peuvent explorer. Automatique lui aussi, donc jamais périmé.
-- **Un JSON-LD `Person`** décrit Eva de façon lisible par la machine. Il relie son nom à ses preuves d'existence : son compte Instagram, son podcast, un article de presse qui parle d'elle. C'est ce qui aide Google à comprendre que derrière ce site, il y a une personne réelle et identifiable, pas une page anonyme.
+- **Un sitemap**, généré au build à partir des routes retenues. Il aide à signaler les URL, mais ne prouve pas qu'elles sont toutes indexées.
+- **Un robots.txt**, pour indiquer les consignes d'exploration. Sa présence ne dispense pas de relire les règles quand le site évolue.
+- **Un JSON-LD `Person`**, qui décrit Eva et relie son identité à ses profils et références, comme Instagram, son podcast ou un article de presse.
 
-**Aucun de ces trois éléments ne demande d'effort récurrent.** Posés une fois dans la configuration, ils se maintiennent seuls à chaque publication. C'est le genre de travail invisible qui distingue un site pensé pour durer d'un site bricolé.
+Je traite ces éléments à côté du chargement : ils servent à décrire le site et à guider son exploration. [Google précise notamment qu'un sitemap aide à découvrir les URL sans garantir leur exploration ou leur indexation](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview).
 
-## Les Core Web Vitals, sans le jargon
+## Ce qu'il reste à mesurer
 
-**Google a mis un nom sur ce qu'il mesure : les Core Web Vitals.** Le terme fait peur, la réalité est simple. Ce sont trois questions de bon sens, posées du point de vue de la visiteuse.
+Ces choix doivent ensuite être vérifiés sur les pages rendues et dans les conditions de visite. Les images, les polices et les scripts peuvent encore peser sur le chargement, même quand la structure est légère.
 
-Un : **est-ce que le contenu principal s'affiche vite ?** Le gros titre, la première image, la promesse. Plus c'est rapide, mieux c'est.
+La performance soutient la lecture. Pour vérifier les textes eux-mêmes, la suite revient sur [la page Human Design et son travail de structure](/ecrire-page-seo-et-humaine-human-design/).
 
-Deux : **est-ce que la page reste stable pendant qu'elle charge ?** Rien de plus agaçant qu'un bouton qui se décale au moment où on allait cliquer, parce qu'une image est arrivée en retard et a tout poussé vers le bas. Une page stable inspire confiance.
-
-Trois : **est-ce que la page répond vite quand on interagit ?** Un clic, un défilement, une saisie : ça doit réagir sans latence.
-
-Je ne vais pas te sortir un score Lighthouse précis, ce serait malhonnête de figer un chiffre qui bouge à chaque mesure. Ce que je peux dire, c'est que ces trois exigences ont été des critères de conception, pas un audit fait à la fin. **HTML statique, images légères, hébergement proche : les trois questions trouvent leur réponse dans les choix, pas dans un rattrapage.**
-
-{% Conseil titre="La vitesse est un billet d'entrée, pas un trophée" %}
-Un bon score de performance ne fait pas classer une page seul. Il enlève un obstacle. Google n'envoie pas ses utilisateurs vers un site rapide et vide plutôt que vers un site un peu plus lent mais utile. La performance soutient la lecture. Elle ne remplace ni un contenu utile, ni les autres signaux évalués par le moteur.
-{% /Conseil %}
-
-## La suite
-
-**Tout ce travail technique a un seul but : que rien ne freine la lectrice avant qu'elle lise.** La vitesse ouvre la porte. Une fois entrée, ce qui la retient ou la fait fuir, ce n'est plus le temps de chargement, ce sont les mots.
-
-C'est l'objet du prochain article : [écrire une page qui se classe ET qui touche, le cas Human Design](/ecrire-page-seo-et-humaine-human-design/). Comment concilier les exigences d'un moteur de recherche et la voix d'une femme, sur une page qui doit faire les deux à la fois.
-
-*Envie de sauter directement à la fin de la série ? [Le bilan complet, ce que j'ai appris en passant de Wix à un site sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/).*
+Le recul sur l'ensemble du chantier se trouve dans [le bilan du passage de Wix au sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/).

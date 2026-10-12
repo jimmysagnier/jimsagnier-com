@@ -4,24 +4,24 @@ territory: comprendre
 publishedAt: 2026-10-01
 scheduledPublishAt: 2026-10-01T06:00:00Z
 summary: >-
-  Un lot de pages non indexées dans le rapport demandait vérification. Je l'ai
-  branchée sur Claude, et ce que ça m'a appris : le vrai visage de l'indexation,
-  et le faux ami qu'est l'Indexing API.
-readingTime: 8
+  Un lot de pages non indexées dans le rapport demandait vérification. J'ai utilisé
+  Claude pour inspecter 120 URL en lot, comparer leurs états et distinguer
+  l'inspection d'une demande d'indexation.
+readingTime: 6
 tags:
   - SEO
   - indexation
   - MCP
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 6 min en entier
   items:
     - >-
       **La surprise** : sur ce lot, rapport agrégé et inspection d'URL
       donnaient des états différents. Ce n'est pas une règle générale.
     - >-
-      **Le branchement** : connecter Search Console à Claude via MCP, et ses
-      pièges (le MCP se charge au démarrage, les sous-agents n'en héritent pas).
+      **Le branchement** : dans mon environnement, il fallait relancer la session
+      pour charger le MCP ; les sous-agents n’avaient pas accès à la connexion.
     - >-
       **Le cas d'usage** : vérifier 120 pages "non indexées" en lot. 117
       l'étaient déjà, 3 vraies exceptions.
@@ -29,8 +29,8 @@ essentiel:
       **Le faux ami** : l'Indexing API est réservée aux offres d'emploi et
       aux vidéos diffusées en direct balisées, pas aux articles de blog.
     - >-
-      **La vraie méthode** : sitemap à jour, inspection, et 2-3 liens internes
-      depuis des pages déjà explorées.
+      **Les contrôles** : accès à la page, contenu, sitemap et liens internes.
+      L’inspection constate un état ; elle ne garantit pas l’indexation.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -60,54 +60,50 @@ Je suis Jim. Deuxième volet de l'aparté "outils" dans la saga Eurofiscalis. Ap
 
 ## Brancher Search Console sur Claude
 
-L'interface web de Search Console est lente, et elle cache une grande partie de la donnée. Je voulais pouvoir l'interroger en langage naturel, et surtout automatiser les vérifications fastidieuses. Alors je l'ai reliée à Claude par un pont, le même type de pont que celui dont je parlais dans [l'article sur nos skills](/usine-skills-claude-mcp/) : le MCP.
+Vérifier les pages une par une dans l'interface web prenait du temps. Je voulais pouvoir l'interroger en langage naturel, et surtout automatiser les vérifications fastidieuses. Alors je l'ai reliée à Claude par un pont, le même type de pont que celui dont je parlais dans [l'article sur nos skills](/usine-skills-claude-mcp/) : le MCP.
 
 Une bonne pratique au passage : avant de brancher quoi que ce soit, j'ai vérifié que l'accès fonctionnait vraiment, que le compte de service dédié voyait bien la propriété du site. Tester l'accès avant de connecter, ça évite de croire qu'on est relié alors qu'on ne l'est pas. Une fois en place, Claude avait sous la main tout un jeu d'outils Search Console : les statistiques, l'inspection d'URL, les sitemaps.
 
 ## Ce qui a coincé
 
-Le blocage n'était pas dans la configuration, mais dans l'usage. Deux pièges qui ne sont écrits nulle part.
+Le blocage n'était pas dans la configuration, mais dans l'usage. Deux limites dans la configuration que j’utilisais.
 
-D'abord, **dans la configuration que j'utilisais, le serveur MCP ne se chargeait qu'au démarrage d'une session.** Tu le branches en cours de conversation, et ses outils ne sont pas encore appelables tant que tu n'as pas relancé. La première fois, tu tournes en rond sans comprendre.
+D'abord, **dans la configuration que j'utilisais, le serveur MCP ne se chargeait qu'au démarrage d'une session.** Tu le branches en cours de conversation, et ses outils ne sont pas encore appelables tant que tu n'as pas relancé. Il fallait relancer la session pour disposer des outils.
 
-Ensuite, **mes sous-agents n'avaient pas accès à cette connexion dans cet environnement.** Je lance souvent des recherches en parallèle, réparties sur plusieurs agents. Tous m'ont remonté la même chose : "pas d'accès à Search Console". Le pont est propre à la session principale, il ne se partage pas automatiquement avec les assistants qu'on lance à côté. Ce sont des leçons de plomberie, pas glorieuses, mais bonnes à connaître avant de perdre une heure.
+Ensuite, **mes sous-agents n'avaient pas accès à cette connexion dans cet environnement.** Je lance souvent des recherches en parallèle, réparties sur plusieurs agents. Tous m'ont remonté la même chose : "pas d'accès à Search Console". Dans cet environnement, je devais donc faire les inspections depuis la session principale. Ce comportement est à vérifier selon le client et sa configuration.
 
-## "Explorée, actuellement non indexée" : le grand malentendu
+## Comparer le rapport et l’inspection d’URL
 
-Voici le cas qui a tout déclenché. Dans Search Console, 120 pages étaient marquées "explorée, actuellement non indexée". De quoi paniquer.
+Voici le cas qui a tout déclenché. Dans Search Console, 120 pages étaient marquées "explorée, actuellement non indexée". Je voulais savoir lesquelles demandaient réellement une intervention.
 
-Sauf que, quand je cliquais sur l'une d'elles pour relancer l'analyse, Google me répondait qu'elle était bien indexée. Pour connaître la vérité, il aurait donc fallu cliquer sur les 120, une par une. Insupportable.
+Sauf que, quand je cliquais sur l'une d'elles pour relancer l'analyse, Google me répondait qu'elle était bien indexée. Vérifier les 120 de cette façon aurait demandé autant de manipulations.
 
-Avec Claude relié à Search Console, je l'ai fait en lot. L'API d'inspection d'URL renvoie exactement le même verdict que le clic manuel, donc j'ai vérifié les 120 pages d'un coup. Résultat : **117 étaient déjà indexées.** Un décalage de mise à jour du rapport était l'hypothèse retenue. Cette observation concerne ces 120 URL, pas l'ensemble du site. La date du contrôle et son export ne sont pas conservés dans cet article : ce résultat reste un récit de terrain, pas un taux d'indexation auditable. Il ne restait que 3 vrais problèmes : deux catégories de blog vides (des pages sans contenu) et une fiche de glossaire trop maigre pour mériter sa place.
+Avec Claude relié à Search Console, je l'ai fait en lot. L'API d'inspection permet de consulter l'état enregistré par Google pour chaque URL. J'ai donc inspecté les 120 pages en lot, sans lancer un test en direct de chacune. Résultat : **117 étaient déjà indexées.** Un décalage de mise à jour du rapport était l'hypothèse retenue. Cette observation concerne ces 120 URL, pas l'ensemble du site. Il ne restait que 3 vrais problèmes : deux catégories de blog vides (des pages sans contenu) et une fiche de glossaire trop maigre pour mériter sa place.
 
 Le détail qui m'a mis sur la piste : Claude a repéré dans l'export que ces 120 pages étaient passées "de 0 à 120 en un seul jour". Pas une lente dégradation, un événement ponctuel : un changement de rapport après que j'avais resoumis le sitemap. Savoir ça change toute la lecture. Ce signal m'a poussé à vérifier les URL plutôt qu'à déduire une panne globale à partir du graphique.
 
-Une limite à garder en tête : cette inspection est bridée (quelques milliers de vérifications par jour, une URL par appel, quelques secondes chacune). C'est parfait pour un lot ciblé, pas pour scanner tout le site tous les jours.
+L'API inspecte une URL par appel, avec des quotas à prendre en compte. Je l'utilise pour des lots ciblés ; ce contrôle ne remplace pas un crawl du site.
 
 ## L'Indexing API, ce faux ami
 
-Passons au conseil qu'on lit partout, et qui est un piège. "Utilise l'Indexing API de Google pour forcer l'indexation de tes pages."
-
-Faux. [Google réserve officiellement l'Indexing API aux pages JobPosting et aux BroadcastEvent intégrés à un VideoObject](https://developers.google.com/search/apis/indexing-api/v3/quickstart). Les articles de blog ordinaires sont hors de ce périmètre. Je ne l'utilise donc pas pour eux, et je ne la présente pas comme un moyen de forcer leur indexation.
+Il faut distinguer cette inspection de l’Indexing API. Cette dernière ne sert pas à soumettre les articles d’un blog. [Google réserve officiellement l'Indexing API aux pages JobPosting et aux BroadcastEvent intégrés à un VideoObject](https://developers.google.com/search/apis/indexing-api/v3/quickstart). Les articles de blog ordinaires sont hors de ce périmètre. Je ne l'utilise donc pas pour eux, et je ne la présente pas comme un moyen de forcer leur indexation.
 
 {% MonAvis sentiment="mitige" %}
-L'Indexing API est le faux ami le plus recommandé du SEO technique. Elle existe, elle est bien réelle, et elle n'est tout simplement pas faite pour ton blog. C'est un bon rappel : avant de brancher une API parce qu'un article de blog te l'a conseillée, lis à quoi elle sert vraiment. Le temps que tu passes à câbler un outil inutile, tu ne le passes pas sur ce qui marche.
+Le nom de l’API peut faire penser qu’elle sert à tous les contenus. Son périmètre est pourtant précis. Je regarde la documentation avant de décider si une connexion répond au besoin.
 {% /MonAvis %}
 
-## Comment accélérer vraiment l'indexation
+## Ce que je vérifie sur une page non indexée
 
-Alors comment pousser une page à être indexée plus vite, pour de bon ? Trois choses ennuyeuses et efficaces. Un sitemap à jour. Une vérification de l'état par l'API d'inspection. [Cette API lit les informations de la version connue de Google](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect), elle ne demande pas l'indexation. Une éventuelle demande d'indexation se fait dans l'interface Search Console, séparément. Et surtout, deux ou trois liens internes depuis des pages que Google explore déjà régulièrement.
+Je regarde d'abord si la page est accessible, si son contenu répond au sujet et si elle figure dans le sitemap. Je vérifie aussi les liens qui permettent de la découvrir depuis d'autres pages. L'inspection permet ensuite de consulter son état. [Cette API lit les informations de la version connue de Google](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect), elle ne demande pas l'indexation. Une éventuelle demande d'indexation se fait dans l'interface Search Console, séparément. Des liens depuis des pages pertinentes aident à la découverte, sans nombre obligatoire ni garantie de délai.
 
-Un exemple concret : une page de glossaire coincée dans le fameux "explorée, non indexée". On a enrichi son contenu, et surtout on lui a ajouté une poignée de liens internes réciproques depuis des pages voisines déjà bien indexées. Le contrôle suivant l'a trouvée indexée. Je ne peux pas isoler l'effet du contenu, des liens ou du temps écoulé. Pas d'API magique. Une page bien reliée, dans un site bien exploré.
+Un exemple concret : une page de glossaire coincée dans le fameux "explorée, non indexée". On a enrichi son contenu, et surtout on lui a ajouté une poignée de liens internes réciproques depuis des pages voisines déjà bien indexées. Le contrôle suivant l'a trouvée indexée. Je ne peux pas isoler l'effet du contenu, des liens ou du temps écoulé. Ce contrôle confirme seulement que son état avait changé après ces interventions.
 
-{% Conseil titre="La vraie recette pour accélérer l'indexation" %}
-Oublie les API "magiques". Pour qu'une page soit indexée vite : elle doit être dans le sitemap, tu peux inspecter son état, puis demander son indexation dans l'interface Search Console si nécessaire, et surtout elle doit recevoir des liens internes depuis des pages que Google visite souvent. L'indexation suit la découverte, et la découverte suit les liens. C'est du maillage, pas de la sorcellerie.
+{% Conseil titre="Séparer la demande du résultat" %}
+Tu peux soumettre un sitemap ou demander une exploration dans Search Console. [Google précise que cette demande ne garantit ni l’inclusion dans les résultats ni son délai](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl). Après une intervention, inspecte de nouveau les URL concernées plutôt que considérer la demande comme une confirmation.
 {% /Conseil %}
 
 ## La suite
 
-Deux outils, deux leçons. Le crawler m'a appris à me méfier d'un outil incapable de dire "ça ne va pas". Search Console m'a appris à me méfier de son propre rapport, et à préférer la vérification en lot au clic manuel.
+Le crawler sert à inventorier les pages. Search Console permet de consulter ce que Google en a enregistré. Sur ce lot, la comparaison du rapport et des inspections m’a évité de traiter 120 URL comme autant de pages absentes de l’index.
 
-Mais ceux-là, ce sont mes outils, ceux que le visiteur ne voit jamais. Il en reste toute une famille à te montrer, à l'autre bout de la chaîne : ceux que le visiteur, lui, utilise pour de bon.
-
-C'est le dernier article de la saga : [les outils interactifs d'un blog, sans casser le SEO](/outils-interactifs-blog/).
+L'article suivant porte sur les outils destinés au visiteur : [les outils interactifs d'un blog, sans casser le SEO](/outils-interactifs-blog/).

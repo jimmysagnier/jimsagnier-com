@@ -5,36 +5,26 @@ publishedAt: 2026-08-17
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-08-17T06:00:00Z
 summary: >-
-  Les choix techniques du nouveau site de La Puissance de l'Éveil : Astro pour
-  la vitesse, Cloudflare pour l'hébergement gratuit, et un CMS visuel pour
-  qu'Eva édite son site sans jamais pouvoir le casser.
-readingTime: 6
+  Pour le site d'Eva, j'ai retenu Astro et Cloudflare Pages. Restait à choisir le CMS et les champs éditables, pour qu'elle puisse modifier ses textes et ses photos sans toucher à la mise en page.
+readingTime: 5
 tags:
   - Astro
   - Cloudflare
   - CMS
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 6 min en entier
+  readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **Astro** : du HTML statique, taillé pour l'éditorial, avec d'excellents
-      Core Web Vitals et un portage du prototype quasi sans friction.
+      **Astro** : reprendre le prototype HTML et organiser les éléments partagés en composants.
     - >-
-      **Cloudflare Pages** : gratuit, `git push` = déploiement, previews
-      automatiques, CDN mondial et HTTPS géré tout seul.
+      **Cloudflare Pages** : héberger les pages statiques et automatiser le déploiement depuis Git.
     - >-
-      **Le vrai sujet** : donner à une cliente non technique l'autonomie
-      éditoriale **sans jamais lui laisser casser le design**.
+      **CMS au stade du récit** : TinaCMS envisagé, Sanity en alternative, choix restant à confirmer à l'usage.
     - >-
-      **La solution** : un CMS visuel git-based, TinaCMS en tête, où Eva clique
-      sur son site et modifie en live. Chaque modif devient un commit.
+      **Champs éditables** : textes et photos, avec structure et styles gérés dans le code.
     - >-
-      **Les garde-fous** : seuls les textes et les photos sont éditables. La
-      structure, les couleurs, la typo et le layout restent verrouillés.
-    - >-
-      **Le coût réel** : environ **12€ par an** (le domaine), contre 20 à 50€
-      par mois sur Wix.
+      **Coût** : domaine estimé à environ 12 € par an dans le budget du chantier, hors temps de construction et de maintenance.
 coverImage:
   src: /images/articles/astro-cloudflare-cms-client/coverImage/src.avif
   alt: La stack technique du site de La Puissance de l'Éveil, Astro et Cloudflare
@@ -42,9 +32,7 @@ coverImage:
 seo:
   title: 'Astro, Cloudflare et un CMS que la cliente peut piloter'
   description: >-
-    Making-of technique du site de La Puissance de l'Éveil : pourquoi Astro et
-    Cloudflare Pages, et comment donner l'autonomie éditoriale à une cliente non
-    technique sans risquer de casser le site.
+    Les choix techniques du site d'Eva : HTML avec Astro, déploiement Cloudflare Pages et CMS envisagé au moment du chantier, avec des champs éditables délimités.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -57,71 +45,54 @@ seriesId: serie-eva
 seriesOrder: 5
 seriesKind: episode
 ---
-Un bon choix technique, ce n'est pas le plus impressionnant. C'est **celui qui tient dans le temps sans devenir un poids**. Pour le site d'Eva, trois décisions comptaient vraiment : le framework, l'hébergement, et la façon dont elle allait pouvoir mettre à jour son site toute seule. Le titre de travail de cette série parlait de « zéro CMS ». C'était faux. Eva n'a aucune compétence technique, et elle doit pouvoir modifier ses textes et ses photos sans m'appeler. **Il y a donc bien un CMS, choisi précisément pour ça.**
+Pour le site d'Eva, j'avais trois choix techniques à faire : le framework, l'hébergement et l'édition du contenu. Astro et Cloudflare Pages étaient retenus. Le CMS restait à choisir au moment où j'écrivais cet épisode.
 
-Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après avoir posé [le prototype en HTML avant de passer au framework](/html-d-abord-framework-ensuite/), voici les fondations sur lesquelles tout repose.
+Je suis Jim. Après [le prototype HTML travaillé avec Eva](/html-d-abord-framework-ensuite/), voici comment j'ai organisé son intégration et ce que j'attendais de l'interface d'édition.
 
-## Astro : du HTML statique, sans le poids
+## Reprendre le prototype avec Astro
 
-**Astro génère des pages en HTML statique.** Pas de couche JavaScript lourde qui s'exécute à chaque visite pour afficher un titre. La page est construite une fois, au moment du build, puis servie telle quelle. Résultat : elle s'affiche vite, très vite.
+Le site contient surtout des textes, des photos, des animations et une vidéo dans le hero. Je n'avais pas besoin d'une application complexe pour afficher ces pages. En génération statique, Astro permet de préparer leur HTML au build, puis de le servir aux visites. Les interactions qui en ont besoin peuvent conserver du JavaScript.
 
-Pour un site comme celui d'Eva, c'est exactement le bon outil. Le contenu est éditorial : des textes, des photos, quelques animations, une vidéo en fond de hero. Peu d'interactivité complexe. **Astro est pensé pour ce type de site, là où la plupart des frameworks modernes sont taillés pour des applications qui n'ont rien à voir.**
+Pour ce site éditorial, je peux donc regarder ce qui est envoyé au navigateur et réserver le JavaScript aux interactions qui le demandent.
 
-Il y a un deuxième argument, plus terre à terre. J'avais construit le prototype en HTML et CSS purs, en sessions de travail avec Eva. Astro accepte ce HTML presque tel quel. Le portage s'est fait sans réécrire le design : j'ai isolé la nav et le footer dans des composants, remplacé les textes en dur par du contenu éditable, et branché l'optimisation des images. Le rendu visuel, lui, n'a pas bougé d'un pixel.
+L'autre intérêt était le portage du prototype. Les [composants Astro acceptent du HTML](https://docs.astro.build/en/basics/astro-components/), ce qui m'a permis de reprendre les pages sans refaire toute leur composition. J'ai isolé la navigation et le footer, remplacé les textes en dur par du contenu éditable et préparé les images.
 
-{% Conseil titre="Le bon outil dépend du site, pas de la mode" %}
-On choisit trop souvent une technologie parce qu'elle est populaire, puis on tord le projet pour la faire rentrer dedans. La bonne question est l'inverse : de quoi ce site a-t-il besoin ? Un site de contenu qui doit charger vite et bien se référencer n'a pas les mêmes besoins qu'une application. Astro répond au premier, pas forcément au second.
+Les optimisations restent à configurer. Les composants d'images d'Astro peuvent préparer des tailles et des formats adaptés. Le sitemap nécessite son intégration ou une autre génération, et le fichier robots.txt reste à prévoir.
+
+## Déployer avec Cloudflare Pages
+
+Le workflow retenu repose sur Git. Une modification poussée dans le dépôt déclenche le build et le déploiement. Je n'ai donc pas à transférer les fichiers un par un sur un serveur.
+
+L'offre gratuite de Pages répondait au budget prévu pour l'hébergement statique de ce chantier. Elle a des [limites documentées](https://developers.cloudflare.com/pages/platform/limits/), notamment sur les builds. Une fonction serveur ou un autre service ajouté au projet peut avoir sa propre facturation.
+
+Les previews permettent de montrer une version avant de l'utiliser en production. Un point à préciser : [leurs URL sont publiques par défaut](https://developers.cloudflare.com/pages/configuration/preview-deployments/). Cloudflare Access permet de restreindre l'accès si nécessaire.
+
+Pages prend aussi en charge la distribution des fichiers sur son réseau et le HTTPS. C'est du travail d'infrastructure que je n'ai pas à gérer comme sur un serveur que j'administre moi-même. Il reste à surveiller les builds et les réglages du projet.
+
+## Délimiter ce qu'Eva peut modifier
+
+Eva doit pouvoir corriger une phrase et remplacer une photo sans modifier le CSS. C'était le besoin principal pour le CMS. Donner accès au contenu ne demande pas forcément de donner accès à toute la composition.
+
+Les champs envisagés étaient précis : textes du hero, manifeste, photos, descriptions des offres et mentions du footer. La structure, les couleurs, la typographie et les animations resteraient gérées dans le code.
+
+Cette frontière évite qu'une correction de texte devienne une modification de mise en page. Je dois tout de même regarder les cas ordinaires : un paragraphe plus long, un titre sur deux lignes ou une photo mal cadrée. Ce sont ces changements qu'Eva fera sur son site.
+
+{% Conseil titre="Définir les modifications avant de choisir l'éditeur" %}
+Je pars des actions que la personne doit faire seule : corriger un paragraphe, changer une image, mettre à jour une description. Ça donne les champs à prévoir et les situations à tester dans l'interface.
 {% /Conseil %}
 
-Concrètement, Astro apporte aussi ce qui compte pour le référencement sans effort supplémentaire : d'excellents Core Web Vitals par défaut, un sitemap et un robots.txt générés automatiquement, et la conversion des images en formats modernes (AVIF, WebP) au moment du build. Autant de choses que je devais bricoler à la main sur d'autres stacks.
+## Le CMS restait un choix à confirmer
 
-## Cloudflare Pages : gratuit, et pratiquement invisible
+Au moment de ce récit, je visais une édition visuelle avec TinaCMS comme candidat, et Sanity comme alternative. L'intérêt attendu était qu'Eva puisse regarder la page pendant qu'elle modifie son contenu.
 
-**L'hébergement du site coûte zéro euro.** Cloudflare Pages est gratuit pour un projet de cette taille, et le « gratuit » n'est pas une version bridée qui pousse à payer trois mois plus tard. C'est large : des centaines de builds par mois, une bande passante non facturée à l'usage.
+Avec une intégration reliée à Git, les modifications peuvent devenir des commits. L'historique permet alors de retrouver un texte ou une version précédente, puis de la republier si nécessaire. Pour moi, c'est un intérêt pratique de ce type de CMS.
 
-Mais le prix n'est pas la vraie raison. C'est le workflow. **Je pousse mon code sur Git, et le site se déploie tout seul.** Pas de transfert de fichiers manuel, pas de serveur à configurer. Chaque branche génère en plus une preview, une URL privée où Eva peut valider une nouvelle page avant qu'elle soit en ligne pour de vrai.
+L'interface devait être jugée sur les actions d'Eva. Peut-elle trouver le texte à modifier ? Comprend-elle ce qui est sauvegardé et ce qui est publié ? Le résultat arrive-t-il sur la bonne page ? Ce sont ces vérifications qui permettent de parler d'autonomie.
 
-Le reste suit sans que j'aie à m'en occuper. Le HTTPS est géré automatiquement, le certificat se renouvelle seul. Le site est distribué sur le réseau mondial de Cloudflare, donc servi depuis un point proche du visiteur, où qu'il soit.
+## Le budget prévu, hors temps de travail
 
-{% MonAvis sentiment="positif" %}
-Ce que j'apprécie le plus avec cette stack, c'est qu'elle disparaît. Une fois en place, je ne pense plus à l'hébergement, aux certificats, aux mises à jour serveur. Je pense au contenu et au design. L'infrastructure devient un détail, et c'est précisément ce qu'on lui demande.
-{% /MonAvis %}
+Le chiffrage du chantier retenait environ **12 € par an pour le domaine**, un hébergement Pages dans l'offre gratuite et un CMS à maintenir dans une offre gratuite adaptée au besoin. Le comparatif de travail situait l'abonnement Wix entre 20 et 50 € par mois. Ce sont les estimations utilisées pour ce chantier.
 
-## Le vrai sujet : l'autonomie d'Eva, sans le risque
+Il manque surtout le temps dans une comparaison limitée aux abonnements. Concevoir le site, intégrer le CMS et maintenir le code a un coût, même lorsque l'hébergement n'est pas facturé. Le contrôle recherché sur les pages doit justifier ce temps de construction et de maintenance.
 
-Voilà où se joue la partie la plus intéressante. **Eva doit pouvoir vivre sur son site.** Changer un paragraphe, remplacer une photo, corriger une phrase, sans dépendre de moi et sans ouvrir une ligne de code. Un site qu'elle ne peut pas mettre à jour seule serait déjà mort le jour de sa mise en ligne.
-
-Le piège classique, c'est de lui donner les clés de tout. Un éditeur trop libre, et la première mise à jour casse une mise en page, déforme une couleur, déséquilibre une section. **L'objectif n'est pas de tout ouvrir. C'est d'ouvrir exactement ce qu'il faut, et de verrouiller le reste.**
-
-C'est là qu'intervient le CMS, et pas n'importe lequel. Je vise un CMS visuel git-based, avec **TinaCMS** en tête. Le principe : Eva ouvre son propre site, clique directement sur un texte, et le modifie en le voyant changer en direct. Aucune interface abstraite à apprendre, aucun tableau de bord intimidant. Elle édite ce qu'elle voit.
-
-Et sous le capot, chaque modification devient un commit Git. Autrement dit : une sauvegarde automatique et un historique complet. Si quelque chose déraille, on revient à la version d'avant en un geste. Eva n'a pas à le savoir, mais moi je dors mieux.
-
-Le point décisif, ce sont les garde-fous. Les champs éditables sont figés à l'avance : les textes du hero, le manifeste, les photos, les descriptions des offres, les mentions du footer. **Tout le reste (la structure, les couleurs, la typographie, le layout, les animations) reste verrouillé, hors de portée.** Eva ne peut pas créer de page, ni déplacer un bloc, ni changer une nuance d'or. Elle a toute la liberté sur le contenu, zéro sur le design. C'est exactement le bon partage.
-
-{% Conseil titre="Autonomie ne veut pas dire tout permettre" %}
-Donner l'autonomie à un client non technique, ce n'est pas lui remettre un outil qui fait tout. C'est concevoir en amont ce qu'il peut toucher et ce qu'il ne peut pas. Le travail du dev, c'est de dessiner cette frontière : assez large pour qu'il soit vraiment indépendant, assez stricte pour que le design reste intact dans un an.
-{% /Conseil %}
-
-Une précision honnête, parce que rien n'est encore gravé. Astro et Cloudflare sont actés, testés, validés. Le CMS, lui, est le dernier choix à verrouiller. TinaCMS est le meilleur candidat pour ce besoin d'édition en direct. Sanity reste l'alternative sérieuse si Tina pose le moindre souci à l'usage. Mais le principe, lui, ne bougera pas : édition visuelle, garde-fous stricts, chaque modif sauvegardée.
-
-## Ce que ça change, en euros
-
-Le plus parlant reste le coût. Voici la comparaison, une fois le site en place :
-
-| Poste | Wix (avant) | Nouvelle stack |
-|---|---|---|
-| Hébergement | inclus dans l'abonnement | 0€ (Cloudflare Pages) |
-| CMS / éditeur | inclus dans l'abonnement | 0€ (offre gratuite) |
-| Domaine | inclus la 1re année | environ 12€ / an |
-| **Total** | **20 à 50€ / mois** | **environ 12€ / an** |
-
-Sur une année, on passe de plusieurs centaines d'euros à une douzaine. **Et le site est plus rapide, mieux référencé, entièrement maîtrisé.** L'économie n'est pas le but, c'est un effet de bord d'avoir choisi les bons outils. Mais pour une entrepreneuse indépendante, cette différence n'est pas anecdotique.
-
-## La suite
-
-**Un site rapide n'est pas qu'un confort pour le visiteur. C'est un levier de visibilité.** Google mesure la vitesse, la stabilité de l'affichage, le temps avant le premier contenu utile, et il en tient compte pour classer les pages. Choisir Astro et Cloudflare, ce n'était donc pas qu'une question de propreté technique.
-
-C'est l'objet du prochain article : [la performance comme stratégie SEO](/performance-strategie-seo/), ou comment la vitesse d'un site devient un atout de référencement à part entière.
-
-*Envie de sauter directement à la fin de la série ? [Le bilan complet, ce que j'ai appris en passant de Wix à un site sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/).*
+Pour regarder ensuite le poids des médias et le chargement des pages, j'ai consacré un épisode à [le travail de performance du site](/performance-strategie-seo/). J'ai rassemblé les choix que je garderais dans [le bilan de la refonte](/de-wix-a-un-site-sur-mesure-lecons/).

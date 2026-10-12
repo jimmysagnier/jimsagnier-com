@@ -5,9 +5,7 @@ publishedAt: 2026-08-11
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-08-11T06:00:00Z
 summary: >-
-  Troisième volet du making-of du site de La Puissance de l'Éveil : comment j'ai
-  conçu chaque écran pour celle qui lit et ce qu'elle doit ressentir, avant de
-  penser au SEO.
+  Pour le site d'Eva, le public visé a guidé des choix précis : quatre passages en sticky scroll, un hero différent sur mobile et un parcours de lecture à vérifier écran par écran.
 readingTime: 5
 tags:
   - UX
@@ -18,22 +16,13 @@ essentiel:
   readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **La cible d'abord** : une femme forte en renaissance, 30-50 ans, qui
-      refuse le discours corporate, hustle et coaching performant.
+      **Public visé** : les femmes de 30 à 50 ans en période de reconstruction, selon le positionnement d'Eva.
     - >-
-      **Les quatre passages** (Conditionnement, Rupture, Reconnexion,
-      Renaissance) sont rendus en **sticky scroll**, pas en grille 4 colonnes.
+      **Quatre passages** : Conditionnement, Rupture, Reconnexion, Renaissance, présentés successivement en sticky scroll.
     - >-
-      **Chaque chapitre est un temps à vivre**, pas une case à survoler du
-      regard.
+      **Hero mobile** : remplacer la vidéo paysage par une photo verticale et placer le titre sous le visage.
     - >-
-      **Le hero mobile a été repensé pour le pouce** : une vidéo paysage ne se
-      recadre pas en portrait, on bascule vers une photo verticale.
-    - >-
-      **Le SEO viendra plus tard** dans la série : on conçoit d'abord pour celle
-      qui lit, la technique d'acquisition ensuite.
-    - >-
-      **Le design fort est au service du message**, jamais l'inverse.
+      **Contrôle mobile** : vérifier le visage, la lisibilité du titre et l’accès à la suite du parcours.
 coverImage:
   src: /images/articles/concevoir-pour-une-femme-pas-pour-google/coverImage/src.avif
   alt: Le parcours de lecture du site de La Puissance de l'Éveil pensé pour une femme en renaissance
@@ -41,9 +30,7 @@ coverImage:
 seo:
   title: 'Concevoir pour une femme en renaissance, pas pour un moteur de recherche'
   description: >-
-    Making-of du site de La Puissance de l'Éveil : concevoir chaque écran pour
-    celle qui lit et ce qu'elle doit ressentir (persona, sticky scroll, hero
-    mobile) avant de penser au SEO.
+    Making-of du site d'Eva : traduire son public et son récit en choix de parcours, du sticky scroll au hero mobile, avec une présentation successive et un cadrage adapté au téléphone.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -56,60 +43,52 @@ seriesId: serie-eva
 seriesOrder: 3
 seriesKind: episode
 ---
-J'ai conçu le site d'Eva **pour une seule personne, pas pour un algorithme**. Une femme forte, en renaissance, entre 30 et 50 ans, qui a passé sa vie à porter et qui commence à peine à s'autoriser à lâcher. Avant la moindre balise, avant le moindre mot-clé, la question a toujours été la même : quand elle arrive sur cette page, qu'est-ce qu'elle doit ressentir ? Le SEO, lui, attendra son tour dans cette série.
+Le public visé par Eva m'a servi à prendre des décisions de mise en page. Son site s'adresse à des femmes de 30 à 50 ans, en période de reconstruction, qui ne se retrouvent pas dans un discours de performance personnelle. Ce positionnement me donne un point de départ pour choisir les textes, leur ordre et la place des images.
 
-Je suis Jim. J'ai conçu et développé entièrement le nouveau site de La Puissance de l'Éveil. Après [avoir posé la direction artistique](/quatre-couleurs-trois-polices-direction-artistique/), voici comment cette identité s'est mise au service d'un parcours humain, écran par écran.
+Je suis Jim. Après [la direction artistique du site de La Puissance de l'Éveil](/quatre-couleurs-trois-polices-direction-artistique/), je raconte ici deux choix de parcours : la présentation des quatre passages d'Eva et l'adaptation du hero sur mobile.
 
-## Un site ne parle jamais à tout le monde
+## Se servir du persona pour prendre une décision
 
-**Le premier réflexe d'un site raté, c'est de vouloir plaire à tout le monde.** Résultat : il ne touche personne. J'ai fait l'inverse en écrivant noir sur blanc à qui ce site s'adresse, et surtout à qui il ne s'adresse pas.
+Un persona, c'est la description du public auquel on veut s'adresser. Celui d'Eva parle de femmes qui ont l'habitude de tenir, de porter beaucoup de choses et qui cherchent à se choisir. Ce sont les termes de son positionnement, que je dois traduire dans le site sans les remplacer par les miens.
 
-La cible d'Eva est précise. Des femmes qui ont appris très tôt à être fortes, à tenir, à contrôler, à ne pas faire de vagues. Celles qui sentent que ce qui les a protégées hier les limite aujourd'hui. Elles ne cherchent pas à « mieux gérer » leur vie, elles cherchent à se choisir.
+Le brief exclut notamment le vocabulaire corporate, le « mindset hustle » et les promesses de transformation en 30 jours. Ça a des conséquences concrètes. Je ne peux pas écrire un appel à l'action agressif puis demander au design de l'adoucir. Le texte, le bouton et la section doivent rester cohérents avec ce qu'Eva propose.
 
-Ce persona ferme des portes, et c'est tant mieux. **Cette femme rejette frontalement le discours corporate, le mindset hustle, le coaching de la performance.** Chaque décision de design découle de ce refus : pas de « Réservez maintenant », pas de compteur de résultats, pas de promesse de transformation en 30 jours. Le vocabulaire du site suit sa voix à elle : se choisir, traverser, retirer.
+Son vocabulaire revient donc dans les pages : se choisir, traverser, retirer. Il aide à garder le même registre d'une section à l'autre.
 
-{% Conseil titre="Écris ton persona avant ta première ligne de code" %}
-Un persona utile n'est pas une fiche marketing pleine de tranches d'âge et de CSP. C'est une phrase que tu gardes sous les yeux : « quand elle lit ça, qu'est-ce qu'elle ressent ? ». Si une section ne répond pas à cette question, elle ne sert pas la visiteuse, elle sert ton envie de remplir la page.
+{% Conseil titre="Relier le persona à un choix visible" %}
+Je trouve une description du public utile quand elle aide à décider : quel texte mettre en premier, quel exemple garder, quelle action proposer. Si elle reste une liste d'adjectifs dans un document, elle ne m'aide pas beaucoup à construire la page.
 {% /Conseil %}
 
-## Les quatre passages ne sont pas une grille
+## Présenter les quatre passages dans l'ordre
 
-**L'histoire d'Eva tient en quatre passages : Conditionnement, Rupture, Reconnexion, Renaissance.** C'est la colonne vertébrale de sa marque. La première version les présentait côte à côte, en quatre colonnes bien rangées. Eva a tranché en une phrase : « je n'aime pas la 4 colonnes ».
+Le récit d'Eva est organisé autour de quatre passages : **Conditionnement, Rupture, Reconnexion, Renaissance**. La première version les mettait côte à côte, dans une grille de quatre colonnes. Eva m'a dit : « je n'aime pas la 4 colonnes ».
 
-Elle avait raison, et voici pourquoi. **Une grille de quatre colonnes aplatit un récit.** L'oeil balaie les quatre cases en deux secondes, coche « ok, j'ai vu », et passe à la suite. On survole un parcours de vie comme on scanne un menu. Ce n'est pas ce qu'on ressent quand quelqu'un vous raconte comment son corps l'a arrêtée pendant deux ans.
+J'ai repris cette section en sticky scroll. Le principe est de garder un passage à l'écran pendant le défilement, puis de laisser le suivant prendre sa place. Chaque étape a un chiffre romain en filigrane doré et une barre de progression qui se remplit segment par segment.
 
-J'ai donc tout repris en **sticky scroll**. Chaque passage occupe l'écran entier, se fixe, puis se fait chasser par le suivant au fil du défilement. Un chiffre romain géant en filigrane doré marque l'étape, une barre de progression se remplit segment par segment. On ne peut pas tout embrasser d'un coup : il faut avancer, un temps après l'autre.
+Ce changement modifie surtout l'ordre de lecture. Dans la grille, les quatre passages sont visibles ensemble. Dans la nouvelle version, ils arrivent successivement. Ça correspondait mieux à la progression que nous voulions présenter : commencer par le Conditionnement avant de passer à la Rupture, puis à la Reconnexion et à la Renaissance.
 
-{% MonAvis sentiment="positif" %}
-Le sticky scroll oblige la lectrice à vivre chaque passage au lieu de le survoler. Conditionnement, puis Rupture, puis Reconnexion, puis Renaissance : elle traverse le récit au même rythme qu'Eva l'a traversé. C'est le moment où le design cesse d'être décoratif pour devenir le message lui-même.
-{% /MonAvis %}
+Le sticky scroll reste un choix pour ce contenu. Une grille peut très bien servir à comparer quatre offres ou quatre caractéristiques. Ici, nous avions un récit à présenter dans un ordre précis, ce qui rendait la présentation successive intéressante.
 
-Cette section est devenue un patron que je réutilise ailleurs : dès qu'un contenu raconte une progression (une méthode, un parcours, une transformation), le sticky scroll bat la grille à plate couture.
+## Adapter le hero au format mobile
 
-## Le pouce avant le regard
+Instagram faisait partie du contexte d’acquisition du projet. Le téléphone était donc un format à travailler dès la conception.
 
-**La majorité des visiteuses d'Eva arrivent depuis Instagram, sur mobile, une main sur le téléphone.** Concevoir « pour elle » voulait donc dire concevoir d'abord pour un écran vertical tenu à bout de pouce, pas pour mon grand moniteur de développeur.
+La version bureau du hero utilisait une vidéo d'Eva en plein écran, cadrée en paysage. Sur un écran vertical, le recadrage posait problème : le visage pouvait sortir du cadre, ou il fallait agrandir l'image pour remplir la hauteur. Dans ce cas précis, garder le même média sur les deux formats demandait un compromis que je ne voulais pas conserver.
 
-Le hero en a fait les frais. En version bureau, il s'appuie sur une vidéo d'Eva en plein écran, cadrée en paysage. Splendide sur un ordinateur. Catastrophique sur mobile : **une vidéo paysage ne se recadre pas proprement en portrait.** On perd le visage, ou on zoome jusqu'à la bouillie de pixels. Aucun réglage ne sauve ça.
+Sur mobile, j'ai donc remplacé la vidéo par une photo portrait. Le titre a été placé sous le visage, pour rester lisible sans couvrir ses yeux. C'est un changement de composition, pas seulement une réduction de la version bureau.
 
-Alors je n'ai pas bricolé un recadrage. **Sur mobile, on bascule totalement : la vidéo disparaît, une vraie photo portrait prend sa place.** Pas la même image rognée, une image pensée pour le format vertical, où le regard d'Eva reste visible. Le titre, lui, a été redescendu sous le visage pour que rien n'écrase ses yeux au chargement.
+Les éléments à contrôler restent très concrets : voit-on le visage, peut-on lire le titre, trouve-t-on la suite du parcours ? Le grand écran sur lequel je travaille ne suffit pas à répondre à ces questions pour un téléphone.
 
-{% Conseil titre="Le mobile n'est pas un bureau rétréci" %}
-Rétrécir une maquette bureau jusqu'à ce que ça rentre sur mobile, c'est le piège classique. Certains éléments ne se réduisent pas, ils se remplacent. Une vidéo paysage devient une photo portrait, un menu horizontal devient une icône, une grille devient une pile. Conçois le mobile comme un format à part entière, pas comme un dommage collatéral.
+{% Conseil titre="Vérifier le cadrage sur le format où il sera lu" %}
+Avant de chercher un réglage CSS supplémentaire, je regarde si le média convient au format. Parfois un recadrage suffit. Ici, une photo verticale répondait mieux au besoin que la vidéo paysage.
 {% /Conseil %}
 
-## Le SEO n'était pas la première question
+## La place du SEO dans ce travail
 
-**On m'attend souvent sur le SEO, c'est mon métier depuis dix ans.** Et pourtant, sur ce projet, je l'ai volontairement gardé pour plus tard. Pas par négligence : par ordre de priorité.
+Sur cette étape, je travaillais d'abord le parcours et le contenu avec Eva. Les choix de structure, de performance et de maillage sont traités dans les autres épisodes.
 
-Un site optimisé pour Google mais tiède pour l'humaine qui le lit rate l'essentiel. Le référencement amène du trafic, il ne crée pas l'émotion qui fait qu'une femme se dit « elle parle de moi » et prend rendez-vous. **L'inverse est faux aussi : un site qui touche juste peut ensuite se rendre visible.** L'émotion d'abord, la visibilité ensuite. On ne monte pas les murs avant d'avoir décidé qui va habiter la maison.
+Le référencement et la lecture posent aussi des questions communes : comprend-on le titre, la page répond-elle à une question, peut-on trouver l'information ? Ces vérifications restent utiles sur les deux formats.
 
-Le SEO reviendra donc, plus loin dans ce making-of, une fois les fondations humaines posées. Structure, performance, contenu, maillage : tout ça se construit très bien par-dessus un site déjà pensé pour celle qui lit. L'inverse, presque jamais.
+Pour garder Eva dans la boucle pendant ces ajustements, j'ai utilisé un prototype que nous pouvions regarder ensemble. C'est la méthode présentée dans [HTML d'abord, framework ensuite](/html-d-abord-framework-ensuite/).
 
-## La suite
-
-**Concevoir pour une femme précise donnait le cap. Restait à le tenir en code.** Comment traduire une atmosphère, un sticky scroll et un hero qui change de nature selon l'écran, sans se noyer dans une usine à gaz technique ?
-
-C'est l'objet du prochain article : [HTML d'abord, framework ensuite](/html-d-abord-framework-ensuite/).
-
-*Envie de sauter directement à la fin de la série ? [Le bilan complet, ce que j'ai appris en passant de Wix à un site sur-mesure](/de-wix-a-un-site-sur-mesure-lecons/).*
+Le [bilan de la refonte depuis Wix](/de-wix-a-un-site-sur-mesure-lecons/) rassemble les choix que je garderais et les limites de ce récit de construction.

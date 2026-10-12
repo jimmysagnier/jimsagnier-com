@@ -5,10 +5,8 @@ publishedAt: 2026-10-04
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-10-04T06:00:00Z
 summary: >-
-  Un site de contenu peut être plus qu'une pile de pages. Les outils
-  interactifs du blog (calculateur, simulateur, vérificateur VIES), comment les
-  coder dans un site statique, et pourquoi ils battent l'IA.
-readingTime: 8
+  Calculateur HT/TTC, simulateur de numéro de TVA et vérificateur VIES : trois outils intégrés à un site statique avec des islands React. Le calcul local et l'appel externe n'ont pas les mêmes contraintes.
+readingTime: 6
 tags:
   - web
   - outils
@@ -16,23 +14,18 @@ tags:
   - SEO
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 6 min en entier
   items:
     - >-
-      **L'astuce** : des outils interactifs dans un site 100% statique, grâce aux
-      islands (React ne se charge que sur l'outil).
+      **Islands** : ajouter le JavaScript de l'outil sans transformer toute la page en application.
     - >-
-      **Le plus rentable** : le calculateur HT/TTC, calcul local zéro API, n°1 du
-      site en clics.
+      **Calculateur HT/TTC** : calcul local, sans appel à un service externe.
     - >-
-      **Le local d'abord** : le simulateur de numéro de TVA se calcule côté
-      navigateur, une simple clé mathématique.
+      **Simulateur** : un numéro calculé à partir du SIREN ne prouve pas une immatriculation.
     - >-
-      **La seule vraie complexité** : le vérificateur VIES, qui passe par un
-      proxy parce que l'API de la Commission est capricieuse.
+      **VIES** : passer par un proxy et distinguer une réponse invalide d'une indisponibilité.
     - >-
-      **La stratégie** : un outil "Do" par article "Know", pour retenir le clic
-      que l'IA voudrait absorber.
+      **Pertinence** : un outil répond à un besoin concret ; chaque article n'a pas besoin de son simulateur ou de son quiz.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -40,9 +33,7 @@ coverImage:
 seo:
   title: 'Les outils interactifs d''un blog, sans casser le SEO'
   description: >-
-    Coder des outils interactifs (calculateur TVA, simulateur, vérificateur
-    VIES) dans un site statique grâce aux islands React, et pourquoi ils
-    retiennent le clic face à l'IA.
+    Intégrer un calculateur, un simulateur et VIES dans un site statique : islands React, calcul côté navigateur et proxy Cloudflare Worker. Choisir un outil selon le besoin réel du lecteur.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -55,60 +46,58 @@ seriesId: saga-eurofiscalis-s3
 seriesOrder: 3
 seriesKind: episode
 ---
-Un site de contenu n'est pas condamné à n'être qu'une pile de pages. Quelques outils interactifs bien placés rendent service au visiteur, le retiennent, et même, retiennent le clic que l'IA voudrait lui piquer. Voilà les outils que j'ai codés pour le blog, et comment les glisser dans un site 100% statique sans casser le référencement.
+Un calculateur n'a pas besoin de transformer tout le site en application. Dans un blog qui sert ses pages en HTML, on peut garder le texte statique et ajouter du JavaScript seulement là où le lecteur saisit une valeur ou demande une vérification.
 
-Je suis Jim. Dernier volet de l'aparté outils de la saga Eurofiscalis, sur les outils interactifs du blog. Après [le crawler](/crawler-seo-maison/) et [Search Console](/search-console-claude-indexation/), qui sont mes outils à moi, place à ceux que voit le visiteur.
+Je suis Jim. Après [le crawler SEO maison](/crawler-seo-maison/) et [le travail avec Search Console](/search-console-claude-indexation/), voici trois outils que le visiteur peut utiliser directement : calculateur HT/TTC, simulateur de numéro de TVA et vérificateur VIES. Ils n'ont pas les mêmes besoins techniques.
 
-## Des outils dans un site statique : l'astuce des islands
+## Ajouter une island à la page
 
-Petit rappel du décor. Tout le site est en HTML statique, généré une fois au build. C'est ce qui le rend rapide et facile à indexer. Sauf qu'un calculateur, lui, doit réagir aux clics. Comment avoir les deux, la page statique légère et l'outil vivant ?
+Le site génère ses pages en HTML au build. Pour les outils interactifs, l'architecture d'Astro permet d'ajouter une « island », un composant autonome qui reçoit son JavaScript côté navigateur.
 
-La réponse tient en un mot : les islands. La page est servie en HTML pur, et seul l'outil embarque un peu de React, chargé uniquement quand le visiteur arrive dessus ou interagit avec. Le reste de la page ne télécharge aucun JavaScript. Tu as donc de l'interactivité exactement là où il en faut, une petite île dans un océan de statique, et zéro poids ailleurs. C'est aussi un choix pour [garder une page légère par conception](/performance-strategie-seo/). Le meilleur des deux mondes.
+[La documentation d'Astro décrit ce principe d'hydratation partielle](https://docs.astro.build/en/concepts/islands/). Ici, les composants utilisent React. Le chargement dépend de la directive choisie : à l'ouverture de la page, quand le composant devient visible ou selon une autre condition prévue. Il ne se déclenche pas automatiquement au clic simplement parce qu'on a choisi des islands.
 
-## Le plus bête est le plus rentable
+Le reste de la page peut rester en HTML sans embarquer React. D'autres scripts éventuels gardent toutefois leur propre coût. Cette architecture évite de rendre toute la page interactive pour un seul formulaire ; il faut encore regarder ce qui est effectivement chargé. C'est le même sujet que [garder les pages légères par conception](/performance-strategie-seo/).
 
-Commençons par le plus simple, et c'est une leçon. Le calculateur HT/TTC : tu saisis un montant et un taux de TVA, il te sort le HT, la TVA et le TTC. Trivial. Zéro API, aucun serveur, juste une multiplication faite dans le navigateur.
+## Le calculateur HT/TTC reste dans le navigateur
 
-Et c'est, de loin, l'outil le plus visité de tout le site. Près de 8 700 clics sur trois mois, numéro un devant tout le reste. L'outil le plus bête que j'aie codé écrase les plus malins.
+Le premier outil demande un montant, un taux de TVA et le sens du calcul. À partir du HT, on calcule le TTC ; à partir du TTC, on retrouve le HT. La différence donne le montant de TVA.
 
-{% MonAvis sentiment="positif" %}
-La leçon que je retiens : l'utilité bat l'intelligence. Un outil qui répond à une toute petite question, mais qu'énormément de gens se posent, fera toujours plus de trafic qu'un outil sophistiqué dont personne n'a besoin. Avant de coder un truc complexe, demande-toi ce que ton visiteur cherche vraiment. Souvent, c'est bête. Et c'est tant mieux.
-{% /MonAvis %}
+Les opérations sont simples, mais il faut les distinguer : ajouter 20 % au HT et retirer 20 % du TTC ne sont pas des calculs inverses. Pour revenir au HT, on divise le TTC par un plus le taux. Le formulaire doit aussi gérer les saisies, les décimales et l'arrondi affiché.
 
-## Le simulateur de numéro de TVA
+Tout cela se fait côté navigateur. Il n'y a pas de donnée externe à demander pour effectuer l'opération avec le taux saisi. L'outil ne choisit pas pour autant le taux légal applicable à la situation du lecteur.
 
-Deuxième outil, à peine plus compliqué. À partir du SIREN d'une entreprise française (ses 9 chiffres), il calcule son numéro de TVA intracommunautaire. Là encore, tout se passe dans le navigateur, zéro API : le numéro de TVA français se déduit du SIREN par une simple clé de contrôle, un petit calcul modulo. Pas besoin d'aller demander à qui que ce soit.
+Sur la période de trois mois citée dans ce retour, le calculateur avait reçu près de **9 000 clics**, devant les autres outils du site. Il ne mesure pas la rentabilité de l'outil, et ne prouve pas qu'un calculateur simple fera toujours plus de trafic qu'un outil spécialisé.
 
-Un point d'honnêteté que l'outil affiche clairement : le numéro obtenu est théorique. Le calcul est juste, mais il ne prouve pas que l'entreprise est réellement immatriculée à la TVA. Pour ça, il faut aller vérifier dans la base officielle. Ce qui nous amène au seul outil qui, lui, n'est pas si simple.
+## Le simulateur donne un numéro théorique
 
-{% Conseil titre="Le local d'abord, le serveur seulement si tu n'as pas le choix" %}
-La plupart des "outils" ne sont que du calcul ou de la logique. Fais-les tourner côté navigateur : zéro serveur, zéro coût, réponse instantanée, et rien à maintenir. Ne sors l'artillerie d'un serveur que quand tu ne peux vraiment pas faire autrement, typiquement quand il faut interroger une source externe que toi seul peux joindre.
-{% /Conseil %}
+Le deuxième outil utilise les neuf chiffres d'un SIREN pour calculer une clé numérique et afficher un numéro de TVA français théorique. Il n'a pas besoin d'un appel externe pour ce calcul.
 
-## VIES, le seul qui a besoin d'un serveur
+La limite doit rester visible avec le résultat : **un numéro calculé n'est pas une preuve d'immatriculation ni d'activation**. La validité d'une clé et l'existence administrative du numéro sont deux choses différentes.
 
-Le vérificateur VIES. Tu entres un numéro de TVA européen, il te dit s'il est valide, avec le nom et l'adresse de l'entreprise, d'après la base VIES de la Commission européenne. Ici, pas de calcul local possible : il faut aller poser la question à la Commission. Et c'est là que ça devient intéressant.
+C'est une distinction utile dans l'interface. Si on affiche seulement « votre numéro est… », le lecteur peut prendre le résultat pour une information officielle. Le libellé doit dire ce qui a été calculé et orienter vers une vérification quand c'est nécessaire.
 
-Deux problèmes. D'abord, tu ne veux pas que le navigateur appelle directement l'API de la Commission : ça expose l'appel et tu ne contrôles rien du débit. Ensuite, VIES est réputé capricieux. Chaque État membre répond via son propre système, donc selon le pays interrogé, tu récoltes des lenteurs et des erreurs.
+## VIES demande une réponse externe
 
-La solution, c'est un proxy. Un petit Cloudflare Worker se place entre le navigateur et VIES. C'est lui qui fait l'appel, encaisse les erreurs, lisse le débit, et renvoie une réponse propre. Détail amusant : cet outil n'est pas né avec la refonte, il a été porté depuis la version en HTML/JavaScript de l'ancien site.
+Le troisième outil interroge VIES. Contrairement aux deux premiers, il ne peut pas déduire la réponse de la saisie. Il faut demander au système si le numéro est reconnu pour les échanges concernés.
 
-Un peu de métier, parce que c'est le genre de piège qu'un bon vérificateur gère : tout le monde n'est pas dans VIES. La Norvège et la Suisse, par exemple, n'y sont pas, elles ne sont pas dans l'Union. Sans oublier les cas particuliers, comme l'Irlande du Nord depuis le Brexit. Un outil qui ignore ça renvoie des faux négatifs.
+[La Commission décrit VIES comme un moteur qui interroge les bases nationales, pas comme une base unique](https://europa.eu/youreurope/business/finance-and-tax/vat/check-vat-number-vies/index_en.htm). Ces systèmes peuvent être temporairement indisponibles. Une erreur technique ne doit donc pas être affichée comme un numéro invalide.
 
-## Pourquoi ces outils, vraiment
+Dans notre outil, un Cloudflare Worker sert de proxy entre le navigateur et VIES. Il centralise l'appel et permet de gérer le débit, les erreurs et la réponse envoyée au formulaire. Il ne rend pas le service national disponible quand il ne l'est pas. Cet outil a été porté depuis la version HTML/JavaScript de l'ancien site.
 
-Reste la vraie raison, celle qui dépasse le "c'est sympa d'en avoir". Ces outils ne sont pas des gadgets, ce sont une stratégie. La règle qu'on s'est fixée : tout article de fond s'accompagne d'au moins un outil. Pour deux raisons.
+Le résultat peut comprendre des informations d'entreprise selon le pays et les données renvoyées. Il ne faut pas promettre un nom et une adresse à chaque vérification. Une absence de validation peut aussi demander de vérifier l'activation ou l'état de l'inscription auprès de l'administration.
 
-La première, l'outil retient le visiteur. Quelqu'un venu comprendre quelque chose reste pour le faire, sur ta page, au lieu de repartir chercher un outil ailleurs.
+## Dire ce que l'outil couvre
 
-La seconde, de plus en plus décisive : l'outil retient le clic que l'IA veut absorber. Quand une réponse d'IA résume ton article, elle peut remplacer la lecture. Elle ne peut pas remplacer l'action. Un calculateur, un vérificateur, un simulateur, c'est quelque chose pour lequel le visiteur doit venir chez toi. Et une page qui propose de "faire", et pas seulement de "lire", l'IA elle-même a tendance à la citer comme source.
+VIES ne vérifie pas tous les numéros fiscaux du monde. La Norvège et la Suisse ne relèvent pas de cette vérification européenne. Il faut aussi prévoir les [identifiants « XI » utilisés pour certains échanges de biens avec l'Irlande du Nord](https://www.gov.uk/register-for-vat/selling-or-moving-goods-between-northern-ireland-and-the-eu), plutôt que se limiter à une liste de pays de l'Union.
 
-{% EnPratique titre="La règle Know / Do" %}
-Pour chaque contenu qui explique (Know), embarque un outil qui permet d'agir (Do). L'explication seule est facile à résumer, donc facile à remplacer. L'outil, non. C'est ce qui fait qu'on vient sur ta page, et qu'on y reste, à l'ère où l'IA répond avant même que tu aies cliqué.
-{% /EnPratique %}
+Cette partie mérite autant d'attention que le formulaire : quels pays accepte-t-on, quelle réponse affiche-t-on lorsque le service échoue, et vers qui renvoie-t-on le lecteur ? Un résultat clair évite de confondre une limite de l'outil avec une conclusion sur l'entreprise.
 
-## La fin, pour de vrai
+## Choisir un outil quand il sert la question
 
-Deux leçons de ces outils. Fais le plus possible en local, tu seras surpris de voir jusqu'où ça te mène sans serveur ni coût. Et mets un "faire" à côté de chaque "expliquer", parce que c'est précisément ce qu'aucun concurrent, aucune IA, ne pourra te prendre.
+L'idée initiale était d'accompagner chaque article qui explique, « Know », d'un outil qui permet d'agir, « Do ». Ce n'est plus une règle à appliquer à tous les contenus. Un calculateur aide quelqu'un qui veut obtenir un montant. Un quiz ajouté à un article sans besoin particulier peut surtout lui faire perdre du temps.
 
-Et voilà, la saga est bouclée. Douze articles pour raconter un an à reconstruire un site de A à Z, de la stack à la fabrique de contenu jusqu'aux petits outils qui font la différence. Le reste, maintenant, ce sont des visiteurs qui cliquent.
+Je regarde donc l'action que le lecteur cherche à faire et ce que l'outil lui apporte par rapport à l'explication. Parfois un tableau suffit. Parfois il faut un calcul ou une donnée externe. Dans ce dernier cas, il faut aussi prévoir le comportement lorsque le service ne répond pas.
+
+Un outil peut donner une raison de venir sur la page. Ce n'est pas une protection garantie contre les réponses d'IA : un calcul simple peut aussi être réalisé ailleurs. On ne peut pas non plus déduire de sa présence que la page sera davantage citée.
+
+Ces trois exemples montrent où le calcul local suffit et où un serveur devient utile. Le choix technique vient du besoin et des données nécessaires. Le nombre d'outils par article vient après, et peut tout à fait être zéro.

@@ -5,10 +5,8 @@ publishedAt: 2026-09-04
 updatedAt: 2026-10-08
 scheduledPublishAt: 2026-09-04T06:00:00Z
 summary: >-
-  On a choisi Sanity, puis on l'a remplacé par Payload deux mois plus tard.
-  Rôles par langue, prix par siège, données dynamiques : pourquoi on a refait ce
-  choix, sans langue de bois.
-readingTime: 7
+  De Sanity à Payload, deux mois après le premier choix : comment les accès par langue, le coût de l'édition et les données partagées ont orienté notre décision.
+readingTime: 5
 tags:
   - Payload
   - Sanity
@@ -16,23 +14,18 @@ tags:
   - migration
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 7 min en entier
+  readingTime: 2 min · ou 5 min en entier
   items:
     - >-
-      **Le premier choix** : Sanity, un CMS headless solide, mais pensé pour
-      d'autres besoins que les nôtres.
+      **Le premier choix** : Sanity pour structurer le contenu et séparer l'édition de l'affichage.
     - >-
-      **Ce qui a coincé** : le cloisonnement des accès par langue, le prix par
-      utilisateur, et la rigidité sur nos données fiscales.
+      **Les contraintes** : les accès par langue, le modèle de coût pour l'équipe et la configuration des données partagées.
     - >-
-      **Le pivot** : le 22 mai, avec Max, on abandonne Sanity pour Payload. Se
-      corriger tôt plutôt que traîner le mauvais outil.
+      **Le changement** : le 22 mai, avec Max, on a décidé de reprendre la mise en place sur Payload.
     - >-
-      **Pourquoi Payload** : self-hosted (pas de prix par siège), schéma en
-      TypeScript, contrôle d'accès natif par langue.
+      **Payload** : schéma en TypeScript et règles d'accès en code, avec une infrastructure à maintenir.
     - >-
-      **Le déclencheur** : les tokens dynamiques, un taux de TVA défini à un seul
-      endroit et propagé sur les 2700 pages.
+      **Les tokens** : des références résolues à la génération du site, qui demandent des contrôles sur les données et leur rendu.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -40,8 +33,7 @@ coverImage:
 seo:
   title: 'Sanity puis Payload : le CMS qu''on a choisi deux fois'
   description: >-
-    Refonte Eurofiscalis : pourquoi on a abandonné Sanity pour Payload CMS
-    (rôles par langue, prix par siège, tokens de TVA dynamiques sur 2700 pages).
+    Pourquoi notre projet de refonte est passé de Sanity à Payload : accès par langue, modèle de coût, données partagées et limites de l'auto-hébergement.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -54,76 +46,65 @@ seriesId: saga-eurofiscalis-s1
 seriesOrder: 2
 seriesKind: episode
 ---
-On a choisi Sanity. Deux mois plus tard, on l'a mis à la poubelle pour repartir sur Payload. Refaire un choix qu'on vient de faire, ça pique l'ego. Mais se tromper de CMS et le garder par fierté, ça coûte bien plus cher.
+On a commencé la refonte avec Sanity. Deux mois plus tard, on est passés sur Payload. Les besoins d'accès par langue et de gestion des données ont pesé davantage que prévu dans ce second choix.
 
-Je suis Jim. Deuxième article de la série sur la refonte du site Eurofiscalis. Dans [l'article sur notre départ de WordPress](/quitter-wordpress-site-2700-pages/), je t'ai raconté pourquoi on a quitté WordPress et choisi Astro pour le framework. Restait la pièce la plus importante au quotidien : le CMS. L'outil dans lequel toute l'équipe écrit, traduit et publie, tous les jours. Et là, on s'est plantés une première fois.
+Je suis Jim. Dans [le premier article de la série](/quitter-wordpress-site-2700-pages/), j'ai expliqué pourquoi on quittait WordPress et pourquoi on retenait Astro pour le site. Restait le CMS, l'outil dans lequel l'équipe allait écrire, traduire et publier. C'est ce choix que l'on a repris en cours de route.
 
-## D'abord, pourquoi Sanity
+## Pourquoi on avait retenu Sanity
 
-Au départ, Sanity cochait beaucoup de cases. C'est un CMS headless moderne, propre, avec une vraie souplesse sur la structure du contenu. Pour un projet éditorial ambitieux, ça se défend très bien.
+Sanity permet de définir une structure de contenu et de la séparer de l'affichage du site. Cette souplesse nous intéressait pour les articles et les différents types de pages.
 
-D'ailleurs, sur un autre projet cette année, un petit site que j'ai fait pour une amie, j'avais penché pour un CMS visuel avec Sanity gardé en alternative sérieuse (j'en parle dans [l'article sur la stack et le CMS du site d'Eva](/astro-cloudflare-cms-client/)). Donc l'outil, je le connaissais, et je l'aimais bien. Le choix n'était pas absurde. Il était juste incomplet.
+Je l'avais aussi envisagé pour [le site d'Eva](/astro-cloudflare-cms-client/), où il restait une alternative au CMS visuel. Mais les besoins n'étaient pas les mêmes : d'un côté une personne, de l'autre 2700 pages et une équipe répartie sur sept langues.
 
-Parce qu'un petit site d'une personne et un site corporate à 2700 pages géré par une équipe multi-pays, ce ne sont pas les mêmes besoins. Et c'est exactement là que ça a coincé.
+Notre premier choix tenait compte de l'édition. Il fallait pousser davantage la vérification des accès et du fonctionnement à l'échelle de l'équipe.
 
-## Ce qui a coincé
+## Les accès par langue
 
-### Les rôles par langue
+Je voulais qu'un rédacteur polonais travaille sur le polonais et qu'un traducteur allemand travaille sur l'allemand. Ces restrictions devaient être appliquées par le CMS, pas seulement suggérées par l'interface.
 
-Souviens-toi de la première douleur WordPress : n'importe qui pouvait modifier n'importe quelle langue. Je voulais l'inverse, proprement. Un rédacteur polonais qui ne voit que le polonais, un traducteur allemand qui ne voit que l'allemand. Point.
+Sanity propose des droits et des ressources de contenu personnalisés. [Sa documentation décrit notamment le filtrage des documents, avec des fonctions disponibles sur certaines offres Enterprise](https://www.sanity.io/docs/user-guides/roles). Ce n'est donc pas une incapacité de l'outil à gérer des permissions fines.
 
-Sur Sanity, obtenir ce cloisonnement par langue, fin et fiable, n'était pas simple sans monter en gamme. Le contrôle d'accès vraiment granulaire n'est pas au coeur du modèle. Et pour nous, ce n'était pas un confort, c'était une exigence de base.
+Pour notre projet, le niveau d'offre et la configuration nécessaires ne correspondaient pas à ce qu'on voulait mettre en place. Ce point était une contrainte de départ, et on l'avait sous-estimé.
 
-### Le prix par siège
+## Le modèle de coût et les données partagées
 
-Deuxième problème, plus terre à terre : le modèle tarifaire. Sanity facture à l'utilisateur. Tant que tu es deux, tu ne sens rien. Mais avec des rédacteurs et des traducteurs dans plusieurs pays, plus l'équipe grandit, plus la facture grimpe, mécaniquement. Payer chaque nouvel arrivant juste pour qu'il puisse écrire dans sa langue, c'est un frein à contre-sens de ce qu'on veut : que l'équipe s'agrandisse.
+Le coût des accès d'édition comptait aussi dans notre comparaison. Avec plusieurs rédacteurs et traducteurs, il fallait regarder le modèle retenu pour toute l'équipe, pas seulement pour les deux personnes qui configuraient le CMS au départ.
 
-### La rigidité sur nos données
+Enfin, on voulait centraliser des données réutilisées dans les pages, puis les afficher par des références. Sanity permet de modéliser du contenu structuré. Notre préférence allait néanmoins vers une configuration que l'on pouvait développer et maintenir directement avec le reste du projet.
 
-Troisième point : notre contenu n'est pas que du texte. Il est truffé de données fiscales qui doivent vivre à un seul endroit et se propager partout (le fameux "un chiffre, un seul endroit" de l'article précédent). Je voulais un modèle de données que je maîtrise complètement, dans lequel je peux tordre le schéma exactement comme notre métier l'exige. Là aussi, je me sentais à l'étroit.
+Ces points ne font pas de Payload un meilleur CMS dans tous les cas. Ils expliquent pourquoi il répondait davantage à notre manière de travailler.
 
-{% Conseil titre="Un CMS se choisit sur le workflow, pas sur la démo" %}
-La démo d'un CMS est toujours belle : on te montre un article qui s'écrit tout seul. Les vraies questions arrivent après. Qui a le droit de toucher à quoi ? Combien ça coûte quand l'équipe double ? Est-ce que je peux modéliser mes données particulières sans me battre contre l'outil ? Réponds à ça avant de tomber amoureux de l'éditeur.
+{% Conseil titre="Tester le travail de l'équipe avant de choisir" %}
+Essaie le CMS avec une situation réelle : un rédacteur dans une langue, un traducteur dans une autre, une donnée partagée et une publication. Vérifie les droits avec ces comptes. L'éditeur peut être agréable tout en laissant une contrainte importante sans réponse.
 {% /Conseil %}
 
-## Le pivot, le 22 mai
+## Le changement du 22 mai
 
-Le 22 mai, avec Max (le dev du projet), on a tranché. On arrête Sanity, on part sur Payload.
+Le 22 mai, avec Max, le développeur du projet, on a décidé d'arrêter la mise en place sur Sanity pour passer à Payload.
 
-Prendre cette décision après avoir déjà commencé, ce n'est jamais agréable. Il y a le travail déjà fait, l'impression de reculer. Mais on n'était pas si loin, et surtout, on a vu clairement que continuer sur Sanity, c'était accumuler une dette qu'on paierait chaque mois, en argent et en frustration. Mieux valait perdre deux semaines que traîner le mauvais outil pendant deux ans.
+Une partie du travail devait être reprise. On a préféré le faire à ce stade, avant d'installer toute l'équipe et de transférer les contenus. Sur un prochain projet, je vérifierais ces exigences avant de commencer l'import.
 
-{% MonAvis sentiment="mitige" %}
-Revenir sur une décision technique, ce n'est pas un échec, c'est le métier. Le vrai échec, c'est de s'entêter parce qu'on a déjà investi. Ce qui compte, ce n'est pas d'avoir raison le premier jour, c'est d'avoir le bon outil le jour du go-live. On a préféré se corriger tôt.
-{% /MonAvis %}
+## Ce que Payload nous permettait de mettre en place
 
-## Pourquoi Payload a gagné
+**Une installation sur notre infrastructure.** Dans ce fonctionnement, on ne paye pas un siège de CMS supplémentaire pour chaque rédacteur. Il reste l'hébergement, la base de données, les mises à jour et le travail de maintenance. L'auto-hébergement ne rend pas ces coûts nuls.
 
-Payload répondait précisément aux trois points qui nous bloquaient.
+**Un schéma en TypeScript.** Les collections, comme les articles, les pays, les fiches et le glossaire, sont définies dans la configuration. On peut les faire évoluer dans le même environnement de développement que nos autres outils.
 
-**Il est self-hosted.** Le CMS tourne sur notre propre infrastructure, avec sa base de données. Pas de tarif par siège : ajouter un rédacteur ne coûte pas un abonnement de plus. L'équipe peut grandir sans que la facture suive.
+**Des règles d'accès en code.** [Payload permet de définir les droits par opération, document ou champ](https://payloadcms.com/docs/access-control/overview). On peut donc écrire les restrictions correspondant à notre modèle de langues, puis les tester avec les comptes de l'équipe.
 
-**Le schéma est en TypeScript.** Je décris mes collections (les articles, les pays, les fiches, le glossaire) directement en code, comme je veux. Le modèle de données colle exactement à notre métier, pas l'inverse.
+L'éditeur permet également d'intégrer des blocs propres au projet. L'un d'eux sert à insérer des références vers les données partagées.
 
-**Le contrôle d'accès est natif et fin.** On définit par le code qui voit quoi. Concrètement, un éditeur ne voit que les contenus de sa langue. La règle que je voulais depuis le début, enfin propre : chacun chez soi, personne ne casse la langue du voisin.
+## Les tokens dynamiques
 
-Ajoute à ça un éditeur de texte riche moderne dans lequel on peut insérer nos propres blocs sur mesure. Et l'un de ces blocs sur mesure, c'est celui qui a tout changé.
+Un token est une référence à une donnée, au lieu d'une valeur recopiée dans le texte. Quand une page utilise un taux de TVA, le rédacteur peut insérer cette référence dans l'article.
 
-## Le détail qui valait le pivot : les tokens dynamiques
-
-Reviens à la cinquième douleur WordPress : les taux de TVA et les seuils qui traînent en dur sur des centaines de pages, avec des shortcodes fragiles.
-
-Avec Payload, on a construit un vrai système. Toutes les données fiscales d'un pays vivent dans une collection dédiée, un seul document par pays. Quand un rédacteur veut afficher le taux de TVA allemand dans un article, il n'écrit pas "19%". Il insère un token, une petite référence qui pointe vers ce document.
-
-{% EnPratique titre="Comment marche un token dynamique" %}
-1. La donnée (le taux, le seuil) est saisie une seule fois, dans le document du pays concerné.
-2. Dans l'article, le rédacteur insère un token qui pointe vers cette donnée, au lieu de recopier le chiffre.
-3. Au moment de générer le site, chaque token est remplacé par la vraie valeur. Un taux change ? On le corrige à un seul endroit, on relance, et les 2700 pages sont à jour.
+{% EnPratique titre="De la donnée au texte affiché" %}
+1. La valeur est renseignée dans le document du pays concerné.
+2. L'article contient une référence à cette valeur.
+3. À la génération du site, le système résout la référence et affiche la valeur.
+4. Après une mise à jour de la donnée et une nouvelle génération, les pages utilisant cette référence peuvent reprendre la nouvelle valeur.
 {% /EnPratique %}
 
-Le jour où un pays modifie son taux de TVA, on ne part plus à la chasse aux pages. Une correction, un endroit, tout le site suit. Pour un site dont c'est le coeur de métier, ce n'est pas un gadget. C'est la raison pour laquelle Payload valait de repartir presque de zéro.
+Le mécanisme évite de rechercher chaque copie d'un chiffre. Il ne met pas à jour les valeurs qui resteraient écrites en dur, et une référence manquante peut poser problème. Il faut donc suivre les usages et contrôler le rendu. On a construit ce système pour notre modèle de contenu.
 
-## La suite
-
-On avait le framework, on avait le CMS, on avait le bon modèle de données. Restait le plus impressionnant, et le plus risqué : déménager les 2700 pages existantes, dans les 7 langues, sans perdre le trafic durement gagné sur Google.
-
-C'est l'objet du dernier article de la série : [déménager 2700 pages en 7 langues sans perdre Google](/migrer-2700-pages-7-langues-sans-perdre-google/).
+Une fois le CMS choisi et le modèle de contenu posé, il restait à [transférer les 2700 pages en sept langues](/migrer-2700-pages-7-langues-sans-perdre-google/), avec les redirections et les vérifications nécessaires après la bascule.

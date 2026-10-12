@@ -7,33 +7,25 @@ summary: >-
   Un plan de redirection, ça ne se remplit pas une fois pour toutes. On a
   audité le nôtre avec un agent par langue, en croisant trois sources. Quatre
   familles de défauts, et une checklist réutilisable.
-readingTime: 8
+readingTime: 7
 tags:
   - SEO
   - migration
   - redirections
 essentiel:
   sousTitre: Les points essentiels.
-  readingTime: 2 min · ou 8 min en entier
+  readingTime: 2 min · ou 7 min en entier
   items:
     - >-
-      **Le constat** : notre plan de redirection était incomplet. Il en
-      manquait des centaines, et certaines existantes menaient droit dans le
-      mur.
+      **Le constat** : un plan d'environ 800 lignes, avec des redirections manquantes et des destinations inexistantes.
     - >-
-      **La méthode** : croiser trois sources qui ne disent jamais la même
-      chose (les adresses du nouveau site, le crawl du site en ligne, le plan
-      de redirection), avec un agent IA par langue.
+      **Les trois sources** : l'inventaire du nouveau site, le crawl de l'ancien et le plan de redirection.
     - >-
-      **Les 4 familles** : des redirections vers une page inexistante, des
-      pages en ligne sans aucun plan, des sources fantômes, et des boucles.
+      **Le découpage** : un agent par langue pour relever les écarts, puis une vérification des corrections.
     - >-
-      **Le piège le plus sournois** : des redirections qui n'existaient que
-      dans une colonne de tableur, et qui ne seraient jamais parties en
-      production.
+      **L'export** : une quarantaine de destinations prévues n'étaient pas encore des règles exportables.
     - >-
-      **Le résultat** : un millier de redirections exportées, zéro boucle,
-      zéro cible en 404, et 100% des pages indexées.
+      **Le contrôle final** : un millier de redirections exportées, sans boucle ni cible en 404 repérée sur ce périmètre. Cela ne prouve pas l'indexation.
 coverImage:
   src: /images/articles/jim-au-travail.webp
   alt: Jim Sagnier au travail devant son ordinateur
@@ -41,9 +33,7 @@ coverImage:
 seo:
   title: 'Audit des redirections 301 après une migration : la méthode'
   description: >-
-    Comment auditer un plan de redirection 301 après une migration
-    multilingue : trois sources à croiser, quatre familles de défauts, et une
-    checklist pour finir à zéro 404.
+    Auditer des redirections après une migration multilingue : croiser trois inventaires, vérifier les destinations et l'export, puis contrôler la production.
   schemaType: BlogPosting
   noindex: false
 faq: []
@@ -58,76 +48,76 @@ seriesKind: episode
 ---
 Notre plan de redirection comptait environ 800 lignes. Il en fallait plus d'un millier. Et parmi celles qui existaient, près d'une centaine menaient droit vers une page qui n'existait pas.
 
-Je suis Jim. Deuxième épisode de l'après-migration Eurofiscalis. Dans l'article sur [la migration de 2700 pages en 7 langues](/migrer-2700-pages-7-langues-sans-perdre-google/), j'ai expliqué ce qu'est une redirection 301 et pourquoi chaque ancienne adresse doit en avoir une. Ici, je ne refais pas la leçon. Je raconte ce qu'on a trouvé quand on a vérifié notre propre plan, et comment on l'a vérifié.
+Je suis Jim. Deuxième épisode de l'après-migration Eurofiscalis. Dans l'article sur [la migration de 2700 pages en 7 langues](/migrer-2700-pages-7-langues-sans-perdre-google/), j'ai expliqué ce qu'est une redirection 301 et comment prévoir le devenir de chaque ancienne adresse. Ici, je ne refais pas la leçon. Je raconte ce qu'on a trouvé quand on a vérifié notre propre plan, et comment on l'a vérifié.
 
-## Le problème : trois sources, trois vérités
+## Le problème : trois sources à confronter
 
 Un plan de redirection, c'est un tableau. À gauche, l'ancienne adresse. À droite, la nouvelle. Simple. Sauf que pour savoir s'il est complet et juste, il faut le confronter à la réalité. Et la réalité, sur un site de cette taille, elle est éclatée en trois endroits.
 
 **Un, la liste des adresses du nouveau site.** Près de 2 900 pages, toutes langues confondues. C'est là que les redirections doivent atterrir.
 
-**Deux, le crawl du site en ligne.** Environ 2 800 adresses, relevées par [le crawler que j'avais codé pour la migration](/crawler-seo-maison/). C'est ce qui existe vraiment, aujourd'hui, et que Google connaît.
+**Deux, le crawl du site en ligne.** Environ 2 800 adresses, relevées par [le crawler que j'avais codé pour la migration](/crawler-seo-maison/). C'est ce que l'outil avait pu atteindre à cette date. Ce relevé ne prouve pas que Google connaît ou indexe chacune de ces adresses.
 
 **Trois, le plan de redirection lui-même**, tenu dans notre tableau de bord de migration.
 
-Aucune de ces trois sources ne suffit seule. Le plan ne sait pas ce qui existe en ligne. Le crawl ne sait pas ce qu'on a prévu. La liste du nouveau site ne sait pas d'où viennent les visiteurs. La vérité, c'est leur croisement.
+Aucune de ces trois sources ne suffit seule. Le plan ne sait pas ce qui existe en ligne. Le crawl ne sait pas ce qu'on a prévu. La liste du nouveau site ne sait pas d'où viennent les visiteurs. Le croisement permet de repérer les écarts et de les vérifier.
 
 ## Un agent par langue
 
 On aurait pu lancer un seul gros audit. On en a lancé sept : un agent IA par langue, coordonnés par un agent chef, avec les mêmes consignes et les mêmes trois sources.
 
-Pourquoi découper par langue ? Parce que les erreurs de redirection sont presque toujours linguistiques. En allemand, le représentant fiscal s'appelait « Fiskalvertreter » dans l'ancien plan, et « Fiskalvertretung » sur le nouveau site : une vingtaine de redirections pointaient vers une adresse qui n'existait pas, à cause d'une simple terminaison. En anglais, même histoire entre « fiscal representative » et « fiscal representation ». En tchèque, des pages de taux avaient perdu leur année dans l'adresse.
+Pourquoi découper par langue ? Plusieurs défauts que l'on avait repérés venaient de différences dans les adresses traduites. En allemand, le représentant fiscal s'appelait « Fiskalvertreter » dans l'ancien plan, et « Fiskalvertretung » sur le nouveau site : une vingtaine de redirections pointaient vers une adresse qui n'existait pas, à cause d'une simple terminaison. En anglais, même histoire entre « fiscal representative » et « fiscal representation ». En tchèque, des pages de taux avaient perdu leur année dans l'adresse.
 
-Un agent qui ne regarde qu'une langue voit ces motifs tout de suite. Un audit global les noie dans la masse.
+Ce découpage aide à regrouper les écarts d'une même langue. Il faut ensuite contrôler les propositions et les correspondances entre langues.
 
 {% MonAvis sentiment="positif" %}
-C'est typiquement le genre de tâche où l'IA brille. Pas pour décider à ta place, mais pour comparer des milliers de lignes entre trois sources, patiemment, sans jamais se lasser, et te sortir des familles de problèmes. La décision de quoi corriger, et comment, reste la mienne. L'agent me fait gagner des jours de tableur.
+Sur cet audit, l'IA m'a aidé à comparer les lignes et à regrouper les écarts. Je gardais la décision sur les destinations à retenir. Le rapport de l'agent donnait une liste de vérifications, pas une validation des redirections en production.
 {% /MonAvis %}
 
 ## Les quatre familles de problèmes
 
 Au bout de l'audit, tout rentrait dans quatre familles.
 
-**Famille A : les redirections vers une page qui n'existe pas.** Près d'une centaine. L'ancienne adresse redirigeait bien, mais vers une nouvelle adresse fausse. Pour Google, c'est presque pire qu'une absence de redirection : tu lui dis « la page a déménagé ici », et ici, il n'y a rien.
+**Famille A : les redirections vers une page qui n'existe pas.** Près d'une centaine. L'ancienne adresse redirigeait bien, mais vers une nouvelle adresse fausse. La redirection existait, mais elle n'amenait pas au contenu attendu. Il fallait corriger la destination et tester sa réponse.
 
 **Famille C : les pages en ligne sans aucun plan.** Plusieurs centaines. Des pages bien vivantes sur l'ancien site, avec parfois du trafic, que personne n'avait prévu de rediriger. Le gros morceau : le glossaire tchèque, environ 250 définitions, dont la rubrique avait simplement changé de nom en route.
 
-**Famille B : les sources fantômes.** Une dizaine de lignes du plan qui redirigeaient des adresses qui n'avaient jamais existé. Du bruit, sans danger, mais du bruit.
+**Famille B : les sources fantômes.** Une dizaine de lignes correspondaient à des adresses que nos inventaires ne retrouvaient pas. Il fallait les vérifier avant de conclure qu'elles n'avaient jamais existé.
 
 **Famille D : les boucles.** Une vraie boucle, où A renvoie vers B qui renvoie vers A. Et environ 160 fausses boucles : des pages qu'on avait décidé de garder, mais étiquetées « à rediriger » par erreur, qui se redirigeaient donc vers elles-mêmes sur le papier.
 
 {% Conseil titre="Les quatre questions à poser à chaque redirection" %}
-Pour chaque ligne de ton plan : la page cible répond-elle bien (statut 200) ? La page source existe-t-elle vraiment ? Est-ce que ça ne tourne pas en rond ? Et est-ce que cette ligne partira bien en production ? Si une seule réponse est non, la redirection est fausse, même si elle a l'air propre dans le tableau.
+Pour chaque ligne : la cible répond-elle en 200 et reprend-elle le bon contenu ? La source correspond-elle à une ancienne adresse réelle ? Y a-t-il une boucle ? Et la règle sera-t-elle bien déployée ? Une ligne douteuse demande une vérification, même si le tableau est rempli.
 {% /Conseil %}
 
 ## Le piège le plus sournois
 
-La quatrième question, c'est celle qu'on ne se pose jamais. Et c'est pourtant elle qui nous a le plus appris.
+La vérification de l'export a révélé un autre défaut.
 
-Dans notre tableau de bord, une redirection pouvait exister de deux façons : comme une vraie redirection, ou comme une simple « cible prévue », une colonne où l'on notait l'adresse de destination. Sauf que seules les vraies redirections partaient à l'export. Une quarantaine de lignes n'existaient que dans cette colonne. Dans le tableau, elles avaient l'air parfaites. En production, elles n'auraient jamais existé. Autant de 404 garanties le jour de la bascule.
+Dans notre tableau de bord, une redirection pouvait exister de deux façons : comme une vraie redirection, ou comme une simple « cible prévue », une colonne où l'on notait l'adresse de destination. Sauf que seules les vraies redirections partaient à l'export. Une quarantaine de lignes n'existaient que dans cette colonne. Dans le tableau, elles avaient l'air parfaites. En production, elles n'auraient jamais existé. Ces adresses auraient donc été absentes de cet export de redirections.
 
-C'est le même genre de bug que le faux positif silencieux du crawler : tout paraît vert, et c'est faux. Une information dans un tableur n'est pas une redirection. Une redirection, c'est ce qui sort réellement à l'export.
+C'est le même genre de bug que le faux positif silencieux du crawler : tout paraît vert, et c'est faux. Une information dans un tableur n'est pas une redirection. Il faut contrôler l'export, puis la règle réellement servie après déploiement.
 
 ## Et quand l'outil ne veut pas te répondre
 
 Petite anecdote au passage. Pour le tchèque, il fallait l'inventaire complet des pages de l'ancien site. Sauf que l'accès automatique à l'ancien WordPress était bloqué par une extension de sécurité, et que le crawl ne remontait qu'une partie des pages.
 
-Alors on a fait le plus bête du monde : j'ai copié-collé l'écran « Toutes les pages » de l'administration WordPress dans un tableur. Quelques centaines de lignes, nettoyées, classées par type. Pas très glorieux, mais c'était la source la plus fiable qu'on avait. Des fois, le meilleur outil, c'est un copier-coller.
+Pour compléter l'inventaire, j'ai copié-collé l'écran « Toutes les pages » de l'administration WordPress dans un tableur. Quelques centaines de lignes, nettoyées, classées par type. Ce relevé nous donnait une source supplémentaire à confronter au crawl.
 
 ## Ce que ça a donné
 
 Après corrections : les fausses boucles nettoyées, la centaine de cibles fausses repointées, les centaines de redirections oubliées ajoutées, la quarantaine de « cibles prévues » transformées en vraies redirections.
 
-État final : **un millier de redirections, toutes exportées. Zéro boucle, zéro cible en 404, zéro redirection sans cible, zéro doublon.** Et le vrai juge de paix, quelques semaines plus tard : 100% des pages indexées, et un gain moyen de 0,3 position.
+Sur le périmètre contrôlé à la fin de cet audit : **un millier de redirections exportées, sans boucle, cible en 404, redirection sans cible ni doublon repéré.** Ce constat décrit ce contrôle, pas l'absence de toute erreur possible sur le site.
+
+L’indexation demande un suivi distinct dans Search Console, comme expliqué dans [la méthode de migration](/migrer-2700-pages-7-langues-sans-perdre-google/). Une redirection qui mène à la bonne page ne confirme pas que Google l’a indexée.
 
 ## Ce que je retiens
 
-Un plan de redirection ne se remplit pas, il s'audite. Croise toujours au moins trois sources, découpe l'audit par langue si ton site est multilingue, et vérifie que chaque ligne sortira vraiment en production. C'est une journée de travail avant la bascule, contre des mois de trafic perdu après.
+Sur ce projet, croiser les trois inventaires a fait apparaître des défauts que le tableau seul ne montrait pas. Le découpage par langue a aidé à les regrouper. La dernière vérification reste celle des anciennes adresses après déploiement : réponse HTTP, destination finale et contenu correspondant.
 
-{% FAQ items=[{question: "Quand faut-il auditer un plan de redirection ?", reponse: "Avant la bascule, une fois le plan rempli, puis une seconde fois juste après la mise en ligne, en vérifiant les redirections réelles du site en production. Le plan sur le papier et ce qui sort vraiment ne sont pas toujours la même chose."}, {question: "Une redirection vers une page 404 est-elle grave ?", reponse: "Oui. Tu indiques à Google que la page a déménagé, et la nouvelle adresse ne répond pas. Tu perds le bénéfice de la redirection et tu envoies un mauvais signal. Chaque cible doit répondre avec un statut 200."}, {question: "Pourquoi découper l'audit par langue ?", reponse: "Parce que les erreurs de redirection sur un site multilingue sont surtout linguistiques : une terminaison différente, un terme renommé, une rubrique traduite autrement. Regardées langue par langue, ces erreurs forment des familles faciles à repérer et à corriger en série."}] /%}
+{% FAQ items=[{question: "Quand faut-il auditer un plan de redirection ?", reponse: "Avant la bascule, une fois le plan rempli, puis une seconde fois juste après la mise en ligne, en vérifiant les redirections réelles du site en production. Le plan sur le papier et ce qui sort vraiment ne sont pas toujours la même chose."}, {question: "Une redirection vers une page 404 est-elle grave ?", reponse: "Oui. Tu indiques à Google que la page a déménagé, et la nouvelle adresse ne répond pas. La redirection n'amène pas au contenu attendu. Pour une page déplacée, on vérifie que la cible répond en 200 et qu'elle correspond bien à l'ancienne page."}, {question: "Pourquoi découper l'audit par langue ?", reponse: "Cela aide à repérer les écarts linguistiques : une terminaison différente, un terme renommé, une rubrique traduite autrement. Regardées langue par langue, ces erreurs forment des familles faciles à repérer et à corriger en série."}] /%}
 
 ## La suite
 
-Les redirections, c'est la tuyauterie entre l'ancien site et le nouveau. Mais une fois les pages bien arrivées, encore faut-il qu'elles parlent au bon pays. Et là, on a découvert qu'une bonne partie de nos traductions parlaient encore... français.
-
-C'est l'objet du prochain article : [quand la France fuit dans vos traductions](/fuites-france-contenu-traduit/).
+Après les adresses, on a aussi vérifié le contenu destiné à chaque pays. Certains passages traduits conservaient des références françaises. J'y reviens dans l'article suivant : [quand la France fuit dans vos traductions](/fuites-france-contenu-traduit/).
