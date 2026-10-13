@@ -1,0 +1,123 @@
+---
+title: 'Un outil par modèle d’article : pourquoi j’ai abandonné la règle'
+territory: reflechir
+publishedAt: 2026-11-05
+scheduledPublishAt: 2026-11-05T07:00:00Z
+summary: >-
+  Je voulais un outil interactif par modèle d’article après des tests encourageants. La refonte a réduit mon autonomie : chaque opportunité passe désormais par un PRD et le développeur.
+readingTime: 6
+tags:
+  - outils interactifs
+  - autonomie
+  - rédaction
+  - SEO
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Un outil par modèle d’article : pourquoi j’ai abandonné la règle'
+  description: >-
+    Après la refonte, créer un outil passe par un PRD et le développeur.
+    Pourquoi j’ai abandonné la systématisation malgré des tests d’engagement encourageants.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["seo", "web-outils", "ecriture-contenu"]
+projectIds: ["eurofiscalis-refonte"]
+relatedArticles:
+  - outils-interactifs-blog
+  - usine-skills-claude-mcp
+  - sanity-puis-payload-cms-choisi-deux-fois
+format: article
+seriesId: saga-eurofiscalis-s5
+seriesOrder: 5
+seriesKind: episode
+---
+Avant la refonte du site d’Eurofiscalis, j’avais testé des outils interactifs dans certaines pages. Le temps passé sur ces pages avait augmenté. J’y voyais un signal encourageant, et je voulais aller plus loin.
+
+On avait déjà des modèles d’articles : comment s’immatriculer à la TVA, comment facturer ses clients, et d’autres formats qui reviennent dans la production éditoriale. Mon idée était de prévoir un petit outil pour chaque modèle, puis de le réutiliser dans les articles correspondants.
+
+L’objectif était d’augmenter l’engagement. Le lecteur pouvait consulter l’explication, puis utiliser quelque chose directement dans la page.
+
+Depuis la refonte en Astro, avec le CMS et l’intervention de notre développeur, j’ai perdu une partie de mon autonomie. Je ne peux plus créer et intégrer ces outils avec la même liberté. Leur mise en place paraît beaucoup plus compliquée en interne.
+
+J’ai donc abandonné la systématisation. Aujourd’hui, si je considère qu’un outil représente une vraie opportunité, je prépare un PRD et je le transmets au développeur, qui doit le coder et l’intégrer dans l’article.
+
+## Pourquoi je voulais le systématiser
+
+La production de contenu reposait déjà sur des formats récurrents. Un article sur l’immatriculation répond à une famille de questions. Un article sur la facturation en traite une autre.
+
+À partir de là, prévoir un outil associé au modèle me semblait cohérent. Il pouvait servir à plusieurs articles, avec les adaptations nécessaires, plutôt que devenir une création isolée pour une seule page.
+
+Par exemple, une explication sur la facturation peut aider à comprendre les informations à faire figurer sur une facture. Un outil peut accompagner le lecteur dans la sélection de ces informations. L’explication et l’interaction répondent alors à deux besoins liés.
+
+C’est le genre de complément que je cherchais à développer. Dans [l’article sur les outils interactifs du blog](/outils-interactifs-blog/), j’ai présenté des outils de calcul et de vérification, avec leurs contraintes techniques. Ici, le sujet est la place qu’on leur donne dans la production éditoriale.
+
+J’avais déjà une observation : sur les pages testées avant la refonte, le temps passé avait augmenté. Je voulais reproduire ce qui me paraissait fonctionner, en l’organisant autour des modèles d’articles.
+
+## Ce que je pensais de l’engagement et de NavBoost
+
+Mon raisonnement avait aussi une dimension SEO. Une hausse du temps passé sur les pages me semblait aller dans le bon sens pour NavBoost.
+
+NavBoost est un système de Google qui exploite des données d’interaction avec les résultats de recherche, notamment les clics. Des documents et témoignages réunis dans le procès antitrust américain décrivent ce fonctionnement. [Pièce du procès publiée par le Department of Justice, page 48](https://www.justice.gov/usdoj-media/atr/media/1320746/dl?inline=#page=48)
+
+Il faut toutefois distinguer ce fonctionnement de ce que j’avais mesuré sur mes pages. Une augmentation du temps passé ne démontre pas un effet sur NavBoost, ni un gain de classement. Je n’avais pas isolé cette relation.
+
+C’était une hypothèse qui participait à mon envie de développer les outils.
+
+Le temps passé demande lui aussi une lecture. Quelqu’un peut rester parce qu’il utilise un outil pertinent, parce qu’il lit une explication utile ou parce qu’il cherche une information difficile à trouver. La durée seule ne permet pas de départager ces situations.
+
+Pour évaluer un outil, il faut donc aussi regarder ce que la personne arrive à faire avec. Un formulaire qui allonge la visite sans aider à obtenir un résultat ne remplit pas le même rôle qu’un calculateur qui répond à sa question.
+
+## La refonte a changé ma marge de manœuvre
+
+C’est là que la règle a rencontré notre organisation.
+
+Avant la refonte, j’avais pu faire des tests. Après le passage à Astro et au CMS, avec un développeur qui intervient sur le site, je n’ai plus la même liberté pour créer les outils moi-même et les intégrer.
+
+L’outil devient une demande de développement. Il faut expliquer ce qu’il doit faire, puis le faire coder et intégrer dans la page.
+
+On peut avoir un petit formulaire à l’écran et un chantier plus conséquent derrière : les saisies à accepter, le calcul ou la donnée à récupérer, le résultat à afficher, les erreurs à gérer. Les [exemples de calcul local et d’appel à VIES](/outils-interactifs-blog/) montrent déjà que tous les outils n’ont pas les mêmes besoins.
+
+Mais la difficulté que je raconte ici est surtout opérationnelle. Dans notre organisation actuelle, leur mise en place paraît trop compliquée pour en faire une composante systématique de chaque modèle.
+
+Je ne peux donc plus traiter cette règle comme si sa réalisation dépendait seulement de moi.
+
+## Une consigne de rédaction ne suffit pas à produire un outil
+
+On peut écrire dans un brief qu’un article doit être accompagné d’un outil. Ça donne une direction. Ça ne rend pas l’outil disponible.
+
+La rédaction et le développement peuvent avancer à des rythmes différents. Prévoir un composant dans le modèle éditorial crée une attente qui doit ensuite être prise en charge ailleurs.
+
+C’est une limite utile à regarder quand on construit une méthode, y compris avec des skills et des agents IA. Une consigne peut produire une proposition détaillée, une liste de fonctionnalités ou une spécification. Pour qu’elle devienne quelque chose que le lecteur utilise, il faut encore pouvoir la réaliser et la déployer.
+
+J’avais expliqué dans [l’article sur notre organisation des skills](/usine-skills-claude-mcp/) comment centraliser les règles de la chaîne éditoriale. Cette expérience ajoute une question : qui a réellement les moyens d’exécuter ce qu’on demande ?
+
+Dans mon cas, la règle supposait une capacité de création et d’intégration que je n’ai plus au même niveau depuis la refonte. La conserver comme une obligation n’aurait pas résolu cette dépendance.
+
+## Aujourd’hui, une opportunité passe par un PRD
+
+Si je considère qu’un outil présente une vraie opportunité, je prépare maintenant un PRD, un document qui décrit ce qu’on veut construire. Je dois le transmettre à notre développeur, qui code l’outil et l’intègre dans l’article.
+
+La décision se prend donc sur un projet précis. Le modèle d’article, à lui seul, ne déclenche plus automatiquement la création d’un outil.
+
+Pour rendre cette demande exploitable, le document peut préciser le problème du lecteur, les informations qu’il saisit, le résultat attendu et les limites de l’outil. Ce sont des éléments de cadrage, pas une liste de fonctionnalités à ajouter pour rendre le projet plus impressionnant.
+
+Un outil qui fait un calcul doit expliquer ce qu’il calcule. Un outil qui interroge un service externe doit prévoir ce qui se passe si le service ne répond pas. Un outil qui aide à s’orienter doit rendre visible le périmètre de sa réponse.
+
+Ce travail permet aussi de discuter de la réalisation avant de l’imposer à la production éditoriale. Il donne au développeur quelque chose de concret à examiner.
+
+Le passage par un PRD ajoute une étape à mon ancienne façon de travailler. C’est aujourd’hui le chemin à suivre quand je veux faire créer un nouvel outil.
+
+## Ce que je garde de l’idée initiale
+
+Les tests réalisés avant la refonte restent la raison pour laquelle je m’intéresse à ces outils. J’avais observé davantage de temps passé sur les pages concernées, et je voulais renforcer l’engagement.
+
+J’ai abandonné l’obligation d’en prévoir un pour chaque modèle d’article. Les opportunités qui me paraissent assez fortes font désormais l’objet d’une demande spécifique.
+
+Ce changement vient de ce que je peux réellement faire dans le site actuel. Il raconte aussi une conséquence de la refonte qu’on mesure moins facilement que la vitesse des pages ou la qualité du rendu : ma capacité à essayer une idée et à la mettre en place.
+
+Aujourd’hui, cette capacité passe davantage par le développeur. Quand un outil me paraît justifié, je prépare le PRD. Je garde cette étape pour les projets que je veux défendre, plutôt que de la rendre obligatoire pour tous les modèles.
