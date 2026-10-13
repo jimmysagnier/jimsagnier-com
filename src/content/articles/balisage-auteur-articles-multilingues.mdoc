@@ -1,0 +1,167 @@
+---
+title: Qui signe nos articles ? La question qui m’a fait regarder le balisage auteur
+territory: comprendre
+publishedAt: 2026-10-29
+scheduledPublishAt: 2026-10-29T07:00:00Z
+summary: >-
+  Une question sur la signature des articles a ouvert un chantier : répartir les responsabilités et relier les auteurs à leurs contenus sur un site en sept langues.
+readingTime: 7
+tags:
+  - balisage auteur
+  - données structurées
+  - E-E-A-T
+  - multilingue
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Balisage auteur : qui signe les articles en sept langues ?'
+  description: >-
+    Répartir les signatures selon l’expertise, relier les profils avec Person et @id,
+    distinguer auteur et relecteur : un chantier de balisage encore à mettre en place.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["seo", "ecriture-contenu"]
+projectIds: ["eurofiscalis-refonte"]
+relatedArticles:
+  - qualite-eeat-contenu-echelle
+  - migrer-2700-pages-7-langues-sans-perdre-google
+  - sitemap-sans-date-fraicheur-ia
+format: article
+seriesId: saga-eurofiscalis-s5
+seriesOrder: 3
+seriesKind: episode
+---
+Un collaborateur polonais m’a demandé qui devait signer les articles. La question était assez simple. Pendant un temps, j’étais le seul à produire du contenu chez Eurofiscalis, donc c’était mon nom qui apparaissait.
+
+Notre CEO souhaitait aussi davantage de diversité dans les signatures. On publie en plusieurs langues, avec des collaborateurs qui ont chacun leurs compétences. Il fallait préciser qui portait les articles selon le marché et le sujet.
+
+On a pris une décision : dans les langues autres que le français et l’anglais, les responsables d’agence signent les articles. Pour le français et l’anglais, la signature est attribuée à certains collaborateurs selon leur expertise.
+
+Ça règle une partie de la question. Ensuite, il faut regarder ce que le site affiche au lecteur, et ce qu’il transmet aux moteurs dans son code. L’audit du balisage auteur a montré plusieurs choses à reprendre.
+
+Le chantier technique n’a pas encore été transmis au développeur. Je raconte ici le diagnostic et l’organisation retenue, avec ce qui reste à faire.
+
+## La signature doit correspondre à une responsabilité réelle
+
+Je pilote l’acquisition. Je travaille sur le site, le SEO, la production de contenu et les appels commerciaux. Je connais les questions qui reviennent, les formulations que les gens utilisent et les sujets sur lesquels ils cherchent une réponse.
+
+Ça ne fait pas de moi un fiscaliste.
+
+Quand un article explique une règle fiscale, la personne capable de vérifier le fond peut être différente de celle qui prépare le texte. Et sur un site multilingue, la personne compétente pour une version peut aussi être différente de celle qui intervient sur une autre.
+
+Notre choix de signature tient compte de cette organisation. Pour les versions autres que françaises et anglaises, les responsables d’agence portent les articles. Pour le français et l’anglais, on regarde l’expertise du collaborateur sur le sujet.
+
+Il faut ensuite que la participation réelle suive cette attribution. Changer le nom sous un texte sans faire intervenir la personne concernée ne renforce pas sa fiabilité.
+
+J’avais déjà abordé la relecture et la responsabilité éditoriale dans [l’article sur la qualité des contenus quand on publie à l’échelle](/qualite-eeat-contenu-echelle/). Ici, je m’intéresse à la façon de relier cette organisation aux articles et aux profils dans le code du site.
+
+## Ce que montrait l’audit d’août
+
+L’audit d’août 2026 portait sur **1 016 articles publiés, répartis sur sept langues**. Aucun n’était anonyme. Les onze profils d’auteurs disposaient d’une photo, d’une biographie, d’un poste et d’un lien LinkedIn.
+
+Il y avait donc déjà des informations utiles. Le problème se trouvait dans leur balisage, c’est-à-dire les données structurées ajoutées au code pour décrire le contenu de la page.
+
+L’audit relevait notamment :
+
+- un auteur déclaré comme `Person` dans chaque article, sans identifiant `@id` stable ;
+- un éditeur également déclaré sans identifiant stable ;
+- des profils sans balisage `ProfilePage` et avec une description de la personne incomplète ;
+- aucun nœud `WebPage` distinct pour porter une information de relecture ;
+- des URL de photo contenant des espaces bruts sur **611 articles** ;
+- une date de modification absente sur **329 articles**.
+
+Ces chiffres décrivent l’état observé en août. Ils ne constituent pas un nouveau contrôle complet du site aujourd’hui.
+
+La question des dates rejoint [le chantier sur le sitemap et la fraîcheur éditoriale](/sitemap-sans-date-fraicheur-ia/). Pour les auteurs, le point central était la cohérence entre leurs différentes apparitions : dans un article, sur leur profil, puis dans une autre langue.
+
+## Un auteur sans `@id` n’est pas forcément inconnu de Google
+
+On pourrait raconter ce diagnostic avec un titre spectaculaire : mille articles, aucun auteur reconnu par Google.
+
+Sauf que l’audit ne permet pas de dire ça.
+
+Un auteur peut déjà être décrit par son nom, l’URL de son profil ou ses autres comptes publics. Dans sa documentation sur les articles, Google recommande notamment les propriétés `url` ou `sameAs` pour aider à identifier les auteurs. Ses propres exemples comportent des objets `Person` directement intégrés aux articles. [Documentation Google sur le balisage auteur](https://developers.google.com/search/docs/appearance/structured-data/article#author-bp)
+
+Le fait de répéter une personne dans plusieurs pages n’est donc pas, à lui seul, une erreur qui rendrait toutes les signatures inutilisables.
+
+En revanche, un identifiant stable permet de rendre les relations explicites.
+
+Dans JSON-LD, le format utilisé pour ces données structurées, `@id` identifie une entité. Plusieurs références au même identifiant peuvent ainsi désigner la même personne. C’est un mécanisme de description des données, pas un badge d’expertise délivré par Google. [Spécification JSON-LD du W3C](https://www.w3.org/TR/json-ld11/#node-identifiers)
+
+Pour notre site, la proposition technique documentée consiste à attribuer à chaque auteur un identifiant fondé sur son profil français, puis à le conserver lorsqu’on parle de cette personne ailleurs.
+
+## Sept langues ne veulent pas dire sept identités
+
+Prenons un exemple simplifié, avec des URL fictives :
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://example.org/auteur/jim/#person",
+      "name": "Jim Sagnier",
+      "url": "https://example.org/auteur/jim/",
+      "jobTitle": "Lead acquisition"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://example.org/un-article/#article",
+      "headline": "Titre de l’article",
+      "author": {
+        "@id": "https://example.org/auteur/jim/#person"
+      }
+    }
+  ]
+}
+```
+
+Le bloc `Person` décrit l’auteur. Le bloc `BlogPosting` décrit l’article et fait référence à cette personne.
+
+Si mon profil possède une version anglaise, l’adresse de la page peut changer. L’identifiant de la personne peut rester le même : on décrit toujours Jim.
+
+Mais il faut bien distinguer la langue de la page et l’identité de son auteur. **Si un responsable d’agence signe la version polonaise, cette version doit référencer son identifiant à lui.** Elle ne doit pas conserver le mien simplement parce qu’elle provient d’un article français.
+
+C’est là que la décision éditoriale doit se retrouver dans les données. La convention technique relie les apparitions d’une même personne. Elle ne décide pas qui mérite de signer chaque version.
+
+Sur un site de sept langues, comme celui dont j’ai raconté [la migration](/migrer-2700-pages-7-langues-sans-perdre-google/), cette distinction mérite un contrôle explicite. Un modèle de page peut reproduire une attribution partout, même quand l’organisation éditoriale prévoit autre chose.
+
+## Le profil doit expliquer qui est la personne
+
+Une page auteur sert aussi à donner du contexte au lecteur : qui est cette personne, sur quoi travaille-t-elle, quelle expérience apporte-t-elle au sujet ?
+
+Le balisage `ProfilePage` décrit une page centrée sur une personne ou une organisation. Google cite notamment les pages d’auteur et les pages de collaborateurs parmi ses cas d’usage. La personne présentée y est déclarée comme l’entité principale, avec la propriété `mainEntity`. [Documentation Google sur les pages de profil](https://developers.google.com/search/docs/appearance/structured-data/profile-page)
+
+La proposition consiste donc à relier le profil et les articles au même identifiant, en conservant des informations cohérentes.
+
+Le poste indiqué doit être le vrai poste. La biographie doit expliquer l’expérience pertinente. Les liens externes doivent mener aux bons profils. Ajouter des champs ne dispense pas de vérifier ce qu’ils racontent.
+
+Pour moi, par exemple, afficher « Lead acquisition » décrit mon rôle. M’attribuer une fonction de fiscaliste pour renforcer artificiellement la signature donnerait une information fausse.
+
+## Auteur et relecteur métier restent deux rôles à préciser
+
+La signature d’un article et la vérification de son fond peuvent correspondre à des interventions différentes.
+
+Nous avons arrêté la répartition des signatures selon les langues et l’expertise. Cela ne suffit pas à décrire précisément qui relit chaque contenu, ni comment cette intervention sera affichée.
+
+La proposition technique prévoit de pouvoir distinguer l’auteur du relecteur métier. Schema.org possède une propriété `reviewedBy`, utilisée sur `WebPage`, pour désigner une personne ou une organisation ayant vérifié l’exactitude ou la complétude du contenu. [Définition de `reviewedBy`](https://schema.org/reviewedBy)
+
+Ce champ doit correspondre à une relecture effectuée. Avant de l’ajouter, il faut savoir qui intervient, sur quoi et à quel moment.
+
+Il reste aussi à définir la présentation visible : quelle mention afficher, vers quel profil renvoyer, quelle date de vérification conserver. Le lecteur doit pouvoir comprendre les responsabilités sans avoir à inspecter le code source.
+
+## Le résultat, pour l’instant, c’est un chantier à transmettre
+
+Les décisions sur les signatures sont prises. Les corrections techniques restent à transmettre au développeur.
+
+Après leur mise en place, le premier contrôle sera assez concret : vérifier que chaque article désigne le bon auteur, que son identifiant correspond au profil, que les versions linguistiques respectent l’attribution prévue et que les URL de photo fonctionnent. La mention d’un relecteur devra, elle aussi, correspondre au travail réellement effectué.
+
+Ce contrôle pourra montrer que les données sont cohérentes. Il ne prouvera pas, à lui seul, un gain de classement ou de citations dans les réponses des IA.
+
+La question de mon collègue portait sur un nom sous un article. Elle oblige à regarder toute la chaîne : la personne qui signe, son rôle sur le sujet, les informations montrées au lecteur et les relations décrites dans le code. On a précisé les signatures. Il reste maintenant à faire suivre le site.
