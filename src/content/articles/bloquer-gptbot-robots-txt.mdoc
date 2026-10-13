@@ -1,0 +1,131 @@
+---
+title: Pourquoi je ne bloque pas GPTBot
+territory: comprendre
+publishedAt: 2026-10-26
+scheduledPublishAt: 2026-10-26T07:00:00Z
+summary: >-
+  Chez Eurofiscalis, je laisse les robots d’entraînement accéder aux contenus. Mon raisonnement, la distinction avec les robots de recherche et les limites de ce choix.
+readingTime: 6
+tags:
+  - GPTBot
+  - robots.txt
+  - recherche IA
+  - citations
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Bloquer GPTBot ou le laisser passer : mon choix et ses limites'
+  description: >-
+    Pourquoi je ne bloque pas GPTBot : distinguer entraînement et recherche IA,
+    comprendre les règles robots.txt et les limites de leur effet sur les citations.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["seo", "ia-appliquee"]
+projectIds: ["eurofiscalis-refonte"]
+relatedArticles:
+  - sitemap-sans-date-fraicheur-ia
+  - search-console-claude-indexation
+  - performance-strategie-seo
+format: article
+seriesId: saga-eurofiscalis-s5
+seriesOrder: 2
+seriesKind: episode
+---
+Chez Eurofiscalis, je n’ai pas bloqué GPTBot. Ni les autres robots d’entraînement des IA.
+
+Je connais la distinction entre les robots qui récupèrent du contenu pour entraîner un modèle et ceux qui viennent chercher des sources pour une réponse. Je suis le sujet depuis les débuts de la recherche avec IA, à travers des blogs, des vidéos et des conférences. Mon choix reste de laisser l’accès ouvert.
+
+La raison est assez simple : les informations que nous traitons existent aussi chez des concurrents et sur les sites des administrations. Tous ne bloquent pas ces robots. Je vois donc mal ce que nous gagnerions à fermer uniquement notre accès.
+
+Et je garde une incertitude sur l’effet réel d’un blocage sur les citations. Ça ne veut pas dire que laisser GPTBot passer fait citer un site. Je n’ai pas de preuve à avancer dans ce sens. Mais je n’ai pas non plus de quoi affirmer que le bloquer serait sans conséquence dans tous les cas.
+
+C’est avec cette incertitude que j’ai pris ma décision.
+
+## Le fichier est court, le choix l’est moins
+
+Dans le [robots.txt d’Eurofiscalis](https://www.eurofiscalis.com/robots.txt), la règle générale est :
+
+```txt
+User-agent: *
+Allow: /
+```
+
+Le `*` désigne les robots auxquels aucune règle plus spécifique ne s’applique. `Allow: /` leur laisse explorer le site. Le fichier donne aussi l’adresse du sitemap.
+
+C’est une consigne d’exploration. Le [protocole robots.txt](https://www.rfc-editor.org/rfc/rfc9309.html) ne constitue pas un contrôle d’accès : un serveur ne refuse pas une requête simplement parce qu’elle contrevient à ce fichier. Pour empêcher techniquement un accès, il faut un autre dispositif.
+
+Cette distinction compte. Ajouter une interdiction dans le fichier exprime un choix aux robots qui le respectent. Ça ne rend pas le contenu inaccessible sur le Web.
+
+## GPTBot et OAI-SearchBot ont des usages distincts
+
+Chez OpenAI, GPTBot récupère des contenus qui peuvent servir à l’entraînement des modèles. OAI-SearchBot sert à faire apparaître des sites dans la recherche ChatGPT. [OpenAI documente des réglages indépendants](https://developers.openai.com/api/docs/bots) : tu peux refuser GPTBot et autoriser OAI-SearchBot.
+
+Pour exprimer ce refus d’entraînement, on peut écrire :
+
+```txt
+User-agent: GPTBot
+Disallow: /
+```
+
+C’est un exemple de règle, pas celle que j’ai retenue chez Eurofiscalis. Elle ne bloque pas, à elle seule, OAI-SearchBot.
+
+En revanche, bloquer OAI-SearchBot retire le site des réponses de recherche ChatGPT, selon cette même documentation. Il peut encore apparaître sous forme de lien de navigation.
+
+Avant de copier une liste de robots à bloquer, je regarderais donc les usages visés. Une liste qui mélange entraînement et recherche peut fermer des accès que tu voulais conserver.
+
+## « Les robots IA » recouvre plusieurs fonctionnements
+
+On retrouve cette séparation chez d’autres fournisseurs, mais les noms et les règles changent.
+
+| Fournisseur | Collecte pour l’entraînement | Recherche | Lecture à la demande d’un utilisateur |
+| --- | --- | --- | --- |
+| OpenAI | GPTBot | OAI-SearchBot | ChatGPT-User |
+| Anthropic | ClaudeBot | Claude-SearchBot | Claude-User |
+| Perplexity | Aucun robot d’entraînement dans cette liste | PerplexityBot | Perplexity-User |
+
+[Anthropic décrit ces trois usages et indique que ses robots respectent robots.txt](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler). [Perplexity présente PerplexityBot comme un robot de recherche, sans usage pour l’entraînement de modèles de base](https://docs.perplexity.ai/docs/resources/perplexity-crawlers).
+
+La dernière colonne mérite qu’on s’y arrête. Quand une personne demande à un assistant de consulter une page, les règles peuvent différer de celles d’une exploration automatique. OpenAI indique que robots.txt peut ne pas s’appliquer à ChatGPT-User. Perplexity précise que Perplexity-User l’ignore généralement, puisque la consultation vient d’une demande utilisateur.
+
+Google ajoute un autre cas. `Google-Extended` est un réglage dans robots.txt, sans robot HTTP distinct portant ce nom. Il couvre certains usages d’entraînement de Gemini, mais aussi l’utilisation de contenus pour étayer ses réponses. [Il ne modifie pas l’inclusion ni le classement dans Google Search](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers). Pour les fonctionnalités IA de Search, [Google renvoie aux contrôles de Googlebot et aux règles d’affichage des contenus](https://developers.google.com/search/docs/appearance/ai-features).
+
+Du coup, je me méfie d’une consigne qui propose de « bloquer l’IA » sans préciser quel service et quel usage elle vise.
+
+## Pourquoi laisser ouvert dans notre cas
+
+Mon raisonnement part du contenu disponible autour de nous. Si nous refusons l’accès, les IA peuvent encore trouver des informations chez des concurrents ou dans les sources administratives accessibles. Notre blocage ne ferait pas disparaître le sujet de leurs réponses.
+
+Il empêcherait certains usages de nos propres pages, dans les limites du respect de cette consigne. On peut vouloir cela. Moi, dans notre situation, je n’y vois pas un intérêt suffisant pour le mettre en place.
+
+Cela ne veut pas dire que les autres sites font forcément le bon choix. Leur comportement entre dans mon raisonnement, mais chacun peut avoir une raison de refuser l’entraînement : le type de contenu produit, sa valeur, les conditions dans lesquelles on souhaite le voir réutilisé.
+
+L’effet sur les citations est une autre question. La séparation documentée entre GPTBot et OAI-SearchBot montre qu’on peut autoriser la recherche tout en refusant l’entraînement. Elle ne mesure pas l’effet d’un changement sur les citations d’un site donné, dans l’ensemble des assistants et de leurs modes de réponse.
+
+Je ne vais donc pas transformer mon incertitude en conseil SEO. Je ne recommande pas de laisser GPTBot ouvert au motif que ce serait une condition pour être cité. Je dis pourquoi, chez nous, j’ai préféré conserver l’accès.
+
+## Le copyright ne me paraît pas suffire à maîtriser la circulation
+
+En suivant ce qui se passe chez les grands médias, je suis sceptique sur la capacité à garder la maîtrise de ses contenus une fois qu’ils sont publiés et repris. C’est aussi ce qui me fait douter de l’intérêt d’un blocage dans notre cas.
+
+Mais il faut regarder les exemples précisément. [Le Monde a annoncé en mars 2024 un accord avec OpenAI](https://www.lemonde.fr/le-monde-et-vous/article/2024/03/13/intelligence-artificielle-un-accord-de-partenariat-entre-le-monde-et-openai_6221836_6065879.html), portant sur l’entraînement et les moteurs de réponse. Le contenu accessible à une IA peut donc aussi relever d’un accord négocié.
+
+Cet exemple ne permet pas de conclure que le droit d’auteur ne sert à rien. Et une règle robots.txt ne règle pas, à elle seule, la question des droits ou des conditions de réutilisation.
+
+En fait, mon doute porte sur ce que je peux maîtriser concrètement en fermant cet accès. Je ne confonds pas cette limite avec une autorisation générale de reprendre ce que d’autres ont écrit.
+
+## Ce que je regarderais avant de changer la règle
+
+Si tu veux revoir la politique de ton site, commence par nommer ce que tu cherches à obtenir. Refuser que tes pages servent à entraîner un modèle, les garder accessibles à un moteur de recherche et empêcher leur lecture par un assistant sont des demandes différentes.
+
+Regarde ensuite le fichier réellement servi sur ton domaine, puis la documentation des robots concernés. Une règle de recherche copiée dans une liste d’entraînement peut changer la portée de ta décision.
+
+Si tu modifies la configuration, vérifie aussi les accès. Un pare-feu peut refuser un robot pourtant autorisé dans robots.txt. À l’inverse, écrire `Disallow` ne crée pas une barrière sur le serveur. Les journaux de requêtes peuvent aider à comprendre ce qui passe, à condition de vérifier l’identité du robot : son nom déclaré ne suffit pas à l’authentifier.
+
+Comme dans [mes contrôles d’indexation avec Search Console](/search-console-claude-indexation/), il faut distinguer la règle configurée de l’état observé. Une visite de robot, une page indexée et une citation dans une réponse sont trois observations différentes.
+
+Chez Eurofiscalis, je laisse les robots d’entraînement accéder aux pages. Le contenu reste ouvert, avec les limites que j’ai décrites. Si je change d’avis, je veux pouvoir expliquer ce que j’attends du blocage et sur quoi je fonde ce choix.

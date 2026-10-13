@@ -9,14 +9,15 @@ compatibility_date = "2026-01-01"
 # ne se désactive JAMAIS pour inactivité : il tourne tant que le Worker est
 # déployé.
 #
-# Trois horaires :
-#   - 06:15 et 14:15 UTC : PUBLICATION. Déclenche le workflow GitHub
-#     `publish-check` (rebuild+redeploie si un article programmé est dû).
-#     Les articles sont programmés à 06:00 UTC, on passe juste après.
+# Horaires :
+#   - 06:00 et 07:00 UTC : PUBLICATION à 08:00 Europe/Paris. Le Worker ne
+#     retient que le passage correspondant à 8 h (heure d'été ou d'hiver).
+#     Déclenche `publish-check`, puis build et déploiement si un article est dû.
+#   - 14:15 UTC : PUBLICATION de rattrapage.
 #   - 10:00 UTC : MONITORING. Vérifie que chaque article censé être en ligne
 #     l'est vraiment ; sinon, ouvre une alerte (issue GitHub).
 [triggers]
-crons = ["15 6 * * *", "15 14 * * *", "0 10 * * *"]
+crons = ["0 6 * * *", "0 7 * * *", "15 14 * * *", "0 10 * * *"]
 
 [vars]
 GITHUB_OWNER = "jimmysagnier"

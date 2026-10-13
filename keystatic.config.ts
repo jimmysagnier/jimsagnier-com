@@ -2,6 +2,11 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 import { block, wrapper } from '@keystatic/core/content-components';
 import { TOPICS, PROJECT_IDS, SERIES } from './src/lib/taxonomy';
 
+const publicationDateTime = fields.datetime({
+  label: 'Publication programmée (UTC)',
+  description: 'Pour publier à 8 h à Paris : saisir 7 h UTC en hiver, 6 h UTC en été.',
+});
+
 export default config({
   storage: { kind: 'local' },
 
@@ -44,10 +49,13 @@ export default config({
           validation: { isRequired: true },
         }),
 
-        scheduledPublishAt: fields.date({
-          label: 'Programmé pour publication le',
-          description: 'Optionnel — si défini, l\'article ne sera visible qu\'à partir de cette date.',
-        }),
+        scheduledPublishAt: {
+          ...publicationDateTime,
+          serialize(value: string | null) {
+            // Conserver le fuseau explicite dans le fichier, y compris après édition.
+            return { value: value === null ? undefined : new Date(/(?:Z|[+-]\d{2}:\d{2})$/i.test(value) ? value : `${value}Z`) };
+          },
+        },
 
         updatedAt: fields.date({
           label: 'Mis à jour le',

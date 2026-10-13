@@ -23,6 +23,14 @@ export default {
     if (event.cron === env.MONITOR_CRON) {
       ctx.waitUntil(runMonitor(env));
     } else {
+      // Cloudflare utilise UTC. Un seul de ces passages correspond à 8 h à Paris,
+      // selon l'heure d'été ou d'hiver. Utiliser l'heure prévue, même en cas de retard.
+      if (event.cron === '0 6 * * *' || event.cron === '0 7 * * *') {
+        const parisHour = new Intl.DateTimeFormat('fr-FR', {
+          timeZone: 'Europe/Paris', hour: '2-digit', hourCycle: 'h23',
+        }).formatToParts(new Date(event.scheduledTime)).find(part => part.type === 'hour')?.value;
+        if (parisHour !== '08') return;
+      }
       ctx.waitUntil(triggerPublish(env));
     }
   },
