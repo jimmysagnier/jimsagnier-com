@@ -1,0 +1,125 @@
+---
+title: Mon sitemap n’avait aucune date de mise à jour
+territory: comprendre
+publishedAt: 2026-10-22
+scheduledPublishAt: 2026-10-22T06:00:00Z
+summary: >-
+  Pendant mon audit mensuel, le sitemap ne donnait aucune date de modification.
+  Comment distinguer la sauvegarde du CMS, la révision éditoriale et le signal
+  envoyé aux moteurs.
+readingTime: 7
+tags:
+  - sitemap
+  - lastmod
+  - Payload
+  - fraîcheur éditoriale
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Sitemap sans lastmod : quelle date de mise à jour utiliser ?'
+  description: >-
+    Un audit de sitemap sans lastmod : distinguer les dates du CMS et les
+    actualisations éditoriales pour envoyer aux moteurs un signal de modification fiable.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["seo", "web-outils"]
+projectIds: ["eurofiscalis-refonte"]
+relatedArticles:
+  - tokens-dynamiques-fallback-derive
+  - search-console-claude-indexation
+  - migrer-2700-pages-7-langues-sans-perdre-google
+format: article
+seriesId: saga-eurofiscalis-s5
+seriesOrder: 1
+seriesKind: episode
+---
+Pendant mon audit mensuel du site d’Eurofiscalis, j’ai repéré un problème dans le sitemap : environ 3 000 URL, aucune date de dernière modification. J’ai lancé Claude Code pour analyser les dates des pages et des articles, puis préparé un rapport pour le développeur chargé des corrections.
+
+En regardant les dates dans le CMS, on a trouvé un deuxième problème. Dans l’échantillon d’articles en français examiné, près de trois dates de modification sur quatre correspondaient à des retouches techniques ou rédactionnelles mineures. Le CMS enregistrait bien une intervention, mais cette intervention ne justifiait pas de présenter l’article comme fraîchement actualisé.
+
+Il fallait donc choisir la date à transmettre aux moteurs, et définir quand la faire avancer.
+
+## Une liste d’URL, sans indication de modification
+
+Un sitemap est un fichier qui liste les adresses que tu veux faire connaître aux moteurs de recherche. Pour chaque page, tu peux ajouter une balise `lastmod`, qui indique sa dernière modification significative.
+
+Lors de cet audit, cette balise était absente. Les adresses figuraient dans le fichier, mais aucune n’avait de `lastmod`.
+
+L’absence de cette date ne prouve pas que les pages sont mal indexées. Un sitemap peut servir à faire découvrir des URL sans la fournir. En revanche, on perd une information utilisable pour organiser de nouvelles explorations.
+
+[Google explique utiliser les dates `lastmod` fiables pour planifier l’exploration de pages déjà connues](https://developers.google.com/search/blog/2023/06/sitemaps-lastmod-ping). Le moteur peut aussi cesser de faire confiance à ces dates si elles ne correspondent pas aux changements réels.
+
+Dans [l’article sur Search Console et l’indexation](/search-console-claude-indexation/), je racontais comment vérifier l’état des URL. Ici, le contrôle porte sur les dates que nous transmettons quand leur contenu change.
+
+## La sauvegarde du CMS ne suffit pas à dater une actualisation
+
+Le site utilise Payload, le CMS dont j’ai expliqué le choix dans [Sanity, puis Payload](/sanity-puis-payload-cms-choisi-deux-fois/). Il conserve une date automatique de modification du document, `updatedAt`.
+
+Dans notre installation, une sauvegarde fait bouger ce champ. Tu remplaces un terme dans une série d’articles, tu nettoies une signature, et le CMS enregistre la date de l’opération. Il garde une trace de la dernière modification du document.
+
+Mais tu ne peux pas en déduire que les informations de l’article ont été revues à cette date.
+
+On a donc besoin de distinguer les usages :
+
+| Date | Ce qu’elle décrit | Usage |
+| --- | --- | --- |
+| Publication | La première mise en ligne du contenu | Conserver son historique de publication |
+| Sauvegarde du CMS | La dernière modification enregistrée dans le document | Suivre les opérations techniques |
+| Actualisation éditoriale | Une intervention qui change les informations ou leur traitement | Indiquer au lecteur une mise à jour du contenu |
+
+En fait, une date automatique peut être exacte pour le CMS et inadaptée à la promesse faite au lecteur. Si tu affiches « Mis à jour le » après une correction d’orthographe, le lecteur peut croire que tu as vérifié les informations. La sauvegarde seule ne permet pas de le dire.
+
+## Définir quand une nouvelle date est justifiée
+
+Nous disposons d’un champ distinct pour l’actualisation éditoriale : `content_updated_at`. Il alimente la date visible sur l’article et la propriété `dateModified` des données structurées, les informations destinées aux moteurs dans le code de la page.
+
+La règle retenue dans notre chaîne éditoriale consiste à faire avancer cette date quand le fond change. Une correction d’information, un développement ajouté ou une réécriture substantielle peuvent justifier une nouvelle date.
+
+Si tu corriges une information ou développes une explication, le lecteur qui revient a du nouveau à lire. Avec un changement d’image ou une retouche du titre SEO, tu as fait une autre intervention. Notre date éditoriale suit la première logique.
+
+Le critère inscrit dans nos règles de publication est simple : un lecteur qui connaissait l’article a-t-il une raison de le relire ? Il oblige à regarder le changement effectué plutôt que la seule présence d’une sauvegarde.
+
+Il faut aussi distinguer cette règle éditoriale de la façon dont Google décrit `lastmod`. [Sa documentation considère comme significatifs des changements du contenu principal, des données structurées ou de certains liens](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap). Un changement de liens peut donc justifier de signaler une modification de la page, sans que nous souhaitions afficher au lecteur un badge de révision de fond.
+
+Avant de brancher les champs, il faut décider comment traiter ces changements. Notre règle de révision éditoriale ne couvre pas à elle seule toutes les modifications que Google juge significatives pour une nouvelle exploration.
+
+## Garder une date vide quand aucune révision ne la justifie
+
+Pour les articles jamais actualisés, la règle retenue est de laisser le champ de mise à jour éditoriale vide.
+
+À la création d’un article, on a déjà sa date de publication. Remplir aussi une date d’actualisation crée une deuxième information dont il faut expliquer le sens. Dans notre front, la présence du champ suffit à afficher « Mis à jour le ». Le remplir sur les anciens articles ferait donc apparaître un badge, même sans révision du contenu.
+
+Pour le sitemap, on peut définir un repli sans remplir artificiellement le champ dans le CMS : date d’actualisation éditoriale, sinon date de publication, sinon aucune date si on ne possède pas de donnée fiable.
+
+[Google accepte que certaines URL d’un sitemap n’aient pas de `lastmod` lorsqu’on ne connaît pas leur date de modification avec suffisamment de confiance](https://developers.google.com/search/blog/2023/06/sitemaps-lastmod-ping).
+
+La date de génération du site ne règle pas ce manque. Sur un site statique, un nouveau build reconstruit des pages dont le contenu peut être resté identique. Mettre la date du build sur toutes les URL reviendrait à annoncer que tout a changé.
+
+En plusieurs langues, cette prudence compte aussi. Une correction de la version française ne permet pas de dater les autres versions comme actualisées. Il faut suivre celles qui ont réellement été modifiées.
+
+## Transformer l’audit en consignes pour le développeur
+
+La date éditoriale est maintenant en place sur les articles : elle alimente la date visible et les données structurées. Pour le sitemap, j’ai transmis au développeur le rapport préparé après l’analyse avec Claude Code. Le branchement de ces dates fait partie des corrections à mettre en place. Mon rôle, sur ce chantier, était d’identifier le problème et de documenter les corrections à effectuer.
+
+Pour qu’un rapport de ce type serve à l’implémentation, il faut préciser la source à lire et le comportement attendu. « Ajouter les dates au sitemap » laisse encore plusieurs choix ouverts : la sauvegarde du CMS, la révision éditoriale, la date de publication, voire celle du build.
+
+Le branchement doit également conserver le lien entre une date et la bonne adresse. Sur un site multilingue, il faut associer chaque valeur à l’URL de la version concernée. Le chemin complet de l’URL permet de faire cette correspondance ; il faut aussi normaliser le slash final. C’est le branchement prévu dans la note technique issue de l’audit.
+
+Après la correction, je recommande de regarder ce que le site sert : un article actualisé, un article jamais révisé et une version linguistique qui n’a pas changé. On compare la date visible, les données structurées et l’entrée du sitemap selon les règles prévues pour chaque usage.
+
+Ces contrôles prolongent ceux de [la migration et du suivi des URL](/migrer-2700-pages-7-langues-sans-perdre-google/). Le champ dans le CMS et le fichier disponible en ligne sont deux endroits à vérifier. Sur notre site statique, une modification du CMS doit passer par un nouveau build pour apparaître dans les pages servies.
+
+## Ce que cela change pour la recherche avec IA
+
+[Bing explique que des dates `lastmod` exactes l’aident à prioriser l’exploration et la réindexation, y compris pour les réponses générées par IA](https://blogs.bing.com/webmaster/2025/7/Keeping-Content-Discoverable-with-Sitemaps-in-AI-Powered-Search/). C’est un mécanisme documenté pour Bing et ses expériences de recherche.
+
+Cela ne permet pas d’affirmer que toutes les IA évaluent la fraîcheur de la même façon, ni qu’une date récente te fera citer dans une réponse. Un contrôle du sitemap ne mesure pas un gain de trafic ou de citations lié à la correction.
+
+Sur ce chantier, on cherche à fournir une date fiable pour les changements effectués. Une nouvelle date de sauvegarde ne suffit pas à prouver une révision du fond, même si le CMS la produit sans intervention supplémentaire.
+
+Pour ton prochain audit, prends un article dont tu connais la dernière révision. Regarde la date annoncée au lecteur, celle inscrite dans les données structurées et celle du sitemap. Puis retrouve l’intervention qui justifie chacune. Si une date correspond seulement à une sauvegarde, vérifie ce que ton site promet en l’affichant.
