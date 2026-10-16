@@ -1,0 +1,137 @@
+---
+title: 'Pourquoi mon suivi éditorial est devenu une application Mac'
+territory: construire
+publishedAt: 2026-11-16
+scheduledPublishAt: 2026-11-16T07:00:00Z
+summary: >-
+  Je voulais un suivi plus visuel et pouvoir analyser mes données moi-même. Avec MyCockpit, je retrouve mes prochaines idées d’articles et je suis les résultats de mes corrections SEO.
+readingTime: 8
+tags:
+  - pilotage éditorial
+  - MyCockpit
+  - multilingue
+  - MCP
+  - outil interne
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'MyCockpit : mes idées d’articles et le suivi des corrections SEO'
+  description: >-
+    Pourquoi j’ai construit MyCockpit : une application Mac pour retrouver mes idées d’articles, explorer mes données et suivre les résultats de mes actualisations SEO.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["ecriture-contenu", "web-outils", "ia-appliquee", "seo"]
+projectIds: ["mycockpit"]
+relatedArticles:
+  - chaine-editoriale-contenu-echelle
+  - usine-skills-claude-mcp
+  - traduire-nest-pas-transcreer
+format: article
+seriesId: saga-eurofiscalis-s6
+seriesOrder: 2
+seriesKind: episode
+---
+Je voulais quelque chose de plus visuel. Mon suivi éditorial passait par des fichiers, puis par un board alimenté depuis une base JSON. Je pouvais y conserver des informations, mais je voulais aussi exploiter les données moi-même et faire mes analyses.
+
+C’est ce qui m’a décidé à construire MyCockpit, une application Mac qui rassemble le suivi des contenus et leurs données de performance.
+
+Aujourd’hui, j’utilise surtout deux parties : **Idées**, pour retrouver les prochains articles à rédiger, et **Impact**, pour regarder l’évolution SEO après les actualisations et les corrections que j’ai apportées aux contenus.
+
+Je suis lead acquisition chez Eurofiscalis. J’ai déjà raconté [notre chaîne éditoriale](/chaine-editoriale-contenu-echelle/), de la recherche à la mise en ligne. MyCockpit est l’outil que j’ai construit autour de ce travail, pour préparer la suite et revenir sur ce qui a été fait.
+
+## Les fichiers et le board avaient leurs limites
+
+Les premières traces vivaient dans des fichiers Markdown et dans la mémoire de travail des assistants. Il fallait suivre les sujets à créer, les brouillons, les dates prévues et les traductions.
+
+Le premier outil dédié a réuni ces informations dans un fichier JSON, un fichier de données structurées. Chaque contenu y avait sa fiche et ses langues. Un tableau permettait de consulter l’ensemble, et je pouvais demander à Claude de le mettre à jour en langage naturel.
+
+Cette étape a organisé le suivi. Mais le board, dans la forme où je l’utilisais, ne me permettait pas de faire tout ce que je voulais. J’avais envie d’une interface plus visuelle, de pouvoir parcourir les données et les analyser directement.
+
+L’application a donc repris ce suivi et ajouté des possibilités autour. Les données de Google Search Console et de Bing ont notamment rejoint les informations éditoriales. On peut regarder le travail prévu, puis revenir sur les pages après une intervention.
+
+L’ancien board n’est plus tenu. MyCockpit l’a remplacé, avec une reprise des données dans une base locale. Le passage à l’application a aussi évité de conserver deux suivis à mettre à jour en parallèle.
+
+## Une application sur mon Mac, parce que je suis seul à l’utiliser
+
+Je voulais que l’outil reste sur mon ordinateur. Pour l’instant, je suis le seul à m’en servir et je ne voyais pas l’intérêt d’avoir le board en ligne.
+
+MyCockpit utilise Electron pour l’application et SQLite pour la base de données locale. L’interface et le serveur MCP accèdent à cette même base. Plusieurs sites peuvent y être suivis, dont Eurofiscalis et jimsagnier.com.
+
+Ce choix correspond à mon usage actuel. Il n’est pas exclu que je mette l’outil en ligne plus tard et que j’abandonne le format application Mac. Je n’ai pas besoin de figer cette décision pour raconter ce que l’outil m’apporte aujourd’hui.
+
+La forme pourra évoluer. Pour l’instant, l’application sur mon ordinateur répond à mon besoin d’accéder moi-même aux informations et de travailler dessus.
+
+## Idées : retrouver les prochains articles à rédiger
+
+La partie Idées fait partie de celles que je consulte le plus. Elle me permet de savoir quels sont les prochains articles à rédiger.
+
+Une idée peut garder son angle, un brief et des liens prévus vers d’autres contenus. Je peux donc retrouver la préparation associée au sujet, au-delà de son titre. Quand je passe à la rédaction, l’idée est convertie en fiche pour continuer à suivre l’article.
+
+C’est le parcours utilisé pour les articles de ce site. L’idée du CRM, par exemple, a été convertie en fiche, puis sa programmation et son déploiement ont été ajoutés à l’historique.
+
+La fiche conserve ainsi le lien avec ce qui avait été préparé. Le texte est rédigé dans les outils habituels, puis enregistré dans le site. Le Cockpit sert à garder le suivi de ce parcours.
+
+Je peux aussi distinguer les sujets encore à préparer de ceux qui sont déjà devenus des articles. Ça donne une utilité assez simple à cette partie de l’application : retrouver ce que j’ai prévu d’écrire et les éléments qui permettent de m’y remettre.
+
+## Impact : revenir sur les contenus que j’ai corrigés
+
+L’autre partie que je regarde beaucoup, c’est Impact. J’y consulte notamment les résultats SEO après une actualisation ou une correction de contenu.
+
+Une intervention a une date, un type et une version concernée. La vue rapproche cet événement des données disponibles ensuite : clics, impressions, position et taux de clic. Je peux revenir sur l’action et examiner comment la page a évolué.
+
+C’est une suite utile au travail éditorial. Quand je reprends un contenu, l’intervention ne s’arrête pas à l’enregistrement du texte corrigé. Je veux aussi pouvoir retrouver cette reprise et regarder ce qui s’est passé après.
+
+L’outil propose des comparaisons dans le temps, avec des repères après l’intervention. Leur lecture dépend de la donnée disponible et du recul. Une correction récente n’a pas le même historique qu’une reprise faite plusieurs semaines auparavant. Une journée non collectée ne doit pas être lue comme une journée à zéro clic.
+
+Je garde aussi une limite dans l’interprétation : une hausse ou une baisse après une modification ne suffit pas à lui attribuer tout le résultat. La demande, les résultats de recherche et les autres pages du site peuvent évoluer en même temps.
+
+La vue permet de revenir sur mes actions avec des données. L’analyse reste à faire, et c’est justement une partie du travail que je voulais pouvoir mener moi-même.
+
+## Pour suivre une correction, il faut garder sa trace
+
+Cette partie Impact repose sur des informations qui peuvent sembler administratives : la date d’une reprise, la page concernée, sa langue et ce qui a été modifié.
+
+Si on conserve seulement l’état « publié », on perd l’action réalisée après la publication. Une page peut avoir été remise à jour plusieurs fois. Il faut pouvoir distinguer sa création des interventions suivantes.
+
+Dans MyCockpit, une actualisation est enregistrée pour la version linguistique concernée, avec sa date et sa nature. On peut ensuite retrouver les données associées à cette page.
+
+La précision par langue compte sur un site multilingue. Reprendre la version française ne signifie pas que les versions anglaise ou allemande ont été corrigées. Elles ont leur propre état et leur propre historique. [L’adaptation d’un article à une autre langue](/traduire-nest-pas-transcreer/) représente elle-même un travail à suivre.
+
+Cette organisation relie les deux usages que je fais le plus de l’application : préparer des contenus dans Idées, puis retrouver les interventions et leurs résultats dans Impact.
+
+## Le CMS reste la référence pour ce qui existe
+
+Une règle était déjà présente dans l’ancien board : le suivi conserve ce qu’on prévoit, le CMS permet de vérifier ce qui existe réellement.
+
+Prévoir une traduction allemande est une décision éditoriale. Trouver cette version dans le CMS, avec un statut et une adresse, est un constat. Les deux informations ont leur place.
+
+Si le CMS ne contient rien, ça ne dit pas si la version a été oubliée, écartée ou simplement pas encore commencée. À l’inverse, avoir enregistré « publié » dans mon suivi ne rend pas la page publique.
+
+Pour Eurofiscalis, le Cockpit sait lire les informations de Payload : les versions présentes, leurs statuts, leurs dates et leurs adresses. La synchronisation rapproche ces informations des fiches et signale les écarts à examiner.
+
+Sur jimsagnier.com, les articles sont enregistrés dans des fichiers Keystatic et Markdoc. Il n’y a pas de synchronisation automatique avec ces fichiers. Le suivi est donc renseigné explicitement, à partir du contenu et des vérifications réalisées.
+
+C’est un point à garder en tête avec un outil multi-site : chaque site a son mode d’alimentation. Il faut savoir d’où viennent les informations avant de s’appuyer dessus.
+
+## L’application et l’assistant travaillent sur la même base
+
+Je peux utiliser l’interface de MyCockpit ou demander une opération à un assistant connecté en MCP. Ce serveur donne accès à des actions définies : consulter une idée, ajouter un brief, créer une fiche, changer un état ou enregistrer une actualisation.
+
+Les deux voies accèdent à la même base. Une mise à jour faite depuis une conversation peut donc être retrouvée dans l’application, sans avoir à recopier les informations dans un deuxième outil.
+
+C’est cette connexion que nous utilisons ici pour documenter les articles. Elle complète l’interface visuelle : je peux mener la préparation et la rédaction dans une conversation, puis faire reporter les informations utiles au suivi. J’ai détaillé [mon organisation des skills et des connexions MCP](/usine-skills-claude-mcp/) dans un autre article.
+
+MyCockpit n’embarque pas de moteur de rédaction IA. Il conserve les idées, le contexte, le travail enregistré et les données qui permettent d’y revenir. L’assistant et le CMS gardent chacun leur rôle dans le processus.
+
+## Ce que je voulais pouvoir faire moi-même
+
+Le passage à une application Mac venait d’une envie assez concrète : avoir une vue plus visuelle de mon travail et pouvoir exploiter mes données directement.
+
+Les prochains articles à rédiger et le suivi des corrections SEO sont aujourd’hui mes deux principaux usages. Ils donnent un point de départ à la préparation et un moyen de revenir sur les interventions une fois réalisées.
+
+La mise en ligne reste une possibilité. Aujourd’hui, je suis seul à l’utiliser et le choix de le garder sur mon Mac correspond à cette situation.
