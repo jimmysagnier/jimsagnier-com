@@ -14,6 +14,7 @@ export const SERIES = [
   { id: 'saga-eurofiscalis-s3', label: 'Eurofiscalis : les outils' },
   { id: 'saga-eurofiscalis-s4', label: 'Eurofiscalis : après la migration' },
   { id: 'saga-eurofiscalis-s5', label: 'Eurofiscalis : SEO et recherche avec IA' },
+  { id: 'saga-eurofiscalis-s6', label: 'Eurofiscalis : les outils du lead acquisition' },
 ] as const;
 export function getTopicLabel(slug: string): string {
   return TOPICS.find((topic) => topic.slug === slug)?.label ?? slug;
