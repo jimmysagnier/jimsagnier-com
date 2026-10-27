@@ -1,0 +1,123 @@
+---
+title: 'Une mémoire de projet que mes agents peuvent retrouver'
+territory: construire
+publishedAt: 2026-12-21
+scheduledPublishAt: 2026-12-21T07:00:00Z
+summary: >-
+  Mes projets gardent leurs décisions dans Obsidian et leurs règles près du code. Le Cockpit suit les contenus. Voici comment ces traces permettent de reprendre le travail sans tout réexpliquer.
+readingTime: 8
+tags: [Obsidian, mémoire de projet, agents IA, documentation, MCP]
+topics: [ia-appliquee, web-outils, ecriture-contenu]
+projectIds: [second-cerveau-mcp]
+relatedArticles:
+  - usine-skills-claude-mcp
+  - athla-runtime-agents-local
+  - piloter-1000-contenus-cockpit
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Mémoire de projet et agents IA : organiser les notes et les décisions'
+  description: >-
+    Comment j’organise mon wiki Obsidian, les consignes du dépôt et le suivi éditorial pour retrouver les décisions, vérifier les sources et reprendre le travail avec des agents IA.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Pour travailler sur ce site, les consignes du dépôt indiquent où retrouver mon positionnement, la ligne éditoriale et la voix. Elles indiquent aussi quelle source consulter quand deux documents se contredisent. Le wiki fait référence pour les décisions ; le code en place fait référence pour le rendu.
+
+Cette distinction compte quand je reprends un projet avec une IA. Une conversation peut contenir une bonne explication, puis rester enfouie dans un historique. Une note peut être facile à retrouver et décrire une version qui a changé depuis.
+
+J’ai donc organisé plusieurs traces autour de mes projets : les sources conservées, un wiki dans Obsidian, les consignes près du code et le suivi des tâches dans MyCockpit. Chacune contient une partie du contexte dont l’agent a besoin pour travailler.
+
+Je vais expliquer ce que cette organisation conserve, comment on retrouve une décision et pourquoi une synthèse doit rester vérifiable. Le point de départ est assez pratique : pouvoir reprendre un travail sans refaire toute la discussion qui a permis de le commencer.
+
+## Garder la raison d’un choix
+
+Un dépôt montre ce qui a été construit. Il montre moins directement pourquoi on a choisi de le construire de cette manière.
+
+Sur ce site, le code contient la palette et les composants. Le positionnement explique ce que l’Atelier doit raconter, à qui il s’adresse et les sujets qui sortent de son périmètre. Pour proposer une nouvelle page ou un article, les deux informations servent.
+
+Une note de décision utile conserve donc le besoin, le choix et sa raison. Elle peut aussi préciser les limites : dans quelle situation le choix convient, ce qu’on a reporté, ce qui demanderait de le reprendre.
+
+Prenons un exemple fictif : un outil personnel stocke ses données sur un ordinateur parce qu’une seule personne l’utilise. La note « base locale » décrit une solution. Ajouter « usage individuel, pas de besoin de collaboration à ce stade » permet de comprendre dans quel contexte elle a été retenue.
+
+Si une deuxième personne doit ensuite utiliser l’outil, on sait quelle hypothèse examiner. La note aide à discuter de l’évolution au lieu de défendre une ancienne solution sans retrouver son motif.
+
+## Conserver la source derrière la synthèse
+
+Mon Second Cerveau sépare les documents sources des notes qui les expliquent ou les relient aux projets. Les sources ont leur dossier. Le wiki développe les méthodes, les décisions et les informations à réutiliser.
+
+Cette séparation permet de revenir au matériau initial. Une synthèse peut avoir oublié une réserve, rapproché deux situations ou conservé une information devenue ancienne. Il faut pouvoir retrouver ce qu’elle résumait pour examiner l’écart.
+
+Je garde aussi des repères sur les notes : date, domaine, statut et référence de source lorsque c’est applicable. Ils donnent un premier contexte à la lecture. Un statut « validé » dans le wiki n’assure pas qu’une version récente du logiciel correspond encore à chaque ligne du document.
+
+[Obsidian conserve les notes dans des fichiers texte au format Markdown](https://help.obsidian.md/Files+and+folders/How+Obsidian+stores+data). Ce choix rend les fichiers lisibles dans d’autres éditeurs et accessibles aux outils qui ont le droit de les lire. L’application sert notamment à les parcourir et à suivre leurs liens.
+
+Le format ne règle pas la fiabilité du contenu. C’est la référence vers la source, puis le contrôle effectué quand l’information compte pour une décision, qui donnent les moyens de vérifier.
+
+## Donner un point d’entrée au domaine
+
+Pour Athla, Intento ou ce site, le wiki possède un index de domaine. Il présente le projet et renvoie vers les notes sur sa vision, son architecture, ses choix et ce qui reste à faire.
+
+L’agent peut commencer par cet index, puis lire les documents utiles à sa tâche. Une question sur une règle de rédaction n’a pas besoin de charger toute l’architecture d’une application. Une reprise du moteur local ne demande pas toutes les anciennes notes éditoriales.
+
+L’index doit donc aider à choisir la lecture suivante. Un résumé du projet, l’emplacement des références et quelques liens précis apportent déjà beaucoup. Recopier tous les détails dedans créerait une autre version à maintenir.
+
+Il faut également savoir ce que l’agent a réellement lu. Avoir accès à un dossier ne signifie pas que son contenu entier est présent dans le contexte de la conversation. Le résultat d’une recherche donne des pistes ; les fichiers retenus doivent encore être ouverts quand leur détail est nécessaire.
+
+C’est une des questions que je retrouve dans [la construction d’Athla](/athla-runtime-agents-local/) : le projet donne un cadre à la session, mais le chargement du contexte a son propre fonctionnement et ses limites. La présence d’un document sur le disque ne suffit pas à garantir son utilisation.
+
+## Rendre l’autorité des documents explicite
+
+Quand un projet avance, il accumule des spécifications, des comptes rendus et des documents de reprise. Ils peuvent décrire des états différents sans être inutiles pour autant.
+
+La spécification raconte ce qui était prévu. Le code indique ce qui a été implémenté. Une vérification de déploiement indique ce qui a été installé à un moment donné. Un retour d’usage décrit encore autre chose. Pour répondre correctement, il faut savoir laquelle de ces informations on cherche.
+
+Dans le wiki, les domaines liés à un dépôt rappellent que le code est la référence pour l’implémentation actuelle. Les notes conservent la synthèse et le raisonnement. Les versions et les compteurs datés demandent une nouvelle vérification si on veut les reprendre.
+
+C’est visible avec [Intento et l’explication de ses scores](/intento-score-seo-explicable/). Les premières notes décrivent un travail encore en observation. Des documents plus récents et le dépôt montrent une évolution. Reprendre seulement la présentation initiale donnerait une description incomplète du projet.
+
+Je préfère donc une consigne qui nomme l’autorité attendue : pour vérifier une fonction, regarder le code et les traces de livraison ; pour comprendre le choix, lire la décision. « Consulte la documentation » laisse cette distinction entière à l’agent.
+
+## Les instructions du dépôt orientent le travail
+
+Le fichier de consignes de ce site conserve les repères nécessaires pour commencer : la stack, les sources à lire, les règles de rédaction et les opérations qui demandent mon accord.
+
+Il donne une direction à la session. Il n’a pas besoin de devenir la copie complète du wiki. Un renvoi précis vers le tone of voice permet de garder cette référence à un seul endroit.
+
+J’ai détaillé [l’organisation des références, des skills et des agents](/usine-skills-claude-mcp/) dans un autre article. Le rôle de la mémoire de projet est de rendre ces références retrouvables, avec assez de contexte pour savoir quand les utiliser.
+
+Le besoin apparaît aussi quand plusieurs agents interviennent. Chacun reçoit un travail délimité et les références qui le concernent. Une découverte utile à toute l’équipe doit ensuite revenir dans le suivi ou dans la référence partagée. Sinon, elle peut rester connue d’un agent et manquer au travail suivant.
+
+Cette coordination demande une relecture. Deux agents peuvent restituer une même décision avec une nuance différente. Conserver les sources permet de revenir sur le point précis, plutôt que choisir la formulation la plus assurée.
+
+## Distinguer le savoir durable de l’avancement
+
+Le protocole de mon wiki sépare les connaissances à conserver des informations de travail temporaires. Une méthode réutilisable, un choix d’architecture ou une difficulté qui mérite d’être documentée rejoignent le wiki. Le statut d’un article et sa prochaine action relèvent du suivi éditorial.
+
+MyCockpit sert à ce suivi : idées, briefs, tâches, dates et interventions. J’ai expliqué [pourquoi il est devenu une application](/piloter-1000-contenus-cockpit/). Il permet de retrouver ce qui est prévu et ce qui a été fait, sans transformer chaque changement de statut en nouvelle note de méthode.
+
+Les mémos propres à une session ont encore une autre fonction. Ils peuvent aider à reprendre un travail en cours. Dans mon organisation, ils ne doivent pas rester le seul endroit où vit une décision durable.
+
+Pour notre outil fictif à base locale, « migration en cours » peut rester un état de travail. Le choix d’une nouvelle structure, sa raison et la procédure de reprise des données méritent une référence durable. On doit pouvoir les retrouver après la clôture de la tâche.
+
+## Prévoir la reprise des notes elles-mêmes
+
+Une base de connaissances demande de l’entretien. Les consignes du wiki prévoient notamment de chercher les liens manquants, les contradictions, les informations anciennes et les écarts entre une synthèse et sa source.
+
+Ce dernier contrôle est utile quand les notes passent par plusieurs réécritures. Une reformulation peut rendre une phrase plus catégorique. Une réserve peut disparaître parce qu’elle ressemblait à une répétition. Revenir à la source permet d’examiner ces changements.
+
+La trace d’une ancienne décision garde aussi son intérêt. Si on remplace une solution, on peut marquer son état historique et renvoyer vers le choix actuel. Le prochain lecteur comprend ainsi pourquoi le projet contient encore des références à l’ancien fonctionnement.
+
+Le branchement technique reste une question séparée. [MCP permet de relier une application IA à des données et à des outils](https://modelcontextprotocol.io/docs/getting-started/intro), selon les capacités exposées et les accès accordés. Des fichiers locaux peuvent aussi être lus directement par un agent autorisé. Dans les deux cas, il faut choisir les documents nécessaires à la tâche ; le lieu de stockage ne dit pas, à lui seul, quel service traitera leur contenu.
+
+## Une reprise qui commence par les bons documents
+
+Pour reprendre un de mes projets, je veux pouvoir retrouver le besoin, la décision et l’état à vérifier. L’index donne le point d’entrée, la note conserve le raisonnement et la source permet de contrôler ce qui compte.
+
+Tu peux commencer avec un seul projet et quelques décisions importantes. Indique où elles vivent, pourquoi elles ont été prises et comment vérifier leur état actuel. À la session suivante, regarde si ces traces permettent effectivement de reprendre le travail. Les passages qui demandent encore une explication te diront quoi compléter.

@@ -1,0 +1,144 @@
+---
+title: 'Trakkeon : suivre les positions sans inventer les données manquantes'
+territory: construire
+publishedAt: 2026-12-14
+scheduledPublishAt: 2026-12-14T07:00:00Z
+summary: >-
+  J’ai construit Trakkeon autour des données de Google et Bing. Le problème central : distinguer une position mesurée, un faible volume et une requête qui n’apparaît pas dans les données.
+readingTime: 9
+tags:
+  - Trakkeon
+  - Search Console
+  - suivi de positions
+  - données SEO
+topics: [seo, web-outils]
+projectIds: [trakkeon]
+relatedArticles:
+  - search-console-claude-indexation
+  - piloter-1000-contenus-cockpit
+  - appels-prospects-plan-editorial
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Trakkeon : lire les positions GSC et les données manquantes'
+  description: >-
+    Construire un suivi SEO à partir de Search Console et Bing : positions pondérées, requêtes non observées, faible volume et provenance des données.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Dans Trakkeon, une cellule sans position peut vouloir dire plusieurs choses. La collecte n’est pas terminée. La source ne fournit pas cette période. La requête n’apparaît pas dans les données reçues. Ces situations ne demandent pas la même action.
+
+C’est une partie importante du travail sur cet outil de suivi SEO : décider ce que l’interface peut afficher quand elle ne possède pas le chiffre attendu.
+
+Je suis lead acquisition. J’ai construit Trakkeon pour suivre des expressions dans les données de Google Search Console et de Bing Webmaster Tools, par site et par section. Le projet est présenté dans [mes outils](/projets/trakkeon/). Ici, je vais surtout expliquer les choix qui empêchent une case vide de devenir une fausse information.
+
+## Commencer par ce que la source mesure
+
+Une position Search Console est une mesure agrégée. Elle ne correspond pas nécessairement à ce que tu verras en tapant la requête sur ton ordinateur maintenant.
+
+[Google définit la position moyenne à partir des impressions enregistrées](https://support.google.com/webmasters/answer/7042828?hl=fr). Le regroupement compte : on peut regarder une propriété ou une page, une requête, un pays, un appareil et une période. Une mesure sortie de ce contexte devient difficile à interpréter.
+
+Dans Trakkeon, une expression est donc rattachée à un périmètre de suivi. Une section peut représenter une partie du site, par exemple un dossier de langue. Le pays fait partie du contexte Google. Il ne faut pas le confondre avec le pays dont parle le contenu.
+
+Si tu compares une moyenne tous pays avec une moyenne limitée à un pays, tu compares deux ensembles d’impressions. Même chose si une période a surtout reçu des impressions sur mobile et la suivante davantage sur ordinateur. Il faut regarder ce qui entre dans la mesure avant de lire l’écart comme un changement uniforme de classement.
+
+J’avais déjà rencontré ce besoin de préciser la mesure en [connectant Search Console à Claude pour inspecter des URL](/search-console-claude-indexation/). Un état dans un rapport, une inspection et une recherche manuelle répondent à des questions différentes.
+
+## Recalculer une moyenne avec ses impressions
+
+Trakkeon présente plusieurs fenêtres : une journée, sept jours, quatorze jours et vingt-huit jours. Pour agréger les lignes d’une période, le calcul tient compte des impressions de chacune.
+
+Voici un exemple entièrement fictif. Une expression reçoit dix impressions avec une position moyenne de 2 le premier jour, puis quatre-vingt-dix impressions avec une position moyenne de 10 le lendemain.
+
+Faire simplement la moyenne de 2 et 10 donnerait 6. Mais les deux jours n’ont pas le même poids dans les données : la grande majorité des impressions est arrivée le second jour.
+
+Le calcul utilisé dans l’outil est :
+
+```text
+(2 × 10 + 10 × 90) / (10 + 90) = 9,2
+```
+
+La position agrégée de cet exemple est donc 9,2. Le code conserve les impressions pour pouvoir faire ce calcul, au lieu d’additionner des positions puis de les diviser par le nombre de jours.
+
+Ça ne rend pas la moyenne exhaustive ni prédictive. Ça permet de recombiner correctement les lignes disponibles et comparables. Si les lignes changent de périmètre ou si la collecte manque une partie de la période, un calcul propre peut quand même porter sur une base insuffisante.
+
+Et quand aucune impression n’est disponible, il n’y a pas de position à calculer. Le résultat reste absent. Lui attribuer zéro fabriquerait une valeur qui n’a pas été observée.
+
+## Une requête absente demande une explication prudente
+
+Une expression peut ne pas apparaître dans les lignes retournées, même si le sujet a une importance commerciale. Il faut éviter d’en déduire que personne ne la cherche.
+
+[Google indique que certaines requêtes sont anonymisées et que toutes les lignes ne sont pas restituées](https://support.google.com/webmasters/answer/17011259?hl=fr). L’[API Search Analytics précise également qu’elle ne garantit pas de retourner toutes les lignes](https://developers.google.com/webmaster-tools/v1/searchanalytics/query). Le contenu du rapport ne constitue donc pas une liste complète de toutes les recherches possibles.
+
+Il peut aussi y avoir une explication plus simple : le site n’a pas reçu d’impression sur cette formulation, dans ce périmètre et sur cette période. Ou les internautes utilisent d’autres mots.
+
+Dans la version actuelle de l’interface, le libellé est donc « non observé ». Il décrit ce qui manque dans les données reçues. Il n’affirme ni une absence de demande sur le marché, ni une disparition générale du site.
+
+La distinction compte pour le travail suivant. Si le besoin est réel mais que l’expression est mal choisie, il faut rechercher des formulations. Si la collecte est incomplète, il faut reprendre la collecte. Si le site apparaît peu sur les requêtes pertinentes, il faut examiner les pages et leur visibilité. Remplir la cellule avec un nombre ne permettrait de résoudre aucun de ces problèmes.
+
+## La position d’une page ne remplace pas celle d’une requête
+
+Trakkeon peut garder une page cible pour une expression. Quand cette expression n’est pas observée mais que la page reçoit des impressions, l’outil peut afficher la position de la page à titre de contexte.
+
+Il faut nommer ce changement de mesure. La position de la page, toutes requêtes confondues dans le périmètre retenu, n’est pas la position de l’expression absente.
+
+Dans un exemple fictif, un guide de préparation d’un déménagement peut recevoir des impressions sur « cartons fragiles » et « emballer des verres ». Ça ne donne pas automatiquement sa position sur « organiser un déménagement ». Les données de la page montrent qu’elle apparaît sur des recherches ; il reste à regarder lesquelles sont disponibles.
+
+Le code garde encore un nom d’état interne, `masked`, hérité du premier cadrage. L’affichage actuel précise que la requête n’est pas observée et que le chiffre montré appartient à la page. Son aide indique aussi que l’anonymisation n’est pas démontrée.
+
+C’est un ajustement utile : une hypothèse plausible sur la cause du manque ne doit pas devenir une certitude dans le tableau. Le contexte de page apporte une information supplémentaire, avec son propre intitulé.
+
+## Afficher des états avant de dessiner des tendances
+
+Le moteur distingue plusieurs situations. Leur rôle est de dire ce que l’on sait avant d’attribuer une couleur ou une flèche à la cellule.
+
+- Une valeur est disponible avec un nombre d’impressions qui atteint le seuil choisi dans l’outil.
+- Une valeur est disponible avec un faible volume, ce que l’affichage signale.
+- La requête n’est pas observée, mais une information de page peut être donnée séparément.
+- La requête n’est pas observée et ce contexte de page n’est pas disponible.
+- La source ne fournit pas la fenêtre demandée.
+- L’historique est encore en cours de récupération.
+
+Le seuil d’impressions est configurable. C’est une règle de lecture et de déclenchement dans Trakkeon, pas une validation statistique fournie par Google. Dépasser ce seuil ne rend pas soudainement le chiffre exact au sens d’un classement unique.
+
+Pour les alertes de chute ou de progression, le code utilise cet état avant de comparer les positions. Les notifications de présence nouvelle ou perdue suivent leurs propres règles. Il faut distinguer un mouvement chiffré d’un changement de disponibilité dans les données.
+
+Si un historique est encore en cours de récupération, afficher une chute à ce moment-là serait particulièrement trompeur. Le lecteur doit d’abord savoir que la base n’est pas prête.
+
+## Google et Bing gardent leurs propres repères
+
+Les deux sources sont présentées dans le suivi, mais elles n’ont pas toutes les mêmes possibilités de collecte.
+
+[Le rapport de performance Bing décrit lui aussi une position moyenne](https://www.bing.com/webmasters/help/search-performance-c680da36). Ça ne suffit pas à rendre ses données interchangeables avec celles de Google. Les mesures portent sur des moteurs et des ensembles d’impressions différents.
+
+Dans le collecteur Bing de Trakkeon, les points exploités sont hebdomadaires. La fenêtre de vingt-quatre heures reste indisponible. Le contexte affiché précise aussi que cette collecte est tous pays confondus. Ce sont les limites du branchement décrit ici, à vérifier de nouveau si l’API ou la méthode de collecte évolue.
+
+L’outil garde un dernier point disponible par source. Une colonne portant le même nombre de jours peut donc ne pas se terminer à la même date pour Google et Bing. Les dates sous les colonnes servent à le voir.
+
+Je ne complète pas les journées absentes en inventant une progression intermédiaire. On peut comparer ce qui est fourni, en conservant la provenance et la période. Mélanger les deux moteurs dans un seul chiffre ferait perdre ces repères.
+
+## Un contrôle ponctuel reste une autre observation
+
+Le projet contient également un collecteur expérimental de résultats de recherche, distinct des données Search Console et Bing Webmaster Tools. Il ouvre une recherche dans un navigateur et essaie d’en lire les résultats organiques.
+
+Son contrat conserve le moteur, l’expression, le contexte demandé, l’heure de capture et les limites de lecture. Il prévoit aussi des états de blocage, de résultat partiel ou de page illisible. Le pays demandé ne garantit pas la géolocalisation de la connexion.
+
+Un résultat absent de la portion examinée ne donne pas sa position au-delà. Une recherche bloquée ne donne aucune position. Et un rang lu à cet instant ne devient pas une impression historique de Search Console.
+
+Le code sépare donc ces observations des métriques des deux API. Le collecteur reste expérimental, avec une validation visuelle prévue. Je le décris comme une possibilité présente dans le projet, pas comme un relevé dont la fiabilité serait acquise en usage réel.
+
+## Décider quoi examiner après le tableau
+
+Trakkeon organise la lecture des expressions suivies. Il ne décide pas à lui seul qu’il faut réécrire une page.
+
+Une baisse peut conduire à examiner les impressions, les pages concernées, les formulations et le périmètre comparé. Une expression non observée peut amener à revoir la liste suivie. Les [questions des prospects rapprochées des données de recherche](/appels-prospects-plan-editorial/) donnent aussi des pistes, sans transformer une question commerciale en volume de recherche.
+
+Le suivi éditorial a son propre outil : j’ai expliqué [pourquoi j’ai construit MyCockpit](/piloter-1000-contenus-cockpit/). Trakkeon porte ici un autre travail, celui de rendre lisibles des observations et leurs limites avant d’en tirer une décision.
+
+Si tu construis un tableau de suivi, commence par la case vide. Définis les raisons pour lesquelles une valeur peut manquer, ce que tu peux afficher à sa place et la vérification qui permet de reprendre. C’est une bonne manière de voir si le tableau aide à comprendre la donnée ou s’il lui donne seulement une apparence complète.

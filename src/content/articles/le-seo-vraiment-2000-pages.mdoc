@@ -1,0 +1,124 @@
+---
+title: 'Le SEO à l’échelle : décider quelles pages méritent le prochain chantier'
+territory: comprendre
+publishedAt: 2026-12-17
+scheduledPublishAt: 2026-12-17T07:00:00Z
+summary: >-
+  Avec plusieurs milliers de pages, les corrections possibles se multiplient. Voici comment je distingue les problèmes d’accès, les réponses à améliorer et les pages à relier avant de lancer un nouveau chantier.
+readingTime: 9
+tags: [SEO, priorisation, audit, contenu, maillage]
+topics: [seo, ecriture-contenu, acquisition-b2b]
+projectIds: [eurofiscalis-refonte]
+relatedArticles:
+  - crawler-seo-maison
+  - search-console-claude-indexation
+  - piloter-1000-contenus-cockpit
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'SEO d’un grand site : comment prioriser les pages à améliorer'
+  description: >-
+    Prioriser le SEO de plusieurs milliers de pages : accès, indexation, intention, maillage et suivi des corrections. Une méthode pour choisir un chantier précis.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+J’ai raconté la refonte d’Eurofiscalis, la migration des contenus, le maillage et les outils construits autour. Quand on regarde ces chantiers séparément, chacun a sa logique. Quand on les remet sur un même site de plusieurs milliers de pages, une autre question apparaît : par quoi commencer lundi matin ?
+
+Un crawl trouve des liens à corriger. Search Console montre des pages qui perdent des clics. Un article demande une actualisation. Une nouvelle idée paraît intéressante. On peut avoir raison sur chacun de ces points et partir dans trop de directions à la fois.
+
+Je suis lead acquisition. Le site doit permettre de comprendre un sujet, de trouver une réponse et, quand c’est pertinent, de prendre contact. Pour choisir une intervention, je veux donc relier un problème visible à une page et à une action que l’on peut réellement effectuer.
+
+Voici une manière de remettre les priorités dans l’ordre, à partir des méthodes que j’ai documentées. Le nombre de pages donne l’échelle du travail. Il ne suffit pas à décider ce qui bloque.
+
+## Commencer par une situation, puis regarder les indicateurs
+
+Prenons un exemple entièrement fictif : un organisme de formation publie des programmes, des guides de préparation et des pages pour ses différents centres. Il reçoit moins de demandes pour une formation importante.
+
+On pourrait décider de réécrire son programme. Mais la baisse des demandes peut venir d’une page devenue inaccessible, d’un changement de demande, d’un formulaire cassé ou de visiteurs qui ne trouvent pas la réponse attendue. La réécriture n’aidera pas de la même façon dans chacun de ces cas.
+
+Je commencerais par nommer ce qu’on observe et son périmètre : quelle formation, quelles pages, quelle période, quel type de demande ? Ensuite, on cherche les éléments qui peuvent éclairer cette observation.
+
+Ça rend aussi la discussion avec l’équipe plus précise. « Notre SEO baisse » appelle une quantité de réactions. « Cette page reçoit moins de visites et son formulaire ne fonctionne plus sur mobile » permet de définir un premier travail.
+
+Les autres signaux restent à examiner. Mais on possède déjà un problème que quelqu’un peut reproduire, puis corriger.
+
+## Vérifier que la bonne page peut être consultée
+
+Avant d’enrichir un texte, il faut savoir ce que le visiteur et le moteur reçoivent réellement à son adresse. La page répond-elle ? Affiche-t-elle le bon contenu ? Les liens du site conduisent-ils toujours à cette version ?
+
+[Google présente des conditions techniques minimales pour qu’une page soit éligible à l’indexation](https://developers.google.com/search/docs/essentials/technical) : accès de Googlebot, réponse HTTP correcte et contenu indexable. Les satisfaire ne garantit pas l’indexation. Elles donnent néanmoins un premier niveau de vérification avant de discuter de la profondeur d’un article.
+
+Sur un stock de pages, le crawl sert à établir cet inventaire : adresses présentes, statuts, destinations des liens, informations extraites. J’ai expliqué [pourquoi j’ai construit un crawler](/crawler-seo-maison/) pour ce travail. Son résultat décrit ce qu’il a pu parcourir. Il reste à comparer l’inventaire avec les pages attendues dans le CMS.
+
+Il faut aussi regarder le contenu retourné. Un statut `200` accompagné de l’accueil à la place du programme ne décrit pas une page correctement disponible. C’est une raison de vérifier l’adresse canonique et des éléments propres au contenu attendu.
+
+La priorité dépend ensuite du périmètre. Une erreur sur le modèle de toutes les pages programme peut toucher une grande partie du site. Une coquille dans un article isolé appelle une autre intervention. L’outil doit aider à repérer ce qui partage la même cause.
+
+## Distinguer le problème du site et celui de son rapport
+
+Un tableau de Search Console peut donner envie d’intervenir immédiatement. Avant de lancer un chantier en lot, je veux savoir si les URL concernées présentent réellement le même problème.
+
+C’est l’intérêt de [la comparaison entre les rapports d’indexation et l’inspection d’URL](/search-console-claude-indexation/). Les deux vues ont des périmètres et des dates à lire. Un état agrégé ne remplace pas l’examen d’une page représentative.
+
+Pour notre organisme fictif, on peut sélectionner quelques programmes signalés comme absents de l’index et regarder leur état, leur contenu et leur place dans le site. Si plusieurs exceptions différentes se cachent derrière le même libellé, il faut les séparer avant de confier une correction générale.
+
+Le volume seul ne justifie pas non plus de faire du budget de crawl le sujet principal. [Le guide de Google sur ce budget vise surtout les sites très volumineux ou rapidement renouvelés](https://developers.google.com/crawling/docs/crawl-budget), ainsi que certaines difficultés de découverte. Quelques milliers de pages ne démontrent pas, à elles seules, un manque de ressources d’exploration.
+
+Je traiterais donc le symptôme constaté : une famille de pages inaccessible, une génération de variantes inutiles, des contenus jamais reliés. Le nom du chantier vient après le diagnostic.
+
+## Examiner la réponse avant d’ajouter une page
+
+Une fois la page disponible, on peut regarder ce qu’elle permet de comprendre. Pour quel lecteur est-elle écrite ? Quelle décision prépare-t-elle ? Quelles informations lui manquent encore ?
+
+Dans notre exemple fictif, un guide sur une formation peut décrire le programme et laisser de côté les prérequis. Si les personnes hésitent sur leur niveau de départ, cette section mérite un travail. Il faut d’abord vérifier qu’on connaît la réponse, puis décider où la placer.
+
+La demande peut ressortir des questions commerciales, des recherches visibles dans Search Console ou d’une analyse des contenus concurrents. Ces éléments donnent des indications différentes. Les impressions du site ne représentent pas tout le marché ; une question répétée au téléphone ne donne pas son volume de recherche.
+
+J’ai détaillé [le passage des questions des prospects au plan éditorial](/appels-prospects-plan-editorial/). Cette matière permet notamment de revenir au blocage exprimé, plutôt que fabriquer un article pour chaque variation de mot-clé.
+
+La réponse peut tenir dans une section existante. Si elle demande un traitement autonome, il faut définir la frontière entre les deux pages. C’est le travail de cadrage décrit dans [l’analyse des angles encore mal couverts](/cluster-territoire-vacant-concurrent/). Un nouveau titre ne suffit pas à donner un rôle distinct à un nouveau contenu.
+
+## Relier les contenus selon le parcours de lecture
+
+Un guide peut être complet et difficile à retrouver depuis les pages qui devraient le proposer. Sur un site important, il faut donc examiner les relations autant que les textes.
+
+Pour l’organisme fictif, la page programme peut mener vers un guide de préparation. Ce guide peut proposer les informations d’inscription quand le lecteur est prêt. Chaque lien doit répondre à la question du passage où il apparaît.
+
+[Google recommande des liens explorables et des ancres descriptives](https://developers.google.com/search/docs/crawling-indexing/links-crawlable). Ça donne un contrôle concret : peut-on atteindre la destination, et comprend-on ce qu’elle apporte avant de cliquer ? Ça ne fournit pas un quota universel de liens par page.
+
+À l’échelle du site, le travail consiste aussi à repérer les liens attendus vers des contenus encore en préparation. Il faut pouvoir les retrouver à la publication. J’ai décrit [l’organisation du maillage et des destinations en attente](/cocon-semantique-maillage-echelle/) pour conserver cette trace.
+
+Ce chantier doit rester relié à une lecture du contenu. Un graphe de liens peut signaler une page peu reliée ; il ne choisit pas, à lui seul, les paragraphes depuis lesquels on devrait l’envoyer au lecteur.
+
+## Choisir une action dont on pourra regarder la suite
+
+Une fois ces vérifications faites, je préparerais une décision courte. La page concernée, ce qu’on observe, ce qu’on propose de changer et ce qu’on regardera ensuite doivent tenir ensemble.
+
+| Constat dans notre exemple fictif | Première action à examiner |
+| --- | --- |
+| Le programme retourne une mauvaise page | Corriger le parcours technique, puis contrôler l’adresse publique |
+| Les prérequis restent incompréhensibles | Vérifier la réponse avec l’équipe, puis reprendre la section |
+| Le guide utile est isolé | Identifier les passages qui devraient y conduire |
+| Les visiteurs arrivent mais ne peuvent pas contacter le centre | Reproduire le problème du formulaire et le corriger |
+
+Pour départager les autres travaux, je regarderais la place de la page dans le parcours, l’ampleur du problème et la possibilité de nommer une correction. Une intervention qui répare un modèle partagé mérite d’être regardée autrement qu’une retouche isolée.
+
+Il faut aussi estimer l’effort, les compétences nécessaires et le risque de régression. Une correction simple peut être traitée rapidement. Une reprise qui touche plusieurs modèles demande de préparer les contrôles et le retour en arrière. Ces éléments permettent de choisir entre deux chantiers utiles, avec les moyens réellement disponibles.
+
+Les données aident à préciser l’enjeu. Elles ne doivent pas faire disparaître ce qu’elles mesurent. Un taux de clic faible demande de regarder les requêtes, la position, la présentation des résultats et les filtres utilisés. Il ne démontre pas automatiquement qu’il faut changer le titre.
+
+Il faut enfin garder l’état précédent et la date de l’intervention. [Mon suivi éditorial dans MyCockpit](/piloter-1000-contenus-cockpit/) sert notamment à retrouver les corrections et l’évolution des données. Une variation après une reprise reste à interpréter : la demande et les résultats du moteur peuvent avoir changé en même temps.
+
+## Garder cette hiérarchie quand un nouveau sujet apparaît
+
+La recherche avec IA ajoute d’autres questions au suivi. Pour les fonctionnalités de Google, [la documentation maintient les fondamentaux SEO et ne demande pas d’optimisation technique spéciale](https://developers.google.com/search/docs/appearance/ai-features). Ça laisse toute leur place à l’accès, à la qualité de la réponse et aux liens qui permettent de retrouver le contenu.
+
+Sur un site de plusieurs milliers de pages, ces éléments donnent déjà beaucoup de travail. Je garderais une intervention assez précise pour être exécutée et contrôlée, plutôt qu’une consigne générale d’« améliorer le SEO ».
+
+Pour le prochain chantier, choisis donc une page importante et décris le problème que tu peux vérifier. Regarde si la même cause touche d’autres pages. Tu pourras alors décider de la bonne échelle de correction, et savoir ce qu’il faudra contrôler une fois le travail terminé.

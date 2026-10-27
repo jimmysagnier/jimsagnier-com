@@ -1,0 +1,127 @@
+---
+title: 'Intento : comprendre ce qu’un score SEO mesure vraiment'
+territory: construire
+publishedAt: 2026-12-10
+scheduledPublishAt: 2026-12-10T07:00:00Z
+summary: >-
+  J’ai construit Intento pour relier la recherche SEO à la rédaction. Son score a surtout posé une question : comment distinguer un texte qui parle d’un sujet d’un texte qui apporte une réponse ?
+readingTime: 9
+tags: [Intento, SEO sémantique, score, intentions de recherche, MCP]
+topics: [seo, ia-appliquee, web-outils, ecriture-contenu]
+projectIds: [intento]
+relatedArticles:
+  - recherche-seo-semantique-agents-ia
+  - qualite-eeat-contenu-echelle
+  - cluster-territoire-vacant-concurrent
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Intento : construire un score SEO explicable, avec ses limites'
+  description: >-
+    Comment Intento distingue vocabulaire, intentions et réponses : passages consultables, juge IA, fiabilité du corpus et versions du barème. Une note à interpréter.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Les premières versions du score d’Intento étaient trop généreuses. Le moteur retrouvait le vocabulaire du sujet et des passages proches des questions attendues. Il pouvait alors considérer les intentions comme couvertes, même quand le texte n’apportait pas vraiment les réponses.
+
+C’était un défaut du calcul. Il fallait reprendre ce que l’outil appelait « répondre ».
+
+J’ai construit [Intento](/projets/intento/) pour préparer et travailler des contenus à partir d’une recherche SEO : résultats collectés, pages concurrentes, questions, vocabulaire et brief. L’outil peut être interrogé par un agent connecté en MCP et possède aussi un espace de rédaction. La note sert à examiner un texte dans ce contexte.
+
+Le chantier du score m’intéresse parce qu’il oblige à préciser ce qu’on attend d’un outil éditorial. Si une note monte, il faut pouvoir retrouver ce qui l’a fait monter et décider si ce changement aide réellement le lecteur.
+
+## Partir de données que l’on peut retrouver
+
+Le projet est né d’un besoin de recherche sémantique directement accessible aux agents de rédaction. Une partie du travail consiste à récupérer les données : des résultats de recherche, des suggestions, les textes de pages et les questions qu’elles contiennent.
+
+Leur provenance doit rester visible. Une question extraite d’une page concurrente n’est pas automatiquement une question affichée par Google. Une suggestion de recherche et une question déduite par un modèle n’ont pas non plus la même origine.
+
+Cette différence se retrouve dans le brief. Si l’outil mélange tout sous une étiquette unique, le rédacteur ne sait plus ce qui a été observé et ce qui a été proposé. Il peut traiter comme une demande établie une question que l’agent vient simplement d’imaginer.
+
+J’ai déjà décrit [la préparation d’un brief avec la recherche sémantique et les agents](/recherche-seo-semantique-agents-ia/). Intento reprend une partie de ce travail dans un outil : conserver les données de départ et fournir des calculs qu’on peut examiner. La décision sur ce que la page doit raconter vient ensuite.
+
+## Le vocabulaire ne suffit pas à reconnaître une réponse
+
+Prenons un exemple entièrement fictif. Un lecteur cherche comment transférer son catalogue vers un nouveau logiciel. Dans un premier texte, on lui dit que la migration est importante, qu’elle doit être préparée et qu’un import permet de reprendre ses produits.
+
+Le texte contient les bons mots. Il n’explique toujours pas quel fichier préparer, quelles informations conserver ni comment vérifier que le catalogue a été repris correctement.
+
+Un second texte peut donner ces précisions avec un vocabulaire un peu différent. Il parle du format accepté, des champs obligatoires et du contrôle des produits importés. Pour le lecteur, cette différence compte davantage que la répétition exacte du mot « migration ».
+
+Les premières méthodes d’Intento s’appuyaient notamment sur la proximité sémantique, c’est-à-dire une mesure de ressemblance entre des représentations de textes. Les essais du projet ont montré ses limites pour cette tâche. Un passage pouvait être proche d’une question sans donner l’information demandée, ou répondre à un cas voisin.
+
+Retrouver un passage pertinent constituait donc une étape. Il restait à examiner ce qu’il permettait réellement de comprendre ou de faire.
+
+## Faire juger la réponse, puis contrôler la citation
+
+Une version livrée en octobre a ajouté un juge Claude. L’article est découpé en blocs numérotés. Pour chaque intention du brief, le juge doit distinguer une réponse, une réponse partielle, une simple mention et une absence.
+
+Il doit aussi fournir une citation du texte pour appuyer son verdict. Le code cherche ensuite cette citation dans les blocs. Si un verdict positif repose sur un extrait introuvable, il est abaissé. Les sous-thèmes et l’introduction ont leurs propres contrôles.
+
+Ce travail ajoute une vérification utile : on peut retrouver le passage sur lequel repose l’évaluation. Mais une citation présente peut encore être mal interprétée. Elle peut ne répondre qu’à une partie de la question, oublier une condition ou porter sur un périmètre différent.
+
+Dans notre exemple fictif, un paragraphe sur l’export de l’ancien logiciel n’explique pas nécessairement l’import dans le nouveau. Les deux opérations appartiennent au même chantier. Le lecteur a pourtant besoin de renseignements distincts pour les réussir.
+
+Le contrôle de citation ne vérifie pas non plus que les informations du paragraphe sont vraies. Une procédure inventée peut être parfaitement retrouvée dans le texte. La vérification métier conserve donc son propre travail, avec ses sources et ses personnes compétentes.
+
+## Quand le juge manque, montrer ce que l’on ignore
+
+Le score actuel combine des calculs de structure et de vocabulaire avec les verdicts du juge. Il faut conserver cette distinction quand un appel au modèle échoue.
+
+Le code prévoit alors une réponse provisoire, présentée sous forme de fourchette. Elle encadre la note selon les contributions encore inconnues et n’est pas enregistrée comme un score définitif.
+
+C’est une limite de fonctionnement à rendre visible. L’outil sait encore compter des termes ou examiner des titres, mais il n’a pas obtenu le jugement demandé sur les réponses. Il ne peut pas présenter le même niveau de conclusion que lorsque cette étape a abouti.
+
+Ces bornes viennent du barème. Elles ne représentent pas une probabilité de bien se classer ni un intervalle de confiance sur la qualité du texte. Leur intérêt est plus simple : éviter de masquer un morceau manquant du calcul derrière un nombre précis.
+
+## Les poids et les seuils restent des choix de conception
+
+Intento donne davantage de poids aux intentions qu’à certains critères de présentation. Le méta-titre, le titre principal, les intertitres et le vocabulaire ont aussi leur place. Ce sont les priorités choisies pour cet outil, avec des réglages identifiables.
+
+Le calcul des termes utilise des plages tirées du corpus analysé. Il distingue leur présence de leur dosage et peut réduire leur contribution lorsqu’ils sont répétés excessivement. Ces règles organisent un diagnostic interne. Elles ne transforment pas les habitudes des pages concurrentes en obligations pour tous les rédacteurs.
+
+Un autre garde-fou plafonne la note d’un texte très court par rapport à la longueur de référence du brief. Il a été ajouté pour éviter qu’un texte presque vide profite trop facilement de critères satisfaits. Ajouter du remplissage pourrait faire disparaître ce plafond sans améliorer la réponse.
+
+Il faut donc revenir à la raison du contrôle. La longueur peut signaler qu’un développement manque. Elle ne permet pas de savoir à elle seule si le lecteur a obtenu ce qu’il cherchait. [Google indique d’ailleurs ne pas privilégier un nombre de mots déterminé](https://developers.google.com/search/docs/fundamentals/creating-helpful-content?hl=fr).
+
+Pour lire une note, je regarderais d’abord le détail des critères et leurs justifications. Une valeur globale devient beaucoup plus utile quand on peut retrouver les décisions qui la composent.
+
+## Le corpus a lui aussi besoin d’un diagnostic
+
+La note dépend du brief, et le brief dépend en partie des pages récupérées. Si plusieurs pages sont inaccessibles, si leur extraction perd des sections ou si les textes retenus sont des doublons, le point de comparaison se dégrade.
+
+Intento conserve donc un diagnostic de collecte : pages exploitables, diversité des domaines, doublons, erreurs et dates de récupération. Les anciennes analyses qui ne possèdent pas ces mesures restent signalées comme non évaluées.
+
+Ce diagnostic ne certifie pas l’exactitude des sources. Plusieurs sites peuvent reprendre la même information erronée. Une collecte complète peut aussi réunir des pages qui traitent mal le besoin.
+
+La date de récupération a également un sens précis : elle indique quand le texte a été collecté, sans prétendre dater sa dernière révision éditoriale. Pour une information qui change, il faut encore vérifier la source appropriée.
+
+Ces précisions évitent de demander à une seule note de tout garantir. La qualité de collecte, l’évaluation du brouillon et la vérification des faits portent sur des objets différents. On doit pouvoir revenir sur chacun.
+
+## Comparer deux notes exige de garder le même repère
+
+Un score peut changer parce que le texte a été amélioré. Il peut aussi changer parce que le brief, le modèle ou les règles ont été repris.
+
+Le projet conserve une identité de calcul avec les réglages utiles, la méthode, le modèle et le contexte du brief. Quand ces références ne sont plus compatibles, l’historique indique pourquoi la comparaison directe pose problème. Les anciens scores ne sont pas effacés pour autant.
+
+Dans notre cas fictif, tu pourrais ajouter au brief une question importante sur les images des produits. Le texte évalué ne change pas, mais il doit désormais répondre à une attente supplémentaire. Une baisse de note ne décrit donc pas nécessairement une régression du texte.
+
+La même prudence vaut pour les pages concurrentes. Les noter avec le même barème donne un autre point de comparaison éditorial. Cela ne transforme pas la note en explication de leur classement. Les essais d’Intento ont justement montré que les pages les mieux classées n’étaient pas systématiquement celles que son barème notait le mieux.
+
+Le rapprochement peut soulever une question utile à examiner. Il ne permet pas d’attribuer une position à un critère isolé.
+
+## Revenir à la modification qui mérite d’être faite
+
+Le projet a évolué depuis les premières expériences locales. Le score avec juge et les comparaisons de pages ont fait l’objet de livraisons documentées. Ça ne termine pas la calibration éditoriale et ne garantit pas la justesse de chaque verdict.
+
+Pour utiliser un tel rapport, je repartirais d’une question signalée comme mal traitée. Je lirais le passage proposé, puis les sources nécessaires pour vérifier la réponse. Il faut ensuite décider si le texte doit être complété, si le brief demande quelque chose hors sujet ou si le diagnostic est erroné.
+
+Cette décision rejoint [le cadrage d’une page et de ses articles complémentaires](/cluster-territoire-vacant-concurrent/). Tout ce qu’on peut rapprocher d’un sujet n’a pas forcément sa place dans le même texte.
+
+Intento me sert de chantier pour rendre ces choix consultables : ce qui a été collecté, ce que le moteur a calculé, le passage proposé par le juge et la règle appliquée. La prochaine modification doit pouvoir s’expliquer à partir de ces éléments. Faire monter la note sans savoir quelle réponse on améliore laisserait entière la question de départ.

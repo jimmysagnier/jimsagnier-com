@@ -1,0 +1,123 @@
+---
+title: 'Athla : construire mon environnement de travail avec l’IA'
+territory: construire
+publishedAt: 2026-12-07
+scheduledPublishAt: 2026-12-07T07:00:00Z
+summary: >-
+  Avec Athla, je construis une application personnelle pour retrouver mes projets, faire vivre les sessions d’agents et choisir le modèle utilisé. Voici les décisions qui organisent cet espace de travail.
+readingTime: 9
+tags: [Athla, agents IA, application personnelle, modèles locaux, contexte]
+topics: [ia-appliquee, web-outils]
+projectIds: [athla]
+relatedArticles:
+  - vibecoding-explique
+  - usine-skills-claude-mcp
+  - piloter-1000-contenus-cockpit
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Athla : mon application personnelle pour travailler avec des agents IA'
+  description: >-
+    Les choix derrière Athla : sessions en arrière-plan, contexte des projets, modèles locaux ou cloud et outils connectés. Un environnement IA personnel en construction.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Je construis Athla pour réunir les projets, les conversations et les outils avec lesquels je travaille avec l’IA. Le point de départ tient dans une question assez concrète : comment retrouver un chantier, son contexte et les tâches en cours quand on passe d’une conversation à l’autre ?
+
+Athla est une application personnelle pour Mac, développée avec Electron et React. Elle peut utiliser un modèle exécuté sur ma machine ou un service de modèles distant. Elle contient aussi la logique qui fait travailler les agents avec leurs outils, suit les sessions et conserve leurs échanges.
+
+Je suis lead acquisition. Mes besoins portent sur la recherche, le contenu, les sites et les outils que je construis. Je voulais donc organiser cet environnement autour de mes projets, avec le choix du modèle et les connexions nécessaires au travail. Je présente ici ces décisions, à partir de la documentation et du code du projet. Ce sont les choix d’un outil personnel en construction.
+
+## La session doit pouvoir vivre sans sa fenêtre
+
+Dans Athla, la session est l’unité centrale. Elle possède son historique, un projet éventuel, un modèle actif et un état : au repos, en train de travailler, en attente d’une réponse, en arrière-plan ou en erreur.
+
+La fenêtre sert à afficher cette session. Elle peut s’y attacher puis s’en détacher. Ce découpage a une conséquence utile : quand une fenêtre est fermée pendant un travail, le code peut garder la session en arrière-plan et signaler la fin du traitement.
+
+Ça suppose que l’application continue de tourner. Fermer une fenêtre et quitter entièrement l’application sont deux opérations différentes. La présence d’un historique enregistré ne signifie pas qu’un calcul continue quand le processus est arrêté ou que l’ordinateur est éteint.
+
+Cette séparation est inscrite dans l’architecture. La logique des sessions fonctionne dans le processus principal d’Electron. L’interface reçoit les événements et affiche le résultat. Elle ne porte pas elle-même tout le travail de l’agent.
+
+Pour comprendre le besoin, imagine un exemple fictif : une recherche documentaire est en cours sur un projet, pendant que tu ouvres une autre conversation pour préparer un texte. Tu veux pouvoir retrouver la recherche sans la confondre avec le nouveau fil. C’est ce type de continuité que le modèle de session doit rendre possible.
+
+## Un projet doit apporter plus qu’un nom dans la barre latérale
+
+Un projet peut regrouper des conversations, mais il doit aussi fournir les informations utiles pour travailler : des instructions, des ressources et un dossier de fichiers.
+
+Dans Athla, je peux associer un dossier à un projet et désigner certains fichiers à charger dans son contexte. Le code prépare l’arborescence et lit ces fichiers au moment de construire le contexte du tour. Il n’attend donc pas que le modèle pense spontanément à ouvrir les consignes importantes.
+
+Ça ne revient pas à charger tout le disque. La lecture est bornée : certains fichiers sont ignorés, la profondeur de l’arborescence est limitée et un fichier trop long est tronqué. Une ressource manquante peut aussi produire une erreur de lecture. Ces limites doivent rester visibles dans le contenu fourni au modèle.
+
+La sélection des ressources devient alors une décision de travail. Quelles règles doivent être présentes dès le début ? Quels documents peuvent être recherchés seulement lorsqu’ils deviennent utiles ? Si on met tout dans les fichiers toujours chargés, on remplit le contexte avec des informations dont la tâche n’a peut-être pas besoin.
+
+Je retrouve une organisation proche dans [mes skills et mes références](/usine-skills-claude-mcp/) : conserver les consignes à un endroit identifié et charger le détail au moment où il sert. Dans Athla, une partie de cette organisation devient une fonction de l’application.
+
+## Garder une mémoire sans considérer qu’elle a toujours raison
+
+Le projet possède aussi un mécanisme de mémoire persistante, avec une portée globale et une portée propre au projet. Quand elles sont activées, leurs informations peuvent rejoindre le contexte d’une nouvelle conversation.
+
+L’historique d’une session et cette mémoire répondent à des besoins différents. L’historique garde les échanges du fil. La mémoire permet de retrouver certaines informations au-delà de ce fil. Les documents du projet restent encore une autre source : on peut aller les lire et voir précisément ce qu’ils contiennent.
+
+La difficulté apparaît quand ces sources divergent. Une décision peut avoir changé depuis sa première formulation. Un résumé peut garder une ancienne contrainte alors que le code a évolué. Il faut donc pouvoir revenir à la source qui décrit l’état recherché, puis corriger ce qui est devenu trompeur.
+
+Athla prévoit une taille limitée pour les mémoires injectées dans le contexte. Si le contenu dépasse cette taille, il est tronqué et un message l’indique. Cette limite rappelle qu’une mémoire doit être entretenue. Accumuler des notes sans tri ne donne pas automatiquement un meilleur point de départ à l’agent.
+
+Je ne cherche donc pas à faire de la mémoire une preuve. Elle aide à reprendre le travail. Pour vérifier une fonction ou une décision, il faut encore regarder la trace correspondante.
+
+## Choisir le modèle fait partie de la tâche
+
+Un autre principe de départ est de garder le choix entre exécution locale et service distant. Le projet possède son propre moteur local, avec des chemins d’exécution pour llama.cpp et MLX, ainsi que des connexions à des fournisseurs externes.
+
+Le modèle actif est rattaché à la session. On peut le changer entre deux réponses, en conservant l’historique de la conversation. Le code bloque le changement pendant une réponse en cours : il faut d’abord laisser le tour se terminer.
+
+Conserver l’historique ne garantit pas que deux modèles vont raisonner de la même façon ou exploiter les outils avec la même facilité. Ça permet de garder le fil du travail, mais il faut regarder ce que le modèle suivant reçoit et ce qu’il fait réellement.
+
+Le moteur local apporte aussi un travail technique propre au projet : retrouver les modèles installés, les charger, les décharger et gérer le passage de l’un à l’autre. Le code organise ces opérations pour éviter de lancer plusieurs chargements concurrents du même moteur.
+
+Je ne donne pas ici de comparaison de vitesse ou de qualité entre modèles. La présence d’un moteur dans l’application ne suffit pas à valider toutes les tailles de modèles, tous les formats et tous les usages. La documentation distingue d’ailleurs les parcours déjà essayés des validations qui restent à reprendre.
+
+## Un modèle local peut quand même utiliser des services externes
+
+Le choix local ou distant concerne d’abord l’exécution du modèle. Les outils utilisés pendant la tâche ont leur propre trajet de données.
+
+Une session avec un modèle local peut demander une recherche web ou appeler un service connecté. À l’inverse, garder des documents sur le Mac ne suffit pas à dire qu’aucun extrait ne sera transmis si on choisit ensuite un modèle distant pour les traiter.
+
+Dans Athla, le choix du fournisseur est donc une décision explicite. Il faut également regarder les connexions ouvertes à la session et les informations nécessaires à chaque opération. L’étiquette « local » ne remplace pas cette lecture.
+
+Ce point compte particulièrement pour un environnement orienté métier. Préparer un article à partir de sources publiques et analyser un document privé ne demandent pas les mêmes accès. Le sujet de la tâche doit guider ce qu’on fournit à l’agent, même lorsque les deux travaux passent par la même interface.
+
+## Donner des outils aux agents, puis suivre leur travail
+
+Athla possède un hôte MCP qui relie les agents à des outils. Un appel peut lire une ressource ou exécuter une action, selon les outils disponibles et leur configuration. Le résultat revient dans la conversation pour permettre au modèle de poursuivre.
+
+Le projet sait aussi répartir du travail entre des sous-agents et réunir leurs résultats. C’est utile pour séparer des missions : une lecture documentaire, une vérification ciblée, une synthèse. Chaque mission doit rester assez précise pour qu’on puisse juger son résultat.
+
+Multiplier les sous-agents ne crée pas une vérification indépendante par défaut. Si chacun part de la même information incorrecte, leur synthèse peut la répéter. Il faut donc conserver les sources et distinguer le travail produit des faits effectivement contrôlés.
+
+Le suivi de l’exécution a sa place dans l’interface : connaître l’état d’une session, voir qu’un outil est utilisé, pouvoir arrêter un traitement. Ces fonctions ne disent pas si la réponse est juste. Elles donnent les moyens de comprendre où en est le travail et d’intervenir.
+
+Pour le cadre plus général de cette boucle entre demande, code et vérification, j’ai expliqué [ce que j’entends par vibecoding](/vibecoding-explique/). Athla est un projet où ces questions deviennent elles-mêmes une partie du logiciel.
+
+## Étendre l’application demande une étape de plus
+
+Le projet distingue les skills des capacités exécutables. Un skill décrit comment accomplir une tâche. Une capacité ajoute du code que l’agent peut appeler comme un outil.
+
+Cette seconde possibilité est plus engageante. Enregistrer une description ne suffit pas : il faut aussi définir l’entrée attendue, le résultat et le chemin d’exécution. Le code des capacités passe par un registre et un mécanisme de contrôle avant son utilisation.
+
+Je ne présente pas ces mécanismes comme une garantie générale d’isolement. Une fonction peut exister dans le dépôt et demander encore une validation sur l’application empaquetée ou dans une configuration particulière. Les notes du projet gardent cette distinction entre implémentation et essai réel.
+
+Pour un outil personnel, je peux reprendre un comportement avec le code et mes fichiers sous la main. Le distribuer à quelqu’un d’autre demanderait aussi de vérifier le premier lancement, les prérequis, les accès et les erreurs qu’il peut rencontrer. C’est un autre niveau de finition que l’ajout d’une fonction.
+
+## Ce que ce chantier cherche à rendre plus facile
+
+Avec Athla, je travaille sur la continuité : retrouver un projet, remettre son contexte à disposition, suivre les sessions et choisir comment elles vont travailler. Les modèles et les outils prennent leur place dans cette organisation.
+
+La même question revient dans [MyCockpit, mon outil de suivi éditorial](/piloter-1000-contenus-cockpit/) : quelle information faut-il garder pour pouvoir reprendre une action plus tard ? Les applications n’ont pas le même rôle, mais elles doivent chacune conserver les repères nécessaires à leur usage.
+
+Si tu envisages un environnement de travail personnel avec l’IA, commence par décrire ce que tu veux retrouver entre deux conversations. Une consigne, un document, une décision, une tâche encore en cours : ces éléments demandent des traitements différents. C’est en les distinguant que tu peux choisir ce qui mérite une simple note et ce qui demande une fonction dans l’application.
