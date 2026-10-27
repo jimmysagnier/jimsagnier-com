@@ -1,0 +1,129 @@
+---
+title: 'Du commit à l’outil en service : vérifier ce qui a réellement changé'
+territory: construire
+publishedAt: 2027-01-25
+scheduledPublishAt: 2027-01-25T07:00:00Z
+summary: >-
+  Pour Intento, pousser le code et vérifier un aperçu ne suffit pas à décrire une livraison. Il faut aussi regarder le service, les données et le parcours utilisé pour accéder à l’outil.
+readingTime: 9
+tags: [déploiement, Intento, livraison, outil personnel, vérification]
+topics: [web-outils, ia-appliquee]
+projectIds: [intento, jimsagnier-com]
+relatedArticles:
+  - intento-score-seo-explicable
+  - tuto-site-perso-astro
+  - deleguer-tache-agent-criteres-verification
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Livrer un outil : du commit à la version réellement en service'
+  description: >-
+    À partir de la procédure Intento, distinguer code poussé, application redémarrée, données vérifiées et parcours d’accès contrôlé après une mise à jour.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+La procédure de livraison d’Intento contient une consigne précise : un commit, un push ou un aperçu séparé ne termine pas la mise à jour du service permanent. Il faut aussi examiner ce qui tourne et ce que l’on retrouve depuis le parcours d’accès habituel.
+
+Cette précision vient de l’organisation de l’outil. Le code, les fichiers d’interface, le processus Python et la base de données ont chacun leur état. Leur mise à jour ne se résume pas à la présence d’une nouvelle version dans Git.
+
+Je suis lead acquisition et je construis mes outils avec l’IA. Je vais reprendre ce parcours à partir de la procédure et du code consultés le 27 octobre 2026. Le texte décrit les contrôles prévus pour la livraison ; il ne présente pas une nouvelle intervention réalisée sur l’application.
+
+J’ai déjà expliqué [ce qu’Intento cherche à mesurer dans un contenu](/intento-score-seo-explicable/). Ici, la question porte sur sa mise à disposition : comment savoir quelle version l’utilisateur peut réellement utiliser ?
+
+## Nommer les étapes que l’on a terminées
+
+Dans un projet, plusieurs phrases peuvent se succéder : le code est écrit, les tests passent, le commit est poussé, l’application a redémarré. Elles donnent des informations différentes.
+
+Le commit permet d’identifier un ensemble de fichiers. Le push le rend disponible dans le dépôt distant. Le build peut fabriquer les éléments nécessaires à l’exécution. Le service doit ensuite utiliser les bons fichiers et les bonnes données.
+
+Une page accessible constitue encore une autre observation. Elle peut provenir de la version attendue, d’une version ancienne ou d’un écran qui ne permet pas d’exercer la fonction modifiée.
+
+Le compte rendu doit donc rattacher chaque état à sa preuve. Quelle révision du code ? Quel service mis à jour ? Quelle page ouverte ? Quelle opération vérifiée ? Sans ces repères, « c’est en ligne » peut recouvrir des travaux très différents.
+
+Pour [la publication de ce journal statique](/tuto-site-perso-astro/), le build prépare des fichiers qui sont ensuite déployés. La procédure d’Intento comporte un processus applicatif et une base qui continuent à vivre entre les livraisons. Il faut examiner ce parcours propre au projet.
+
+## Comprendre ce que l’aperçu permet de vérifier
+
+Un aperçu séparé est utile pour regarder la nouvelle interface et essayer une fonction dans un cadre de travail. Il faut savoir avec quels fichiers, quel processus et quelle base il a été lancé.
+
+S’il utilise une base de démonstration, il peut valider un comportement sans vérifier la compatibilité avec les données de l’installation habituelle. S’il utilise un autre processus, sa réussite ne prouve pas que le service permanent a chargé la même version.
+
+Dans la procédure documentée d’Intento, l’interface et les fichiers statiques peuvent être lus depuis le même dépôt que le service. Certains éléments visibles peuvent donc changer pendant que le processus Python conserve du code déjà chargé.
+
+Prenons un exemple entièrement fictif : un formulaire d’inscription reçoit un nouveau champ de préférence. L’interface peut afficher ce champ avant que le serveur soit capable de l’enregistrer. Voir le champ ne suffit alors pas à valider la fonction.
+
+Pour éviter ce type de mélange, il faut préparer une transition compatible ou utiliser un emplacement de travail séparé. L’important est de savoir quels éléments sont partagés avec le service que les personnes utilisent déjà.
+
+## Identifier le processus qui doit recevoir le changement
+
+Le code d’Intento démarre une application Python avec Uvicorn. Le lancement consulté n’active pas le rechargement automatique des fichiers. [La documentation Uvicorn décrit ce rechargement comme une option, désactivée par défaut](https://uvicorn.dev/settings/).
+
+La procédure prévoit donc la mise à jour du service permanent, avec un traitement différent lorsqu’une migration de données doit avoir lieu. Un simple redémarrage ne décrit pas toute la préparation nécessaire à cette migration.
+
+Il faut aussi identifier les autres processus qui utilisent les mêmes données. Une ancienne interface ou un serveur MCP peut garder une connexion ouverte. Avant une intervention qui exige leur arrêt, on doit savoir lesquels sont concernés et vérifier qu’ils ont effectivement été fermés.
+
+Le nom d’un fichier modifié ne suffit pas à choisir un processus à arrêter. La procédure demande d’identifier les utilisateurs de la base et de ne pas interrompre un processus inconnu par supposition.
+
+Dans un outil personnel, cette étape peut sembler disproportionnée parce que l’on est seul devant l’écran. Mais plusieurs clients et tâches peuvent quand même travailler en arrière-plan. Le périmètre réel des écritures compte davantage que le nombre de personnes devant l’application.
+
+## Préparer les données avant la bascule
+
+Une livraison peut modifier le code sans changer le stockage. Elle peut aussi ajouter une table, transformer un champ ou reprendre des données existantes. Il faut identifier ce second cas avant de faire démarrer une version qui applique une migration.
+
+La procédure d’Intento prévoit une sauvegarde cohérente de la base et des repères sur les contenus à conserver. Les compteurs et les empreintes permettent de comparer des états sans publier les textes privés dans les journaux.
+
+Une sauvegarde doit correspondre à un moment connu de l’intervention. Si des écritures continuent ensuite, il faut savoir quelles données plus récentes devraient être préservées avant un éventuel retour en arrière.
+
+Les contrôles portent donc sur deux questions : la nouvelle application peut-elle utiliser la base, et les informations attendues sont-elles encore présentes ? Une migration exécutée sans erreur ne répond pas à elle seule à la seconde.
+
+Le test du formulaire fictif pourrait inclure la conservation d’une ancienne inscription et le traitement du nouveau champ. Il faudrait aussi distinguer un essai sur des données synthétiques d’un contrôle sur l’installation utilisée au quotidien, avec les autorisations adaptées.
+
+## Vérifier une fonction, au-delà de l’ouverture de la page
+
+Une réponse HTTP correcte confirme que quelque chose a répondu à l’adresse. Il reste à vérifier le contenu attendu et le chemin concerné par la modification.
+
+Pour Intento, la procédure demande notamment de regarder une rédaction existante, les fonctions modifiées et la conservation des textes. Elle prévoit un calcul réel depuis l’interface pour examiner le moteur effectivement utilisé.
+
+Le contrôle doit rester adapté à la livraison. Une modification documentaire n’exige pas de redémarrer l’application. Une reprise du calcul demande davantage qu’une capture de l’accueil. Une retouche de présentation peut être examinée sur les écrans concernés et sur petit écran si leur mise en page le justifie.
+
+Il faut conserver ce qui a été constaté. Un résultat obtenu dans l’aperçu peut rester une preuve utile de cet aperçu. Pour conclure sur le service permanent, il faut pouvoir le relier à ce service.
+
+Cette distinction rejoint [la définition d’une tâche vérifiable pour un agent](/deleguer-tache-agent-criteres-verification/). Les mots du rapport de fin doivent suivre le contrôle effectué, sans étendre sa portée à une étape encore inconnue.
+
+## Contrôler le parcours d’accès séparément
+
+Dans le dispositif documenté pour Intento, le service tourne sur le Mac et l’accès distant passe par un tunnel, avec une authentification devant l’application.
+
+[Cloudflare décrit Tunnel comme une connexion initiée depuis l’origine vers son réseau](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/). Ce mécanisme relie l’accès distant au service ; il ne transforme pas, à lui seul, l’application locale en processus hébergé ailleurs.
+
+Une vérification locale et une ouverture depuis l’adresse habituelle regardent donc des parties différentes du parcours. Le service peut répondre localement pendant qu’un autre élément empêche l’accès distant. Une page de connexion peut aussi être exactement le comportement prévu pour une personne non authentifiée.
+
+La procédure demande de distinguer ces situations. Atteindre l’authentification ne prouve pas que l’écran après connexion fonctionne. À l’inverse, ne pas disposer d’une session de test n’autorise pas à qualifier l’application de panne.
+
+Cette limite apparaît dans les comptes rendus documentés du projet : certaines revues ont atteint la page de connexion sans vérifier le parcours authentifié. C’est une information à garder dans le rapport. Elle ne doit être remplacée ni par un succès supposé, ni par un échec supposé.
+
+Le tunnel n’a pas non plus besoin d’être recréé à chaque changement de code. La procédure prévoit d’examiner son état et de le redémarrer si le diagnostic ou une modification de sa configuration le justifie.
+
+## Prévoir un retour compatible avec les données
+
+Revenir à un ancien commit peut remettre les anciens fichiers en place. Si la base a changé, il faut aussi examiner si cette version du code sait encore la lire et l’utiliser.
+
+Un retour arrière doit donc décrire le code, les données et les écritures à conserver. Restaurer une copie ancienne sans regarder les changements intervenus depuis peut retirer du travail que l’on souhaitait garder.
+
+Dans l’exemple fictif, des inscriptions peuvent avoir été créées après la sauvegarde. Leur existence change la préparation de la reprise, même si la correction initiale portait seulement sur un champ.
+
+La procédure d’Intento prévoit de conserver l’état en échec et les éléments de diagnostic, puis de refaire les contrôles après la reprise. L’objectif est de savoir quel état a été remis en service et quelles vérifications permettent de le confirmer.
+
+## Rendre la livraison lisible pour la session suivante
+
+À la fin, le suivi peut conserver le commit destiné au service, la sauvegarde utilisée, le résultat de la migration éventuelle et les parcours essayés. Il doit aussi garder les limites de la vérification.
+
+Ces traces permettent de reprendre le projet sans déduire l’état de l’application du dernier message de conversation. Le dépôt indique les fichiers disponibles. Le compte rendu de livraison précise ce qui a été mis en service et ce qui a été observé.
+
+Pour mon outil, c’est ce passage que je veux pouvoir retrouver : du changement préparé à la fonction vérifiée dans son environnement. La fin du travail doit permettre de dire où la nouvelle version tourne, et sur quelles preuves cette conclusion repose.

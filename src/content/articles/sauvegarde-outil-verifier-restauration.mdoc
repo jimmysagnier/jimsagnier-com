@@ -1,0 +1,117 @@
+---
+title: 'Sauvegarder mon outil : vérifier aussi ce qu’il faudra restaurer'
+territory: construire
+publishedAt: 2027-01-21
+scheduledPublishAt: 2027-01-21T07:00:00Z
+summary: >-
+  Trakkeon possède des sauvegardes SQLite et un mécanisme de restauration. Leur présence pose encore des questions concrètes : cohérence du fichier, données attendues, clés nécessaires et reprise de l’application.
+readingTime: 9
+tags: [sauvegarde, SQLite, restauration, outil personnel, Trakkeon]
+topics: [web-outils, ia-appliquee]
+projectIds: [trakkeon]
+relatedArticles:
+  - trakkeon-suivi-positions-donnees-manquantes
+  - deleguer-tache-agent-criteres-verification
+  - vibecoding-explique
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Sauvegarde SQLite : vérifier la restauration d’un outil personnel'
+  description: >-
+    À partir de Trakkeon, comprendre les contrôles d’une sauvegarde : copie cohérente, intégrité, état attendu, clés de chiffrement et essai de reprise isolé.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Trakkeon conserve ses données dans une base SQLite. Le projet possède une fonction de sauvegarde, une politique de conservation et une commande de restauration. Dans un outil que je construis pour travailler, ces fonctions demandent autant d’attention que le tableau affiché à l’écran.
+
+Le fichier de sauvegarde peut exister sans que l’on ait encore vérifié tout le parcours de reprise. Est-il lisible ? Contient-il l’état attendu ? Dispose-t-on des éléments nécessaires pour rouvrir l’outil et retrouver ses données ?
+
+Je suis lead acquisition et je construis mes outils avec l’IA. Je vais partir du code de Trakkeon et de sa procédure d’exploitation, consultés le 27 octobre 2026, pour expliquer ces questions. Il s’agit d’examiner les mécanismes prévus et leurs limites, sans prétendre avoir réalisé ici un exercice complet de reprise après sinistre.
+
+J’ai déjà présenté [le rôle de Trakkeon dans mon suivi SEO](/trakkeon-suivi-positions-donnees-manquantes/). Ici, on regarde ce qu’il faut conserver pour pouvoir reprendre cet outil après un problème ou une modification.
+
+## Définir l’état que l’on veut retrouver
+
+Avant de regarder les fichiers, il faut savoir ce que la restauration doit rendre possible. Retrouver une base qui s’ouvre constitue un premier résultat. Retrouver les données et les fonctions attendues en demande d’autres.
+
+Prenons un exemple entièrement fictif : une application locale organise les réservations d’une salle associative. Elle contient les événements, les personnes référentes et les créneaux. Un export de la liste des événements peut aider à consulter l’agenda ; il ne conserve pas nécessairement les relations et les paramètres utiles pour faire repartir l’application.
+
+La description de la reprise doit donc nommer les objets à retrouver. Elle doit aussi préciser le moment auquel ils correspondent. Une sauvegarde prise avant une modification ne contient pas les réservations ajoutées après.
+
+Dans un vrai outil, on peut relever quelques compteurs et préparer des éléments représentatifs à contrôler. Leur contenu n’a pas besoin d’être exposé dans un journal public. Le résultat recherché est de comparer l’état restauré à une référence identifiable.
+
+Cette distinction évite de demander à une seule vérification de tout couvrir. Un fichier présent, une base cohérente et un agenda utilisable apportent chacun une preuve sur une partie du parcours.
+
+## Faire une copie cohérente de la base
+
+Pour SQLite, la manière de produire la copie compte. Quand une base utilise le mode WAL, des transactions validées peuvent encore se trouver dans un fichier journal associé.
+
+[La documentation SQLite décrit ce journal comme une partie de l’état persistant de la base](https://sqlite.org/wal.html). Séparer arbitrairement le fichier principal de cet état peut faire perdre des transactions ou rendre la copie incohérente. Copier simplement un fichier ouvert n’est donc pas une procédure générale suffisante.
+
+Dans le code de Trakkeon, la sauvegarde passe par `VACUUM INTO`. [SQLite documente cette commande pour produire un nouveau fichier contenant un instantané cohérent de la base](https://sqlite.org/lang_vacuum.html#vacuuminto). La base d’origine reste à sa place. Une interruption pendant la production peut toutefois laisser une destination incomplète ; il faut distinguer une opération terminée d’un fichier apparu dans le dossier.
+
+Une autre possibilité existe avec [l’API de sauvegarde de SQLite](https://sqlite.org/backup.html), utilisée notamment dans la procédure d’exploitation d’Intento. Le choix dépend de l’application et de la bibliothèque qui ouvre la base. Ce sont des mécanismes de copie de données, avec leurs conditions d’utilisation.
+
+Le point utile pour une reprise est de savoir quelle méthode a produit le fichier et si elle a abouti. La présence d’une extension `.db` ne donne pas cette information.
+
+## Conserver des versions que l’on pourra identifier
+
+Trakkeon distingue les sauvegardes quotidiennes des sauvegardes forcées, créées à la demande. Le code applique leur rétention séparément : une série de copies manuelles ne remplace pas toute la série des copies quotidiennes.
+
+Cette séparation répond à deux besoins. L’historique régulier donne des repères dans le temps. Une copie faite avant une opération précise permet de rattacher la sauvegarde à cette intervention.
+
+Il faut garder ce contexte avec le fichier : date, application concernée, version connue et raison de la copie lorsque c’est utile. « Sauvegarde finale » devient vite ambigu si plusieurs versions portent ce nom.
+
+Le lieu de conservation a aussi sa portée. Une copie placée dans un autre dossier du même ordinateur peut aider après une modification malheureuse. Elle peut disparaître avec le disque ou la machine. Il faut donc décider séparément comment protéger les copies contre le type de perte envisagé.
+
+Je décris ici la sauvegarde locale présente dans le projet. Sa présence ne démontre pas à elle seule une stratégie complète de conservation sur plusieurs supports.
+
+## Vérifier la structure, puis les données attendues
+
+Avant de remplacer la base, Trakkeon ouvre la sauvegarde et lance `PRAGMA integrity_check`. Si le contrôle ne retourne pas le résultat attendu, le chemin de restauration s’arrête avant la modification de la cible.
+
+[SQLite précise que ce contrôle examine le format et la cohérence de la base](https://sqlite.org/pragma.html#pragma_integrity_check). Il ne vérifie pas les contraintes de clé étrangère, qui ont leur propre contrôle. Il ne peut pas non plus décider si les données correspondent au moment que l’on cherchait à retrouver.
+
+Pour notre agenda fictif, une base structurellement correcte pourrait contenir un ancien calendrier. Il faudrait encore retrouver les événements attendus, leurs horaires et leur rattachement à la salle.
+
+Les tests du projet utilisent des bases temporaires et des données synthétiques. Ils comprennent notamment une sauvegarde lisible, le rejet d’un fichier abîmé et une restauration qui conserve l’ancienne base. Ces scénarios donnent des contrôles reproductibles sur le mécanisme. Ils ne remplacent pas la vérification de tous les éléments d’une installation réelle.
+
+La compatibilité avec le code mérite également un regard. Une base peut avoir reçu une migration depuis sa sauvegarde. Avant de la rouvrir avec une autre version de l’application, il faut savoir quelles transformations cette version attend ou applique.
+
+## Préparer la bascule et son éventuel échec
+
+La procédure documentée de Trakkeon demande de fermer les applications et les clients qui utilisent la base avant une restauration. Le remplacement d’un état doit être préparé avec les processus qui peuvent encore le lire ou l’écrire.
+
+Le code commence par copier la sauvegarde à côté de la cible. Il met ensuite l’ancienne base et ses fichiers associés de côté, puis renomme la copie préparée vers la destination. La dernière bascule se fait sur le même système de fichiers.
+
+Si une étape de déplacement échoue, le code essaie de remettre en place les fichiers déjà déplacés. Un test simule un échec lors de la bascule finale et vérifie que la base initiale est retrouvée dans ce scénario.
+
+Cette protection a un périmètre précis. Une tentative de retour arrière peut elle-même rencontrer un problème de fichiers ou de stockage. Le code et le scénario de test ne justifient donc pas d’annoncer une restauration garantie dans toutes les situations.
+
+Pour préparer une intervention réelle, il faut conserver les éléments de diagnostic et prévoir comment examiner l’état laissé sur le disque si la procédure n’aboutit pas. Une phrase de succès dans un compte rendu doit suivre les vérifications réellement effectuées.
+
+## Retrouver aussi les éléments extérieurs à la base
+
+Une application peut utiliser des fichiers et des secrets que la base ne contient pas. Dans Trakkeon, la documentation signale notamment une clé de chiffrement à conserver séparément.
+
+Récupérer une base contenant des identifiants chiffrés ne suffit pas si l’élément nécessaire pour les déchiffrer a disparu. À l’inverse, réunir toutes les clés dans une archive largement accessible créerait un autre problème. La procédure doit préciser comment ces éléments sont conservés et à qui leur accès est accordé.
+
+Pour notre agenda fictif, des pièces jointes pourraient être stockées dans un dossier distinct. Restaurer les lignes qui décrivent ces documents sans les documents eux-mêmes laisserait des liens inutilisables.
+
+On peut donc préparer un inventaire de reprise : données, fichiers associés, configuration nécessaire et version de l’application. Le détail dépend du produit. Le fait qu’un composant stocke ses informations dans SQLite ne décrit pas automatiquement tout ce qu’utilise l’application.
+
+## Essayer une reprise dans un environnement isolé
+
+Un essai de restauration peut commencer sur une copie et dans un emplacement séparé. L’objectif est de vérifier l’ouverture et quelques parcours représentatifs sans remplacer les données utilisées au quotidien.
+
+Pour l’agenda fictif, on pourrait retrouver un événement connu, vérifier son horaire et constater que les pièces attendues sont accessibles. Les éventuels appels externes doivent être contrôlés dans ce cadre de test : rouvrir une copie ne doit pas déclencher sans décision des notifications vers de vrais destinataires.
+
+Il faut noter ce que l’essai a couvert et ce qui n’a pas été tenté. Une reprise sur le même ordinateur n’examine pas tous les prérequis d’un nouvel ordinateur. Une ouverture de la base ne vérifie pas tout le parcours de l’interface.
+
+Cette manière de définir les preuves rejoint [la préparation d’une tâche confiée à un agent](/deleguer-tache-agent-criteres-verification/). Produire le mécanisme, tester quelques scénarios et reprendre réellement une installation sont des résultats distincts. Pour mon outil, je veux pouvoir retrouver lequel a été vérifié et les éléments encore nécessaires pour le suivant.

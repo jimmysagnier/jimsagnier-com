@@ -1,0 +1,123 @@
+---
+title: 'Exporter Search Console en sachant ce que le fichier contient'
+territory: comprendre
+publishedAt: 2027-01-18
+scheduledPublishAt: 2027-01-18T07:00:00Z
+summary: >-
+  Un export Search Console doit garder ses filtres, ses dates et ses limites. Voici comment préparer une extraction reproductible et distinguer les lignes récupérées des données que la source ne fournit pas.
+readingTime: 9
+tags: [Search Console, export, données SEO, API, analyse]
+topics: [seo, web-outils]
+projectIds: [trakkeon]
+relatedArticles:
+  - trakkeon-suivi-positions-donnees-manquantes
+  - verifier-audit-seo-page-reelle
+  - le-seo-vraiment-2000-pages
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Exporter Search Console : filtres, pagination et limites des données'
+  description: >-
+    Préparer un export Search Console reproductible : propriété, dates, dimensions, pagination, agrégation et requêtes absentes. Savoir ce que le fichier permet de conclure.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Un fichier de données peut être facile à ouvrir et difficile à interpréter. Il contient des pages, des requêtes et des chiffres, mais on ne sait plus quels filtres ont servi à l’obtenir, quand il a été extrait ou si le traitement est allé jusqu’au bout.
+
+J’ai documenté une procédure d’extraction Search Console pour préparer mes analyses SEO. Le premier besoin est assez simple : pouvoir relire un export et comprendre ce qu’il représente avant de lui demander d’expliquer la performance d’une page.
+
+Je suis lead acquisition. Ici, je vais détailler la préparation du fichier, les contrôles de collecte et les limites à conserver avec lui. Les paramètres techniques s’appuient sur la documentation Google consultée le 27 octobre 2026. Ils sont à revérifier si l’API évolue.
+
+Le sujet est complémentaire de [la lecture des données manquantes dans Trakkeon](/trakkeon-suivi-positions-donnees-manquantes/). Avant d’afficher un tableau, il faut savoir quelles observations ont réellement été récupérées et lesquelles restent inconnues.
+
+## Écrire la question avant de choisir les colonnes
+
+Prenons un exemple entièrement fictif : un site présente des ateliers de céramique et publie des fiches pratiques. Son équipe veut comprendre pourquoi les pages de programme reçoivent moins de clics depuis la recherche.
+
+La première extraction peut porter sur les pages concernées et leur évolution. Une seconde peut examiner les formulations de recherche visibles. Si l’on commence directement par un immense tableau de requêtes, on risque de perdre la question de départ dans des lignes que personne ne saura organiser.
+
+Je préparerais donc une phrase de travail : comparer les pages de programme sur deux périodes, avec le même type de recherche et le même périmètre géographique. Le fichier doit permettre de retrouver cette phrase dans ses réglages.
+
+Ça aide aussi à limiter les données demandées. Une colonne utile pour une question peut compliquer une autre lecture. Ajouter toutes les dimensions disponibles ne rend pas automatiquement l’export plus fiable ni plus facile à rapprocher des totaux.
+
+On pourra ensuite détailler une page ou un groupe de recherches. Mais cette seconde étape aura une raison identifiée : chercher ce qui a changé dans le périmètre déjà observé.
+
+## Conserver les réglages avec le résultat
+
+La propriété consultée doit être nommée. Une propriété de domaine et une propriété limitée à un préfixe d’URL ne désignent pas le même périmètre. Pour un travail récurrent, garde son identifiant exact plutôt qu’un simple nom de site dans le nom du fichier.
+
+Les bornes de dates demandent la même précision. [La référence de l’API Search Analytics indique que les dates de début et de fin sont incluses et exprimées en heure du Pacifique](https://developers.google.com/webmaster-tools/v1/searchanalytics/query). Une date de collecte à Paris et une journée de données Search Console n’ont donc pas la même fonction.
+
+Pour notre exemple fictif, je conserverais ces repères dans une fiche jointe à l’export :
+
+| Repère | Information à garder |
+| --- | --- |
+| But | Les pages et le changement étudiés |
+| Cible | Propriété, type de recherche et filtres |
+| Dates | Bornes demandées et date d’extraction |
+| Unité | Dimensions et mode d’agrégation |
+| État | Résultat, erreurs et limites connues |
+
+Cette fiche peut être un fichier de métadonnées ou un enregistrement dans l’outil de collecte. Son intérêt est de suivre les données quand elles quittent l’interface. Un collègue doit pouvoir reprendre le résultat sans retrouver la conversation qui avait lancé l’extraction.
+
+## Choisir une unité que l’on saura comparer
+
+Les dimensions découpent les observations. Un résultat par page donne une lecture différente d’un résultat par page, requête, pays et appareil. Il faut savoir à quoi correspond une ligne avant d’additionner ses valeurs.
+
+[Google explique que les mesures sont calculées différemment selon le regroupement par page ou par propriété](https://developers.google.com/webmaster-tools/v1/how-tos/all-your-data). Le même guide précise qu’un détail par page ou requête peut laisser de côté des données pour des raisons de traitement.
+
+Pour le site fictif, je garderais donc les totaux et les lignes détaillées comme deux jeux identifiés. Le total sert à observer le périmètre demandé. Le détail permet de chercher des variations dans les lignes disponibles. Il faut vérifier leurs règles de comptage avant de vouloir les réconcilier.
+
+Si deux exports ne concordent pas, commence par comparer leurs réglages : propriété, période, type de recherche, filtres et agrégation. Un écart ne doit pas recevoir immédiatement une explication unique. On peut avoir changé de population, laissé manquer une partie de la collecte ou comparé des unités différentes.
+
+Ce contrôle peut sembler administratif. Il évite surtout de consacrer l’analyse à expliquer un mouvement créé par la façon dont les fichiers ont été préparés.
+
+## Paginer jusqu’au bout de ce qui est disponible
+
+L’API renvoie les résultats par réponses successives. La [référence Search Analytics](https://developers.google.com/webmaster-tools/v1/searchanalytics/query) fixe `rowLimit` entre 1 et 25 000, avec 1 000 par défaut. `startRow` indique le décalage de départ.
+
+La collecte doit donc garder sa place dans les résultats et demander la suite. [Le guide Google montre cette pagination jusqu’à une réponse vide](https://developers.google.com/webmaster-tools/v1/how-tos/all-your-data). Il indique aussi une limite de 50 000 lignes exposées par jour, type de recherche et propriété.
+
+Ces deux limites n’ont pas le même rôle. La première règle la taille d’une réponse. La seconde concerne les données exposées par la source. Terminer la pagination permet de finir la récupération disponible pour la demande ; ça ne démontre pas que toutes les recherches du site ont été récupérées.
+
+Pour une collecte répétée, je conserverais les demandes envoyées et leur issue. Si la troisième réponse échoue, les deux premières ne doivent pas devenir silencieusement un export annoncé comme complet. Le traitement peut les conserver, avec un état partiel et une reprise définie.
+
+Le découpage par journées peut faciliter la reprise et le contrôle des périodes. Mais il faut ensuite recomposer des ensembles compatibles. Des demandes qui se chevauchent, additionnées sans règle, peuvent compter plusieurs fois une même observation.
+
+## Garder la différence entre zéro, absence et échec
+
+Un export automatisé rencontre plusieurs situations : une ligne contient zéro clic, une ligne attendue n’est pas renvoyée, ou la requête technique a échoué. Leur donner la même valeur numérique ferait perdre l’information nécessaire pour les traiter.
+
+Une ligne sans clic peut avoir des impressions. Une collecte en erreur ne permet pas de mesurer ce qui s’est passé. Et [l’API précise que les journées sans données sont omises lorsque l’on groupe par date](https://developers.google.com/webmaster-tools/v1/searchanalytics/query).
+
+Dans notre cas fictif, si une journée manque dans le fichier des programmes, je voudrais donc retrouver l’état de la collecte avant de tracer une courbe à zéro. Le fichier peut aussi conserver la liste des journées demandées et le résultat de chacune.
+
+La fraîcheur compte également. L’API permet de demander des données finalisées ou d’inclure des données récentes encore incomplètes. Ce choix doit rester visible. Comparer une période stabilisée avec une période encore en cours de traitement appelle une réserve explicite.
+
+Le tableau final peut être simple. La collecte doit néanmoins garder les différences qui expliquent pourquoi une case est vide ou provisoire.
+
+## Traiter les requêtes invisibles comme une limite
+
+[Google indique que certaines requêtes sont omises pour protéger la confidentialité et que les tableaux ne présentent pas toutes les lignes](https://support.google.com/webmasters/answer/17011259?hl=fr). Les totaux du graphique peuvent inclure les requêtes anonymisées, sauf lorsqu’un filtre de requête s’applique.
+
+Cela limite ce qu’on peut conclure de la liste. Une expression absente ne prouve pas qu’elle n’a jamais été cherchée. Et la somme des lignes visibles ne décrit pas nécessairement tout le trafic du périmètre.
+
+Pour nos ateliers fictifs, on pourrait trouver des formulations utiles à la rédaction sans pouvoir reconstituer chaque recherche ayant conduit aux programmes. Il faut garder cette différence dans le rapport : la liste soutient une lecture des formulations observées, pas un inventaire exhaustif de la demande.
+
+Un filtre ou une expression régulière sert à préciser la demande. Il ne faut pas le présenter comme un moyen de révéler le texte des requêtes que Google masque. Si la source ne fournit pas cette information, la méthode d’export doit conserver cette limite.
+
+## Choisir le stockage selon le travail à reprendre
+
+Un fichier ponctuel peut suffire pour examiner quelques pages. Un suivi régulier demande aussi de savoir quelles périodes ont été conservées, lesquelles sont encore récupérables et comment reprendre une extraction manquée.
+
+[L’export en masse vers BigQuery permet de programmer un envoi quotidien des données de performance disponibles](https://support.google.com/webmasters/answer/12918484?hl=fr), avec les limites de confidentialité indiquées par Google. C’est une autre voie de collecte, qui demande son propre suivi. Elle ne transforme pas les requêtes anonymisées en liste de mots-clés lisible.
+
+Le choix doit partir de l’usage : un contrôle ponctuel, un historique à constituer ou des rapprochements réguliers entre plusieurs sources. Il faut ensuite prévoir les accès, la conservation et le contrôle des échecs. Accumuler des fichiers sans leur périmètre ne prépare pas un historique facile à comparer.
+
+Pour le prochain export, garde donc la demande exacte, son résultat et ses limites dans le même ensemble. C’est ce qui permet de [contrôler une analyse SEO et ses preuves](/verifier-audit-seo-page-reelle/), puis de [choisir une intervention sur les pages concernées](/le-seo-vraiment-2000-pages/). Le premier livrable utile est un fichier que l’on sait relire, avec une explication précise de ce qu’il permet de voir.
