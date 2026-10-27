@@ -1,0 +1,128 @@
+---
+title: Un assistant pour préparer mes mails commerciaux dans ma voix
+territory: construire
+publishedAt: 2026-11-23
+scheduledPublishAt: 2026-11-23T07:00:00Z
+summary: >-
+  J’ai construit un rédacteur de mails à partir de mes exemples et de mes règles de style. Il prépare la réponse ou le suivi d’appel dans Outlook. Je garde la relecture et l’envoi.
+readingTime: 8
+tags:
+  - email commercial
+  - Claude Code
+  - skills
+  - Outlook
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: Un assistant IA pour mes mails commerciaux et suivis d’appel
+  description: >-
+    Mes exemples de mails, un guide de style et les faits du dossier : comment j’ai construit un assistant qui prépare des brouillons Outlook à relire.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+topics: ["acquisition-b2b", "ia-appliquee", "ecriture-contenu"]
+projectIds: ["crm-eurofiscalis"]
+relatedArticles:
+  - usine-skills-claude-mcp
+  - chaine-editoriale-contenu-echelle
+  - crm-sur-mesure-vibecoding
+format: article
+seriesId: saga-eurofiscalis-s6
+seriesOrder: 4
+seriesKind: episode
+---
+Après un appel commercial, le travail continue dans le mail. Il faut reprendre la situation, répondre aux questions qui restent et préciser la suite. C’est une partie de mon travail de lead acquisition chez Eurofiscalis, au même titre que le site et le SEO.
+
+J’ai construit un rédacteur de mails avec Claude Code pour préparer ce travail. Il s’appuie sur des exemples de mes messages, des règles de style et les informations de l’échange. La sortie prévue est un brouillon dans Outlook, accompagné d’une copie locale. Je relis, je corrige et j’envoie moi-même.
+
+Le projet comporte trois modes : répondre à un mail, préparer un suivi d’appel, écrire un message interne à partir d’un brief. Ils partagent une base de références, mais chacun a sa procédure. Je vais détailler cette organisation, y compris une limite assez concrète : les brouillons de réponse ne sont pas automatiquement rattachés au fil d’origine.
+
+## Trois entrées, trois préparations différentes
+
+Une réponse commence par un message reçu. Le rédacteur doit retrouver ce message et le contexte récent de la conversation. Si plusieurs échanges correspondent à la demande, la consigne est de me faire choisir. Partir du mauvais mail peut donner un texte très propre qui répond à côté.
+
+Le suivi d’appel commence par une transcription. Il faut d’abord en extraire les faits utiles, puis préparer un message qui restitue ce qui a été convenu. Le compte rendu de la conversation et le mail au prospect ont des usages différents : le prospect a besoin de retrouver sa situation et la prochaine étape, pas de relire toute la réunion.
+
+Le message interne part d’un brief plus court. Par exemple, demander une vérification ou transmettre un point à reprendre. Le ton change, les informations techniques peuvent rester techniques, et la formule commerciale n’a aucune raison de s’inviter dans l’échange.
+
+Dans le projet, un skill principal dirige la demande vers la procédure correspondante. Un [skill est un dossier d’instructions et de ressources que Claude peut charger pour une tâche](https://support.claude.com/en/articles/12512176-what-are-skills). Ici, j’y mets la manière de préparer chaque type de mail, les références à consulter et le format à retourner.
+
+La récupération peut passer par les connexions aux outils lorsqu’elles sont disponibles. Le texte d’un mail ou d’une transcription peut aussi être fourni directement. Je ne voulais pas que toute la préparation dépende d’un seul mode d’entrée.
+
+## Extraire les faits avant de rédiger
+
+Pour le suivi d’appel, la procédure demande de séparer l’extraction de la rédaction. Elle commence par identifier le besoin, la situation, le périmètre discuté et les éléments précis qui ont été cités.
+
+Cette étape sert notamment à distinguer une possibilité évoquée d’un engagement pris. Dire qu’on pourrait étudier un sujet ne revient pas à promettre de le traiter. Une proposition du prospect n’est pas non plus un accord de ma part. Dans un mail, un changement de verbe suffit parfois à faire glisser le sens.
+
+Les montants, les dates et les délais demandent une attention particulière. La procédure prévoit de les reprendre depuis les sources et de me demander ce qui manque avant de rédiger. Une phrase comme « nous reviendrons vers vous vendredi » engage déjà quelqu’un. Elle ne doit pas apparaître simplement parce qu’elle termine bien le paragraphe.
+
+Ça reste une consigne donnée au modèle. Elle ne dispense pas de vérifier le brouillon. À la relecture, je dois pouvoir retrouver ce qui justifie un engagement, au-delà du fait que la phrase paraît plausible.
+
+Le destinataire fait partie de ces vérifications. Une transcription peut contenir plusieurs participants, et un échange peut mentionner des personnes auxquelles le message n’est pas destiné. Les noms présents dans la source ne donnent pas, à eux seuls, la liste des destinataires.
+
+## Pour la voix, je pars de mes vrais mails
+
+Écrire « professionnel, clair et humain » dans un prompt laisse beaucoup de place à l’interprétation. J’ai donc une base plus précise : des exemples de mails et un guide de style.
+
+Les exemples servent à retrouver la construction d’un message. Dans quel ordre j’explique une situation, quelle place je laisse aux réponses, comment j’amène la suite. La procédure prévoit de choisir un exemple proche du cas à traiter et de le lire en entier.
+
+Le guide précise des choix de formulation. Je vouvoie par défaut un interlocuteur externe, j’explique avant de conclure, je réponds aux questions posées. Les paragraphes restent courts, les listes servent quand elles rendent les éléments plus faciles à parcourir.
+
+En interne, le registre est différent : tutoiement, demande directe, contexte technique utile. Le rédacteur a donc une référence distincte. Faire écrire tous les messages dans un unique « style Jim » gommerait cette différence assez normale entre une proposition commerciale et un échange avec un collègue.
+
+Les exemples donnent une forme. Les faits du nouveau message viennent du dossier en cours. C’est une séparation que j’ai inscrite dans l’architecture : un ancien mail peut montrer comment organiser une réponse, sans fournir les chiffres ou les engagements du suivant.
+
+J’ai déjà décrit [l’organisation de mes références et de mes skills](/usine-skills-claude-mcp/). Le rédacteur email en est une application assez concrète : la voix a son point de référence, chaque procédure vient la lire, et une correction de style doit pouvoir être retrouvée sans fouiller plusieurs conversations.
+
+## Un exemple fictif pour voir la différence
+
+Prenons un cas entièrement inventé, sans lien avec un prospect réel : une personne demande si un logiciel permet d’exporter les données et de réunir plusieurs utilisateurs sur le même compte. La documentation confirme l’export, mais les conditions d’accès à plusieurs restent à vérifier.
+
+Un brouillon utile pourrait reprendre la réponse confirmée et laisser apparaître la question ouverte :
+
+> Bonjour,
+>
+> Vous pouvez exporter les données au format CSV. Pour l’accès de plusieurs utilisateurs au même compte, je dois vérifier les conditions avant de vous confirmer ce point.
+>
+> Je reste à votre disposition.
+
+Ce texte n’essaie pas de compléter le dossier. Il rend visible la limite de ce qu’on sait. La phrase sur la vérification suppose aussi que je sois bien prêt à la faire : elle reste à relire comme le reste.
+
+Dans un vrai traitement, si cette information est indispensable à la réponse, ma procédure demande d’abord de me poser la question. Cet exemple montre la différence entre une réponse partielle explicitement assumée et une réponse complète en apparence, qui contiendrait une condition inventée.
+
+La qualité de la voix vient ensuite. On peut raccourcir, déplacer un paragraphe ou ajuster la formule de fin. Aucun de ces changements ne répare une information fausse.
+
+## Le brouillon doit arriver dans l’outil où je vais le relire
+
+Le projet utilise un script AppleScript pour créer un message dans Outlook sur mon Mac. Il reçoit le destinataire, l’objet et le corps du mail. Il crée le brouillon puis l’ouvre pour la relecture. Le script ne contient pas d’étape d’envoi.
+
+Ce passage à Outlook évite de s’arrêter au texte affiché dans le terminal. Il reste à vérifier le compte utilisé, le destinataire, l’objet, la présentation et les éventuelles pièces jointes. Une pièce mentionnée dans un appel n’est pas automatiquement une pièce disponible dans le brouillon.
+
+Une copie locale du texte est aussi prévue dans le processus, avec les références consultées et les alertes de rédaction. Si la création dans Outlook échoue, cette copie fournit un point de reprise pour le copier-coller. Il faut alors signaler l’échec : avoir produit le texte ne suffit pas à annoncer que le brouillon est dans la messagerie.
+
+L’intégration a demandé de s’occuper d’un détail peu spectaculaire : les retours à la ligne. Les commentaires de recette du script indiquent que l’écriture par une propriété de texte brut faisait disparaître les séparations de paragraphes dans la version testée d’Outlook Mac. Le script transforme donc le corps en HTML, en conservant les sauts de ligne.
+
+Autre ajustement présent dans le code : créer le message avec son objet, puis lui affecter le contenu séparément. Le commentaire de correction décrit des brouillons dont le corps disparaissait quand tout était passé à la création. C’est le genre de point qu’un bon prompt ne règle pas : il faut vérifier ce que l’application reçoit réellement.
+
+## Une réponse encore à rattacher au bon fil
+
+La première version accepte une référence au message d’origine dans son interface, mais le script l’ignore. Le rattachement automatique au fil n’est pas implémenté. Le brouillon est donc créé à part, même lorsque le texte préparé est une réponse.
+
+Pour un nouveau suivi d’appel, créer un nouveau message correspond au fonctionnement attendu. Pour une réponse, il reste une manipulation manuelle dans Outlook afin de l’insérer au bon endroit.
+
+Cette limite mérite d’être nommée, parce qu’elle change le travail restant. Lire le bon message, préparer une réponse pertinente et la rattacher dans la messagerie sont trois opérations distinctes. Les deux premières ne prouvent pas que la troisième a eu lieu.
+
+L’intégration est donc à juger sur le brouillon obtenu dans l’application. Est-ce le bon destinataire ? Le corps est-il présent et lisible ? Est-on dans le bon fil ? Ces vérifications portent sur autre chose que la rédaction, mais elles font partie de l’outil.
+
+## Ce que je garde à la relecture
+
+Le rédacteur prépare un texte et le dépose dans un environnement de travail. Mon rôle reste de vérifier que ce texte correspond à ce que je veux dire et à ce que je peux engager.
+
+Je regarde d’abord la situation et les réponses, puis les chiffres, les conditions et la prochaine étape. Le ton compte aussi : une formule peut être correcte et ne pas convenir à la relation. C’est précisément pour ça que le passage par un brouillon m’intéresse.
+
+Si tu veux construire un dispositif similaire, commence avec quelques messages représentatifs et un cas de rédaction précis. Tu pourras comparer le texte proposé à ce que tu aurais réellement envoyé, puis corriger la référence qui produit l’écart. C’est sur ces corrections concrètes que le rédacteur peut progresser.

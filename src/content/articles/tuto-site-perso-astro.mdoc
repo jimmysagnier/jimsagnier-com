@@ -1,0 +1,135 @@
+---
+title: 'Programmer un article sur un site statique : la date ne suffit pas'
+territory: construire
+publishedAt: 2026-12-03
+scheduledPublishAt: 2026-12-03T07:00:00Z
+summary: >-
+  Sur ce site Astro, une date future ne déclenche rien toute seule. Voici le parcours entre le fichier de l’article, le réveil du build, le déploiement et la vérification de la page publique.
+readingTime: 8
+tags: [Astro, Cloudflare, publication programmée, automatisation]
+topics: [web-outils, ecriture-contenu]
+projectIds: [jimsagnier-com]
+relatedArticles:
+  - vibecoder-site-claude
+  - astro-cloudflare-cms-client
+  - sitemap-sans-date-fraicheur-ia
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Astro : programmer ses articles avec Cloudflare et GitHub Actions'
+  description: >-
+    Comment ce journal Astro publie à date : filtre des articles, Worker Cloudflare, déclenchement GitHub Actions, rebuild et contrôle de la page réellement en ligne.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Dans ce journal, je peux préparer un article et lui donner une date de publication future. Le fichier est déjà dans le projet, mais le lecteur ne doit le retrouver ni sur l’accueil, ni dans le journal, ni en ouvrant directement son adresse.
+
+Le jour prévu, il doit apparaître. Sans que j’aie besoin de modifier une virgule pour déclencher un nouveau déploiement.
+
+Ça paraît être un simple champ de date dans un CMS. Sur un site statique, il faut aussi prévoir ce qui se passe quand cette date arrive. Je vais expliquer le mécanisme en place sur jimsagnier.com : les fichiers éditoriaux, le déclencheur Cloudflare, le workflow GitHub et le contrôle de la page publique.
+
+C’est un prolongement du [chantier de construction de ce site avec Claude](/vibecoder-site-claude/). On quitte ici la composition des pages pour regarder comment un contenu préparé à l’avance devient effectivement accessible.
+
+## Le site est fabriqué avant la visite
+
+Ce journal utilise Astro pour générer ses pages. Dans le fonctionnement statique, [les pages sont préparées au moment du build](https://docs.astro.build/en/guides/on-demand-rendering/). Le navigateur reçoit ensuite les fichiers générés. Il ne demande pas au CMS, à chaque visite, si un nouvel article vient de devenir publiable.
+
+Prenons un article prévu pour jeudi matin. Si le site a été construit mercredi, le filtre de publication a exclu cet article. Jeudi, l’horloge peut dépasser l’heure prévue : les fichiers déjà déployés restent les mêmes.
+
+Il faut donc refaire le build et déployer sa sortie. C’est cette opération qui va réévaluer les dates et inclure le nouvel article.
+
+Un push sur la branche principale déclenche déjà la construction du site. Mais programmer un article revient justement à préparer le contenu avant son échéance. S’il n’y a aucun nouveau changement jeudi matin, il faut un autre déclencheur.
+
+## Trois champs avec des rôles différents
+
+Les articles sont enregistrés dans des fichiers Markdoc, éditables en local avec Keystatic. Leur en-tête contient notamment `publishedAt`, `scheduledPublishAt` et `draft`.
+
+Voici un exemple fictif de programmation pour un matin d’hiver à Paris :
+
+```yaml
+publishedAt: 2026-11-19
+scheduledPublishAt: 2026-11-19T07:00:00Z
+draft: false
+```
+
+`publishedAt` donne la date éditoriale de l’article. `scheduledPublishAt` porte l’échéance avec une heure et un fuseau explicites. `draft` permet de garder un texte en brouillon.
+
+Dans le code de ce site, les trois conditions doivent être satisfaites : le texte n’est plus un brouillon, sa date éditoriale est arrivée et sa programmation éventuelle est également passée. Un `draft: true` reste donc exclu, même si sa date est ancienne.
+
+Cette règle distingue deux situations utiles : un texte sur lequel je travaille encore et un texte prêt à sortir à une date choisie. Les programmer demande aussi que leur fichier soit présent dans la branche utilisée pour la production. Une date enregistrée uniquement sur mon ordinateur ne peut pas être lue par le build distant.
+
+## Masquer la carte ne suffit pas
+
+Le filtre doit s’appliquer à chaque endroit où le contenu pourrait apparaître. Pour ce journal, ça comprend la route de l’article, l’accueil, la bibliothèque, les pages de sujets et de projets, les recommandations, le RSS et `llms.txt`.
+
+Le sitemap suit les routes générées. Si la route d’un article futur est fabriquée par erreur, son absence de l’accueil ne le rend pas privé.
+
+Le contrôle utile consiste donc à essayer plusieurs portes d’entrée. Avant l’échéance, l’adresse directe doit être indisponible et les listes publiques ne doivent pas proposer le contenu. Après un build effectué à l’échéance ou plus tard, ces mêmes éléments doivent être cohérents.
+
+Ce dépôt possède un script de vérification qui parcourt le résultat généré. Il regarde notamment les routes, les liens, les images et les flux. Ça permet de vérifier le site fabriqué, au-delà de la valeur enregistrée dans le CMS.
+
+J’ai rencontré la même question de fond pour [les dates de mise à jour du sitemap](/sitemap-sans-date-fraicheur-ia/) : une information éditoriale doit correspondre à ce qu’on expose réellement. Mettre un champ dans le modèle de contenu n’assure pas sa bonne utilisation dans toutes les sorties.
+
+## Cloudflare réveille le workflow GitHub
+
+Le déclencheur récurrent est un petit Worker Cloudflare, appelé `publish-heartbeat`. Son rôle de publication consiste à demander l’exécution du workflow GitHub `publish-check.yml`.
+
+Le workflow accepte l’événement [`workflow_dispatch`, qui permet son lancement manuel ou par API](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch). Le Worker utilise cette entrée. Le rythme est défini côté Cloudflare ; il n’y a pas de déclencheur `schedule` dans ce workflow.
+
+Ce choix répond à une limite documentée par GitHub : [dans un dépôt public, les workflows programmés sont désactivés après soixante jours sans activité du dépôt](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule). Or un journal dont les articles sont préparés à l’avance peut justement rester un moment sans nouveau commit.
+
+Le Worker ne génère pas lui-même les pages. Il donne le départ. GitHub récupère le projet, installe ses dépendances et lance le script qui vérifie si un article est dû. Si c’est le cas, le workflow construit puis déploie le site sur Cloudflare Pages.
+
+On peut suivre le parcours en une ligne : échéance, appel du workflow, vérification des fichiers, build, déploiement. Chaque étape peut réussir ou échouer séparément. Recevoir la demande de lancement ne prouve pas que l’article est arrivé en ligne.
+
+## Huit heures à Paris, y compris après le changement d’heure
+
+Les [Cron Triggers Cloudflare utilisent des horaires UTC](https://developers.cloudflare.com/workers/configuration/cron-triggers/). Pour viser huit heures à Paris, il faut tenir compte de l’heure d’été et de l’heure d’hiver.
+
+Dans cette configuration, deux passages matinaux sont prévus : six heures et sept heures UTC. Le code regarde l’heure correspondante dans le fuseau `Europe/Paris`, puis ne conserve que le passage qui correspond à huit heures.
+
+Le contrôle utilise l’heure prévue du déclenchement, fournie par l’événement. Il évite ainsi de choisir le mauvais passage simplement parce que le traitement démarre un peu plus tard.
+
+Les tests du projet couvrent notamment les jours de changement d’heure. Pour chaque date testée, un seul des deux passages doit demander la publication. Un troisième passage, à quatorze heures quinze UTC, sert au rattrapage.
+
+Huit heures reste l’heure de départ du parcours. Il faut ensuite laisser au workflow le temps de construire et de déployer le site. La page n’apparaît pas nécessairement à huit heures zéro minute zéro seconde. C’est une distinction à garder quand on choisit une heure de publication.
+
+Le champ accepte aussi une autre heure d’échéance, mais les passages automatiques restent ceux du Worker. Un texte prévu entre deux passages attend donc le prochain build, à huit heures à Paris ou au rattrapage, sauf si un autre événement le déclenche avant.
+
+## Prévoir une reprise après un passage manqué
+
+Le script `check-scheduled.mjs` lit les dates dans les fichiers du dépôt. Il cherche les articles non brouillons dont l’échéance est passée depuis moins de trente jours.
+
+Cette fenêtre permet de reprendre une publication récente si un passage n’a pas abouti. Le contrôle suivant peut encore constater que l’article est dû et demander le build.
+
+La méthode a un coût : le script ne compare pas son résultat avec une liste des articles déjà publiés. Pendant cette fenêtre, un article déjà accessible peut donc continuer à provoquer des builds. La fenêtre borne les reconstructions, sans en faire un traitement « une seule fois ».
+
+À l’autre bout, si le mécanisme ne revient qu’après l’expiration des trente jours et qu’aucun article plus récent ne provoque de build, cette condition ne déclenchera plus la publication de l’ancien texte. Il faudra relancer un build par un autre moyen.
+
+Ce sont des choix visibles dans le fonctionnement actuel. Pour reprendre le mécanisme sur un autre site, il faut choisir sa propre manière de détecter ce qui manque : fenêtre temporelle, état de publication conservé ou comparaison avec les pages publiques.
+
+## Vérifier l’article après la publication
+
+Le Worker a aussi un passage quotidien de surveillance, distinct du parcours qui déclenche la publication. Il lit les articles attendus dans le dépôt, puis essaie leurs adresses publiques.
+
+Une marge de trois heures après l’échéance laisse du temps au build et au déploiement. Le contrôle regarde ensuite le statut HTTP, des marqueurs de page article et l’adresse canonique attendue. Une réponse `200` ne suffit pas : un hébergement peut renvoyer une autre page à l’adresse demandée.
+
+Quand un article manque, le code prévoit l’ouverture d’une issue GitHub. Si l’alerte existe déjà, il évite d’en créer une nouvelle à chaque passage. Quand tous les articles attendus sont revenus, l’alerte peut être fermée.
+
+Cette surveillance vérifie la présence d’une page. Elle ne relit pas le texte et ne décide pas si le contenu mérite d’être publié. Elle a également ses propres dépendances : accès au dépôt, accès au site et autorisation de gérer les issues. Il faut garder ces limites en tête pour interpréter un contrôle silencieux.
+
+Les deux parcours tournent dans le même Worker. Ils sont distincts dans le code, mais sa suppression ou l’arrêt de ses déclencheurs pourrait interrompre à la fois la publication et sa surveillance.
+
+## Ce que je garderais pour un autre site éditorial
+
+Le mécanisme peut être plus simple avec un autre CMS ou un hébergement différent. Pour [le choix du CMS et de l’hébergement](/astro-cloudflare-cms-client/), je regarde aussi qui doit pouvoir publier et comment cette personne travaille.
+
+Sur ce journal, le parcours reste lisible dans quelques fichiers : l’article dit quand il est prêt, le filtre décide s’il entre dans le site, le Worker réveille la construction et le contrôle public regarde si la page attendue existe.
+
+Si tu veux programmer des contenus sur un site statique, commence par vérifier ce qui déclenche le prochain build sans intervention humaine. Puis prépare un article de test, vérifie son absence avant l’échéance et sa présence après le déploiement. C’est ce parcours complet qui permet de savoir si la programmation fonctionne.

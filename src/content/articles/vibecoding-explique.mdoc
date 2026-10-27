@@ -1,0 +1,111 @@
+---
+title: 'Le vibecoding expliqué à quelqu’un qui a un outil à construire'
+territory: comprendre
+publishedAt: 2026-11-30
+scheduledPublishAt: 2026-11-30T07:00:00Z
+summary: >-
+  Décrire un outil à une IA, regarder le résultat, le corriger : voilà le point de départ. Avec ce site comme exemple, j’explique ce que cette méthode permet et ce qu’il faut savoir vérifier.
+readingTime: 8
+tags: [vibecoding, IA, développement, prototype]
+topics: [ia-appliquee, web-outils]
+projectIds: [jimsagnier-com]
+relatedArticles:
+  - vibecoder-site-claude
+  - html-d-abord-framework-ensuite
+  - usine-skills-claude-mcp
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Vibecoding : définition, exemples et limites pour construire un outil'
+  description: >-
+    Comprendre le vibecoding à partir d’un site réel : décrire son besoin, faire produire le code par une IA, vérifier le résultat et choisir un premier projet adapté.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Ce site a été construit avec l’aide de Claude Code. Les pages, les composants, l’éditeur d’articles et les règles de publication sont dans un dépôt de code. J’ai décrit ce que je voulais, travaillé le rendu, puis repris les changements avec l’agent.
+
+C’est ce que j’appelle vibecoder dans le journal. Mais si tu découvres le terme, il manque une explication : qu’est-ce que tu fais réellement quand l’IA écrit le code ? Et jusqu’où peux-tu avancer sans être développeur ?
+
+Je suis lead acquisition. Mon point de départ, c’est un besoin de site ou d’outil, avec des choses précises à faire fonctionner. Je vais partir de là pour expliquer la méthode. Le [récit de construction de ce site](/vibecoder-site-claude/) raconte le chantier lui-même ; ici, on regarde ce que tu pourrais en reprendre pour ton propre projet.
+
+## De quoi parle-t-on quand on dit vibecoding ?
+
+Dans son usage courant, le mot désigne une façon de construire un logiciel en formulant des demandes à une IA capable de produire ou de modifier du code. Tu décris un résultat, l’outil propose une réalisation, tu l’essaies et tu demandes la suite.
+
+Le terme a aussi un sens plus strict. [Simon Willison le réserve au fait de laisser l’IA écrire sans revoir le code produit](https://simonwillison.net/2025/Mar/19/vibe-coding/). Il distingue cette pratique du développement assisté par IA, où le code est relu et vérifié. Cette distinction aide à préciser le niveau de contrôle derrière un même mot.
+
+Dans mes articles, je garde le vocabulaire utilisé pour mes projets. La boucle que je décris comprend des vérifications : regarder ce qui a changé, lancer le site, tester les comportements attendus. Le mot seul ne dit donc pas comment le travail a été contrôlé. Il faut regarder la méthode derrière.
+
+Concrètement, une demande peut porter sur une toute petite chose : déplacer une image, ajouter un filtre dans une bibliothèque, corriger un lien. Elle peut aussi porter sur une fonctionnalité complète. Plus la demande touche de parties du logiciel, plus il faut savoir décrire leurs relations et vérifier leurs effets.
+
+## Une conversation qui laisse des fichiers derrière elle
+
+L’interface ressemble à une discussion. Le résultat, lui, est du logiciel.
+
+Sur ce site, un article est un fichier Markdoc, un format de texte enrichi. Sa présentation dépend d’un composant Astro. Les couleurs viennent des styles CSS. La date à laquelle il peut apparaître dépend aussi de règles dans le code.
+
+Quand je demande un changement, il faut donc intervenir au bon endroit. Modifier le texte d’un bouton ne demande pas le même travail que modifier la règle qui décide quels articles afficher.
+
+C’est une première chose à comprendre si tu débutes : l’agent ne conserve pas ton application dans la conversation. Il travaille sur un projet qui a des fichiers, des dépendances et une manière de se lancer. La discussion sert à guider ces modifications. Pour reprendre le travail plus tard, le projet doit rester accessible et compréhensible.
+
+Tu n’as pas besoin de mémoriser tout son contenu. Mais savoir où sont les textes, où se trouvent les données et comment lancer l’outil te donne déjà des repères pour discuter d’une modification. Sans ces repères, chaque problème ressemble à une nouvelle demande vague : « ça ne marche plus ».
+
+## Le besoin doit être assez précis pour être essayé
+
+Prenons un exemple fictif. Tu veux un petit outil pour comparer des devis de travaux. Tu pourrais demander : « Construis-moi un comparateur simple et joli. » L’IA devra décider ce que signifie comparer, quelles informations demander et quel résultat afficher.
+
+Une description plus utile serait : tu saisis le nom de chaque prestataire, le montant du devis et les prestations incluses ; l’écran montre les offres côte à côte ; les informations restent disponibles après fermeture du navigateur. Le dernier point pose déjà une question technique : où sont-elles enregistrées ?
+
+Avant même de parler de design, tu peux décrire un essai. Tu ajoutes deux devis, tu fermes la page, tu la rouvres et tu vérifies que les deux sont toujours là. Puis tu corriges un montant et tu regardes si la comparaison suit.
+
+Ce travail reste à ta portée sans écrire le code. Il repose sur ta connaissance de l’usage. Tu sais ce que tu veux retrouver quand tu ouvres l’outil, ce qui doit être modifiable et ce qui rendrait le résultat faux.
+
+Sur ce site, les maquettes jouaient ce rôle pour le rendu. Elles donnaient une référence visible. J’ai détaillé une méthode comparable avec le site d’Eva dans [le travail en HTML avant le framework](/html-d-abord-framework-ensuite/). Une référence concrète donne quelque chose à comparer à la proposition de l’agent.
+
+## Une page qui s’affiche ne vérifie qu’une partie du projet
+
+Le résultat visible arrive vite à l’écran. On peut naviguer, cliquer, lire un titre. C’est utile pour avancer sur la composition, mais certaines erreurs restent ailleurs.
+
+Dans le comparateur fictif, un total peut être bien présenté et mal calculé. Les données peuvent disparaître au rechargement. Le bouton de suppression peut fonctionner sur un devis et se tromper quand deux portent le même nom.
+
+Pour mon journal, le sujet se pose autrement. Il faut vérifier qu’un article en brouillon n’apparaît pas dans le site public. L’absence de carte sur l’accueil ne suffit pas si sa route est accessible ou si son titre entre dans le flux RSS.
+
+Le dépôt contient donc des contrôles qui regardent les routes générées, les liens internes et les flux. Un build, l’opération qui fabrique le site, vérifie aussi une partie de sa structure. Il peut réussir tout en laissant passer un texte faux ou une mise en page peu lisible. Chaque vérification répond à une question précise.
+
+Si tu demandes à l’agent de contrôler son travail, donne-lui ces questions. « Vérifie que les devis sont conservés après rechargement » permet de constater un comportement. « Vérifie que tout fonctionne » lui laisse une quantité de choses à interpréter.
+
+## Quel premier projet choisir ?
+
+Un projet adapté pour commencer te permet de voir le résultat et de repérer une erreur. Une page personnelle, un prototype de formulaire ou un outil qui transforme des données fictives donnent ce type de retour.
+
+Le comparateur de devis peut convenir si tu connais les calculs attendus et si les informations sont de simples données d’essai. En revanche, ajouter des comptes utilisateurs, partager les devis entre plusieurs personnes ou traiter des paiements change le périmètre. Il faut alors vérifier des accès, des échanges de données et des opérations que l’écran ne montre pas entièrement.
+
+La taille apparente de l’interface est un mauvais repère. Un formulaire peut tenir sur un écran et envoyer des données dans plusieurs services. À l’inverse, un site avec beaucoup de pages de texte peut avoir un fonctionnement assez répétitif.
+
+Je regarderais donc le premier projet par ce que tu peux contrôler toi-même. Peux-tu expliquer le résultat attendu ? Le reproduire avec un exemple ? Revenir à l’état précédent si une modification casse quelque chose ? Si une partie dépasse ce que tu sais vérifier, il faut la faire regarder par quelqu’un qui la maîtrise, ou réduire le projet à ce stade.
+
+Ça ne retire pas l’intérêt de construire. Ça permet de choisir un terrain sur lequel tu peux apprendre en comprenant ce qui se passe.
+
+## Garder des règles entre les conversations
+
+À mesure que le projet avance, certaines décisions doivent rester disponibles : la structure des pages, les données à conserver, les commandes à utiliser, les opérations qui demandent ton accord.
+
+Dans mon dépôt, une partie de ces règles est dans `CLAUDE.md`. Le positionnement et la voix du site sont documentés à part. L’agent peut ainsi retrouver les consignes sans attendre que je les reformule dans chaque demande.
+
+Une règle doit être assez précise pour guider une action. « Respecter le site » laisse beaucoup d’interprétation. « Utiliser les couleurs existantes et conserver les composants en place » donne un point de départ vérifiable. Si le besoin change, il faut aussi corriger la consigne.
+
+J’utilise également des [skills pour décrire des méthodes de travail](/usine-skills-claude-mcp/). Tu peux commencer plus simplement : une description du projet, la façon de le lancer et les quelques limites qui comptent. Le document doit aider à reprendre le travail, pas devenir un deuxième projet à entretenir.
+
+## Le travail continue après la première version
+
+Une fois l’outil utilisable, il reste du code à garder en état. Les contenus évoluent, une connexion peut cesser de répondre, une nouvelle demande peut remettre en question une décision initiale.
+
+Le fait que l’IA ait écrit la première version ne supprime pas ce travail. Pour le reprendre, il faut retrouver les fichiers, les règles et les changements précédents. Git, l’outil qui conserve l’historique du dépôt, permet de comparer les versions et de revenir sur une modification. Encore faut-il garder des étapes identifiables.
+
+Pour démarrer, je choisirais donc un seul usage et un résultat facile à vérifier. Écris ce que tu veux obtenir, prépare quelques données fictives, puis essaie la première version avant d’ajouter une fonction. Cette boucle donne déjà une bonne idée de ce que construire avec une IA peut t’apporter, et de ce que tu dois encore apprendre pour garder la main sur ton outil.
