@@ -1,0 +1,130 @@
+---
+title: 'Embeddings et SEO : quelles pages faut-il vraiment comparer ?'
+territory: comprendre
+publishedAt: 2026-12-31
+scheduledPublishAt: 2026-12-31T07:00:00Z
+summary: >-
+  Les embeddings permettent de rapprocher des textes. Pour en tirer un travail SEO utile, il faut choisir les passages comparés, comprendre le score et relire les paires avant de décider.
+readingTime: 9
+tags: [embeddings, similarité sémantique, SEO, maillage, contenu]
+topics: [seo, ia-appliquee, web-outils]
+projectIds: [intento]
+relatedArticles:
+  - intento-score-seo-explicable
+  - cluster-territoire-vacant-concurrent
+  - cocon-semantique-maillage-echelle
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Embeddings et similarité cosinus : comparer des pages pour le SEO'
+  description: >-
+    Comprendre les embeddings pour rapprocher des pages : préparation du texte, segmentation, modèle, similarité cosinus et calibration avant toute décision SEO.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Deux articles peuvent traiter presque la même question avec des mots différents. À l’inverse, deux pages remplies du même vocabulaire peuvent aider le lecteur à faire des choses distinctes. Pour organiser un corpus, il faut pouvoir retrouver ces rapprochements, puis regarder ce qu’ils signifient.
+
+Les embeddings font partie des méthodes que j’ai documentées pour ce travail. Ils permettent de représenter des textes sous forme de vecteurs, des listes de nombres que l’on peut comparer. Le résultat aide à sélectionner les pages à examiner ensemble.
+
+Je suis lead acquisition. Ce qui m’intéresse ici, c’est le travail éditorial qui devient possible : repérer des recouvrements, chercher des contenus complémentaires et préparer le maillage. Je vais expliquer comment construire cette comparaison, avec ses limites. Le calcul est une étape ; il reste à décider ce que le rapprochement apporte au lecteur.
+
+## Un embedding représente le texte qu’on lui donne
+
+Un modèle d’embedding reçoit du texte et produit une représentation numérique. Les modèles entraînés pour la similarité cherchent à rapprocher certaines formulations de sens voisin. C’est le principe utilisé dans la [comparaison de textes présentée par Sentence Transformers](https://www.sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html).
+
+Cette représentation dépend du modèle et de son entraînement. Les nombres ne constituent pas une fiche lisible où un axe représenterait le prix et un autre la difficulté. Leur intérêt vient de la manière dont on peut comparer les vecteurs produits dans le même espace.
+
+Le [papier Sentence-BERT de Reimers et Gurevych](https://arxiv.org/abs/1908.10084) décrit une méthode pour produire des représentations de phrases comparables, notamment avec la similarité cosinus. Il explique un outil de recherche et de comparaison de textes. On ne peut pas en déduire le fonctionnement complet du classement de Google.
+
+Avant de calculer quoi que ce soit, la première décision reste donc éditoriale : que veut-on comparer ? Le sujet général d’une page, les réponses de chaque section ou quelques passages sélectionnés ? Ces trois entrées ne donneront pas forcément les mêmes rapprochements.
+
+## Choisir un texte assez représentatif
+
+Si tu compares des pages web, commence par regarder ce qui a été extrait. Le menu, le pied de page, un encart identique sur tout le site ou des liens de navigation peuvent prendre beaucoup de place dans le texte envoyé au modèle.
+
+Pour rapprocher les sujets des articles, je préparerais un contenu centré sur l’article : titre, introduction, intertitres et corps utile. Il faut ensuite lire quelques extractions. Une règle qui retire correctement le menu peut aussi supprimer par erreur un passage important.
+
+On peut choisir une représentation plus courte, comme le titre, l’introduction et le plan. Elle sera plus rapide à examiner, mais elle décrit surtout la promesse et la structure. Deux guides peuvent annoncer le même sujet et développer des réponses différentes. Les sections doivent encore être consultées avant de conclure qu’ils font doublon.
+
+Il faut conserver cette règle de préparation avec le résultat. Un score obtenu à partir des titres seuls ne se compare pas directement à un score calculé sur les textes entiers. La donnée d’entrée fait partie de la mesure.
+
+## La longueur ne disparaît pas dans le calcul
+
+Les modèles acceptent une quantité limitée de texte. Pour un long article, il faut savoir quelle partie entre réellement dans le traitement et ce qui est éventuellement tronqué.
+
+La [fiche officielle de multilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base) indique une limite de 512 tokens pour les textes longs. Les tokens sont les unités traitées par le modèle ; leur nombre ne correspond pas simplement au nombre de mots. Envoyer une page entière ne garantit donc pas qu’elle sera représentée dans son ensemble.
+
+Pour des articles longs, une option consiste à travailler par sections. Chaque passage garde alors un lien vers sa page et son intertitre. On peut retrouver les passages proches, puis revenir au document complet pour comprendre leur rôle.
+
+Le découpage demande lui aussi une décision. Un paragraphe séparé de sa condition ou de son titre peut devenir ambigu. Il faut préparer des morceaux assez autonomes pour être comparés, tout en gardant la possibilité de retrouver le contexte.
+
+La représentation finale n’est pas systématiquement la moyenne des passages. La [documentation des modules Sentence Transformers décrit plusieurs stratégies de regroupement des vecteurs](https://sbert.net/docs/package_reference/sentence_transformer/modules.html), appelées *pooling*. La méthode choisie fait partie du modèle ou du traitement. On ne peut donc pas expliquer toutes les pages et tous les modèles avec une seule règle de moyenne.
+
+## Lire la similarité cosinus pour ce qu’elle mesure
+
+Pour deux vecteurs non nuls, la similarité cosinus compare leur direction. Sa formule s’écrit :
+
+```text
+similarité = (A · B)
+             / (||A|| × ||B||)
+```
+
+A et B désignent les deux vecteurs. Le point représente leur produit scalaire, et les doubles barres la norme de chacun.
+
+Elle est comprise entre −1 et 1. Des vecteurs de même direction ont une similarité de 1 ; des vecteurs orthogonaux donnent 0. Ces propriétés géométriques ne donnent pas une traduction universelle du sens : zéro ne certifie pas que deux textes n’ont aucun rapport, et une valeur négative ne démontre pas une contradiction.
+
+Attention également au nom du résultat dans la bibliothèque utilisée. [SciPy définit sa distance cosinus comme un moins la similarité](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cosine.html). Trier une distance comme une similarité inverserait les rapprochements recherchés.
+
+Le cosinus normalise la norme des vecteurs. Il n’efface pas les effets du texte fourni, de sa longueur ou de sa troncature sur la représentation obtenue. Une formule correcte ne répare pas une extraction incomplète.
+
+## Garder le protocole du modèle
+
+Pour comparer deux représentations, il faut utiliser un modèle et une préparation compatibles. Mélanger des vecteurs provenant de modèles différents n’est pas une manière valable de prolonger une ancienne liste de scores, même si les listes de nombres ont la même taille.
+
+Certains modèles demandent aussi une mise en forme particulière de leur entrée. Pour E5, la [fiche du modèle distingue les préfixes selon la tâche](https://huggingface.co/intfloat/multilingual-e5-base#faq), notamment `query:` et `passage:`. Elle recommande `query:` des deux côtés pour une comparaison symétrique de similarité.
+
+La même fiche précise que les scores peuvent être concentrés dans une plage élevée, et que leur ordre relatif compte davantage que leur valeur absolue pour ces usages. Un nombre qui semble élevé au premier regard n’a donc pas de sens sans connaître le modèle et la tâche.
+
+Pour pouvoir reprendre le travail, je garderais avec les résultats le modèle, sa version, la règle d’extraction, le découpage et la date de calcul. Si l’un de ces éléments change, il faut vérifier de nouveau les repères utilisés pour sélectionner les paires.
+
+## Relire le besoin derrière la ressemblance
+
+Prenons un corpus entièrement fictif consacré à un logiciel de catalogue. Ce tableau propose un exercice de lecture, sans calcul de similarité :
+
+| Pages rapprochées | Question à examiner |
+| --- | --- |
+| Importer son catalogue / Préparer le fichier d’import | Deux étapes complémentaires ou deux guides qui répètent la même réponse ? |
+| Réussir un import / Annuler un import | Vocabulaire commun, mais quelles actions le lecteur veut-il accomplir ? |
+| Choisir un logiciel / Comparer deux offres précises | Les critères et le niveau de décision sont-ils les mêmes ? |
+
+Un score peut conduire à examiner ces paires. Pour choisir l’action, il faut ouvrir les pages et regarder ce qu’elles permettent de faire.
+
+Deux textes peuvent se recouper sans être interchangeables. Une définition courte et un guide de mise en œuvre peuvent avoir chacun leur place. À l’inverse, deux titres distincts peuvent cacher le même parcours et les mêmes explications.
+
+C’est le travail de délimitation décrit dans [la préparation d’un cluster et de ses articles complémentaires](/cluster-territoire-vacant-concurrent/). La représentation numérique aide à retrouver une paire ; le rôle de chaque page doit encore être formulé.
+
+## Calibrer sur des paires que l’on sait expliquer
+
+Avant de traiter un grand corpus, prépare un ensemble de pages que tu peux relire. Choisis des recouvrements évidents, des contenus complémentaires et des sujets distincts. Garde aussi des cas difficiles : ils montreront où le calcul mélange des situations que tu veux distinguer.
+
+La décision de référence doit être écrite. « Ces pages se ressemblent » reste vague. « Elles répondent à la même question avec les mêmes étapes » ou « elles servent deux moments différents du parcours » donne quelque chose à comparer à la sélection du modèle.
+
+Regarde ensuite les faux rapprochements et les paires importantes oubliées. Tu pourras ajuster la préparation, le découpage ou le niveau à partir duquel une paire entre dans la relecture. Le seuil obtenu restera un réglage de ce dispositif, avec ce corpus.
+
+Une traduction mérite aussi son propre traitement. Deux versions linguistiques peuvent se ressembler parce qu’elles adaptent volontairement le même article. Pour chercher des recouvrements éditoriaux dans une langue, commencer à l’intérieur de cette langue évite de remplir la liste avec ces correspondances attendues.
+
+## Faire déboucher la comparaison sur un travail précis
+
+Pour une paire retenue, je conserverais les passages comparés et une action proposée. Compléter une section, différencier les deux angles, ajouter un lien ou ne rien changer sont des issues possibles. Une fusion demande d’examiner le contenu, les usages et les données des pages concernées.
+
+La même lecture s’applique au [maillage interne](/cocon-semantique-maillage-echelle/). La proximité de sujet permet de chercher des destinations. L’ancre et le passage source doivent encore expliquer pourquoi le lecteur gagnerait à suivre ce lien.
+
+Enfin, une ressemblance ne prouve pas qu’un texte répond correctement à une question. [Le travail sur les scores d’Intento](/intento-score-seo-explicable/) pose justement cette limite : retrouver un passage proche et vérifier sa réponse demandent des contrôles différents.
+
+Pour commencer, prépare donc un petit lot de paires avec leur texte d’entrée, leur score et la raison pour laquelle tu les retiens ou les écartes. Cette liste relue donne déjà un outil de travail : on sait quelles pages examiner ensemble, et quelle décision reste à prendre.

@@ -1,0 +1,119 @@
+---
+title: 'Déléguer une tâche à un agent IA : définir comment vérifier qu’elle est terminée'
+territory: construire
+publishedAt: 2027-01-07
+scheduledPublishAt: 2027-01-07T07:00:00Z
+summary: >-
+  Dans mes projets, une tâche déléguée possède un périmètre et une validation. Voici comment préparer le livrable, répartir les changements et demander des preuves adaptées avant de passer à la suite.
+readingTime: 9
+tags: [agents IA, délégation, vérification, sous-agents, méthode de travail]
+topics: [ia-appliquee, web-outils]
+projectIds: [athla, trakkeon, jimsagnier-com]
+relatedArticles:
+  - vibecoding-explique
+  - athla-runtime-agents-local
+  - memoire-projet-agents-ia
+format: article
+coverImage:
+  src: /images/articles/jim-au-travail.webp
+  alt: Jim Sagnier au travail devant son ordinateur
+  caption: Portrait de Jim, visuel commun de remplacement.
+seo:
+  title: 'Déléguer à un agent IA : périmètre, livrable et vérification'
+  description: >-
+    Préparer une tâche pour un agent IA : résultat attendu, fichiers concernés, accès, critères de validation et rapport de fin. Une méthode issue de mes projets.
+  schemaType: BlogPosting
+  noindex: false
+faq: []
+draft: false
+featured: false
+---
+Dans la méthode documentée pour Athla et Trakkeon, les plans découpent le travail en tâches. Chacune indique ce qu’il faut produire et comment le vérifier. Une revue vient ensuite regarder la réalisation et les écarts.
+
+Cette organisation répond à une question concrète : qu’est-ce qui permet de dire qu’un agent a terminé ? Un fichier peut avoir été modifié et laisser le comportement attendu incomplet. Un compte rendu peut annoncer une vérification sans préciser ce qui a été regardé.
+
+Je suis lead acquisition et je construis des sites et des outils avec l’IA. Je vais expliquer comment préparer une tâche assez précise pour être déléguée, puis reprise par quelqu’un d’autre. Les exemples s’appuient sur les règles de mes projets et, pour la publication de ce journal, sur le code vérifié le 27 octobre 2026.
+
+L’objectif est de savoir ce qu’on attend à la sortie, quelle preuve on peut demander et où une décision doit revenir vers la personne qui pilote le projet.
+
+## Décrire un résultat que l’on pourra examiner
+
+« Améliore la publication » laisse beaucoup de place à l’interprétation. L’agent peut modifier un écran, une règle de date ou un script. Il peut aussi proposer une organisation différente alors que le besoin portait seulement sur un article.
+
+Pour ce journal, un résultat plus précis serait : intégrer un texte dans le format attendu, lui attribuer une date et vérifier qu’il entre dans le site au bon moment. On peut ensuite identifier les fichiers concernés et les étapes nécessaires.
+
+Le travail n’est pas entièrement décrit par les opérations. « Ajouter une date » dit ce qu’on modifie. « L’article reste absent avant cette date et apparaît après le build effectué à l’échéance » décrit le comportement à vérifier.
+
+C’est ce second niveau qui permet de préparer une validation. On sait chercher le contenu dans les pages générées et essayer son adresse. J’ai détaillé [le mécanisme de publication programmée](/tuto-site-perso-astro/) dans un autre article ; ici, il sert d’exemple pour définir la sortie attendue d’une tâche.
+
+Pour un travail éditorial, le résultat se décrit autrement. Le texte doit répondre à une question, respecter un angle et s’appuyer sur une matière disponible. La vérification comprend alors une relecture des sources et du contenu. Un build ne peut pas décider si le récit est fidèle à ce que je voulais dire.
+
+## Séparer le contexte de la mission
+
+L’agent a besoin de comprendre le projet, mais toute la documentation n’a pas à devenir une consigne dans chaque tâche.
+
+Le contexte donne les règles stables : la structure du site, les sources qui font référence, le vocabulaire et les limites d’intervention. La mission décrit le changement demandé maintenant. Une ressource utile pour comprendre un projet ne demande pas forcément d’être modifiée.
+
+Dans ce dépôt, les consignes indiquent notamment où lire le positionnement et le tone of voice. Pour un nouvel article, il faut ensuite préciser le sujet, l’angle et les sources. Ce sont deux niveaux complémentaires : connaître la voix ne fournit pas les faits à raconter.
+
+Le même principe s’applique au code. Une spécification peut expliquer l’intention d’une fonction. Il faut encore regarder les types, les appels et les fichiers réellement présents avant de reprendre un extrait illustratif.
+
+J’ai expliqué [comment les références et les décisions restent retrouvables entre les sessions](/memoire-projet-agents-ia/). Cette mémoire aide à repartir du bon endroit. Le brief doit ensuite dire quelle partie de ce contexte sert à la tâche confiée.
+
+## Délimiter les fichiers et les actions autorisées
+
+Une tâche doit préciser son terrain d’intervention. Ça comprend les fichiers à créer ou modifier, mais aussi les systèmes auxquels l’agent peut accéder et les opérations qu’il peut effectuer.
+
+Pour un article, on peut demander un seul fichier et réserver l’intégration finale à la session principale. Pour une correction de calcul, on peut désigner le module concerné et les cas qui doivent rester valides. Ce périmètre rend les changements plus faciles à comparer au besoin initial.
+
+Les autorisations ont leur propre place. Dans ce projet, les consignes demandent un accord avant les actions distantes. Un accès en lecture au dépôt ou au suivi éditorial ne signifie donc pas que toute modification est autorisée.
+
+Une autorisation déjà donnée pour un lot doit aussi rester disponible pour l’équipe. Il n’y a pas d’intérêt à interrompre chaque tâche pour redemander le même accord. Il faut pouvoir retrouver ce qui a été autorisé et ce qui demanderait une nouvelle décision.
+
+Si le travail révèle un besoin hors périmètre, le compte rendu doit l’indiquer précisément : le fichier concerné, la raison et les conséquences. C’est plus utile qu’une demande générale de « continuer » sans montrer la décision à prendre.
+
+## Préparer une validation adaptée au changement
+
+La validation doit répondre au risque et au comportement concernés. Elle peut combiner une lecture, un contrôle de structure, un test du calcul et une vérification dans l’interface. Chaque moyen a ses limites.
+
+Dans notre exemple de programmation, le schéma vérifie les champs et leurs types. Le build fabrique les pages. Le contrôle du résultat cherche l’article dans les routes, les listes et les flux. Une simulation à une autre date permet d’examiner son apparition à l’échéance.
+
+Ces opérations ne sont pas interchangeables. Un fichier valide peut contenir la mauvaise date. Une page correcte en local ne prouve pas que la version distante a été déployée. Le rapport doit garder ces étapes distinctes.
+
+Prenons un autre exemple entièrement fictif : un outil calcule le total de plusieurs lignes de devis. Une validation utile donne des entrées connues et le total attendu, y compris pour un cas de ligne vide ou de quantité nulle si le produit les accepte. Vérifier seulement que le nombre s’affiche laisserait le calcul entier à confirmer.
+
+À l’inverse, corriger une faute dans un libellé ne demande pas de construire une nouvelle suite de tests qui répète ce libellé. Il faut surtout vérifier le bon changement et son rendu. Le volume de contrôle doit rester lié à ce que la tâche peut affecter.
+
+La méthode de mes projets prévoit des blocs de validation dans les plans. Ils doivent rester exécutables avec le projet réel. Une commande copiée d’un ancien plan peut avoir changé ; l’échec demande d’examiner sa cause, pas simplement de déclarer le contrôle impossible.
+
+## Répartir les sous-agents sans mélanger leurs livrables
+
+Pour travailler en parallèle, il faut choisir des missions qui peuvent avancer sans se gêner. Deux lectures documentaires se prêtent souvent bien à cette séparation. Deux modifications simultanées du même fichier demandent une coordination différente.
+
+Pour ce journal, chaque rédacteur peut recevoir un sujet et un fichier distincts. La session principale garde la cohérence du lot : dates, liens entre les textes et intégration. La relecture croisée apporte un autre examen des passages, puis les corrections sont réunies.
+
+Dans les projets de développement, les dépendances peuvent imposer un ordre. Un module doit parfois définir ses entrées et ses sorties avant qu’une autre tâche puisse le consommer. Mettre les deux en parallèle sans contrat stable crée du travail de rapprochement à la fin.
+
+Il faut aussi préciser ce qu’un sous-agent doit rendre. Le livrable, les fichiers touchés, les vérifications effectuées et les points encore ouverts permettent à la session principale de reprendre. Un simple « terminé » ne donne aucun moyen de savoir ce qui a été constaté.
+
+Le nombre d’agents ne garantit pas la diversité des preuves. S’ils reprennent tous la même note périmée, leurs réponses peuvent converger. L’intérêt d’une revue vient de ce qu’elle examine : source, comportement, hypothèse et résultat, avec un périmètre défini.
+
+## Relire le résultat face au besoin initial
+
+La revue doit pouvoir revenir au brief. L’agent a-t-il réalisé le changement demandé ? A-t-il ajouté une autre décision ? Les exemples vérifiés couvrent-ils le comportement attendu ?
+
+Le résultat peut être techniquement cohérent et mal cadré. Un filtre ajouté au site peut fonctionner et masquer des contenus qui devaient rester disponibles. Une procédure peut bien expliquer une opération différente de celle que le lecteur devait réussir.
+
+Pour la relecture, je garderais donc le résultat attendu à côté du livrable et des preuves. Quand un écart apparaît, il faut le décrire avec assez de précision pour le reprendre. Le passage concerné, le cas à reproduire ou le fichier à examiner donnent un point de départ à la correction.
+
+La revue elle-même peut se tromper. Un constat doit rester vérifiable avant d’entraîner une modification. Si le relecteur affirme qu’un cas n’est pas traité, il faut regarder le chemin réel et les conditions qu’il a utilisées.
+
+C’est aussi la différence entre déléguer l’exécution et abandonner l’arbitrage. Les agents préparent et contrôlent des éléments. Les choix de périmètre, d’usage et d’autorisation restent rattachés à la personne qui pilote le projet.
+
+## Rendre une fin de tâche qui permette la suite
+
+À la fin, le compte rendu doit permettre de retrouver le changement et de comprendre les vérifications. On peut y nommer le fichier produit, les contrôles réussis, ce qui n’a pas été essayé et la prochaine étape qui dépend d’un autre système ou d’une décision.
+
+Le vocabulaire doit suivre les preuves. « Écrit », « vérifié localement », « poussé » et « déployé » décrivent des états différents. Pour un article programmé, la mise en ligne effective reste encore une étape à constater à l’échéance.
+
+Cette précision donne une continuité au travail. La tâche suivante peut s’appuyer sur un livrable et ses limites, sans reconstruire toute la conversation. C’est ce que j’attends de la délégation : un résultat que l’on peut examiner, puis reprendre en sachant ce qui est établi et ce qui reste à faire.
